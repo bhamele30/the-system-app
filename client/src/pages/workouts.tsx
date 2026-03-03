@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dumbbell, Clock, Zap, ChevronRight, PlayCircle } from "lucide-react";
+import { Dumbbell, Clock, Zap, ChevronRight, PlayCircle, CheckCircle2, ArrowLeft } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const WORKOUT_PLANS = [
   {
@@ -46,6 +48,81 @@ const WORKOUT_PLANS = [
 ];
 
 export default function Workouts() {
+  const [activeWorkout, setActiveWorkout] = useState<typeof WORKOUT_PLANS[0] | null>(null);
+  const [completedSets, setCompletedSets] = useState<Record<string, boolean>>({});
+
+  const toggleSet = (exerciseName: string, setIndex: number) => {
+    const key = `${exerciseName}-${setIndex}`;
+    setCompletedSets(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const finishWorkout = () => {
+    toast({
+      title: "Workout Complete!",
+      description: `Great job finishing ${activeWorkout?.title}. Progression logged.`,
+    });
+    setActiveWorkout(null);
+    setCompletedSets({});
+  };
+
+  if (activeWorkout) {
+    return (
+      <div className="p-6 md:p-10 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <Button 
+          variant="ghost" 
+          onClick={() => setActiveWorkout(null)}
+          className="mb-6 -ml-4 text-muted-foreground hover:text-primary"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Library
+        </Button>
+
+        <header className="mb-8">
+          <div className="text-primary font-display font-medium tracking-widest text-xs mb-2 uppercase">Active Session</div>
+          <h1 className="text-4xl font-bold text-glow">{activeWorkout.title}</h1>
+        </header>
+
+        <div className="space-y-8">
+          {activeWorkout.exercises.map((ex, i) => (
+            <section key={i} className="glass-panel p-6 rounded-2xl border-white/5">
+              <h3 className="text-xl font-bold mb-4 flex items-center justify-between">
+                {ex.name}
+                <Badge variant="outline" className="text-[10px] font-display uppercase tracking-widest">
+                  {ex.sets} Sets × {ex.reps}
+                </Badge>
+              </h3>
+              
+              <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+                {Array.from({ length: parseInt(ex.sets) }).map((_, setIdx) => {
+                  const isDone = completedSets[`${ex.name}-${setIdx}`];
+                  return (
+                    <button
+                      key={setIdx}
+                      onClick={() => toggleSet(ex.name, setIdx)}
+                      className={`h-12 rounded-lg border font-display text-sm transition-all duration-200 ${
+                        isDone 
+                          ? "bg-primary border-primary text-primary-foreground" 
+                          : "bg-secondary/50 border-white/5 hover:border-primary/50"
+                      }`}
+                    >
+                      {isDone ? <CheckCircle2 className="w-5 h-5 mx-auto" /> : setIdx + 1}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <Button 
+          onClick={finishWorkout}
+          className="w-full mt-12 py-8 font-display font-bold uppercase tracking-widest text-sm bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_hsl(var(--primary)/0.3)]"
+        >
+          Complete Workout & Log Progress
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 md:p-10 max-w-6xl mx-auto animate-in fade-in duration-700">
       <header className="mb-10">
@@ -92,7 +169,10 @@ export default function Workouts() {
                 ))}
               </div>
 
-              <Button className="w-full font-display uppercase tracking-widest text-xs py-6 bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground border border-primary/20">
+              <Button 
+                onClick={() => setActiveWorkout(plan)}
+                className="w-full font-display uppercase tracking-widest text-xs py-6 bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground border border-primary/20 transition-all duration-300 shadow-[0_0_0px_hsl(var(--primary)/0)] hover:shadow-[0_0_15px_hsl(var(--primary)/0.3)] cursor-pointer"
+              >
                 <PlayCircle className="w-4 h-4 mr-2" /> Start Workout
               </Button>
             </div>
@@ -102,3 +182,4 @@ export default function Workouts() {
     </div>
   );
 }
+
