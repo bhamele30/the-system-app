@@ -34,14 +34,14 @@ function Navigation() {
         </div>
         {navItems.map((item) => (
           <Link key={item.href} href={item.href}>
-            <a className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
+            <span className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors cursor-pointer ${
               location.startsWith(item.href) 
                 ? "text-primary bg-primary/10" 
                 : "text-muted-foreground hover:text-foreground hover:bg-white/5"
             }`}>
               <item.icon className="w-5 h-5" />
               <span className="text-[10px] uppercase font-display hidden md:block mt-1">{item.label}</span>
-            </a>
+            </span>
           </Link>
         ))}
       </div>

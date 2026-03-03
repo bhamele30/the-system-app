@@ -1,12 +1,12 @@
-import { useState } from "wouter";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronLeft, ArrowRight } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 export default function Onboarding() {
   const [, setLocation] = useLocation();
-  const [step, setStep] = React.useState(1);
+  const [step, setStep] = useState(1);
+  const [answers, setAnswers] = useState<Record<number, number>>({});
 
   const nextStep = () => {
     if (step < 4) setStep(step + 1);
@@ -15,6 +15,10 @@ export default function Onboarding() {
 
   const prevStep = () => {
     if (step > 1) setStep(step - 1);
+  };
+
+  const handleSelect = (optionIndex: number) => {
+    setAnswers(prev => ({ ...prev, [step]: optionIndex }));
   };
 
   return (
@@ -33,6 +37,8 @@ export default function Onboarding() {
           <QuestionStep 
             title="What's your current training age?"
             subtitle="Be honest. This sets the foundation of your blueprint."
+            selected={answers[1]}
+            onSelect={handleSelect}
             options={[
               "Beginner (0-1 years)",
               "Intermediate (1-3 years)",
@@ -45,6 +51,8 @@ export default function Onboarding() {
           <QuestionStep 
             title="What equipment do you have access to?"
             subtitle="The blueprint requires heavy lifting."
+            selected={answers[2]}
+            onSelect={handleSelect}
             options={[
               "Full Commercial Gym",
               "Home Gym (Rack, Barbell, Dumbbells)",
@@ -57,6 +65,8 @@ export default function Onboarding() {
           <QuestionStep 
             title="What's your primary obstacle right now?"
             subtitle="Select the biggest hurdle preventing your growth."
+            selected={answers[3]}
+            onSelect={handleSelect}
             options={[
               "Not gaining strength/muscle despite lifting",
               "Don't know what to eat / skinny fat",
@@ -90,6 +100,7 @@ export default function Onboarding() {
           </Button>
           <Button 
             onClick={nextStep}
+            disabled={step < 4 && answers[step] === undefined}
             className="font-display uppercase tracking-widest px-8 bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {step === 4 ? "Enter Dashboard" : "Continue"} <ChevronRight className="w-4 h-4 ml-2" />
@@ -101,9 +112,15 @@ export default function Onboarding() {
   );
 }
 
-function QuestionStep({ title, subtitle, options }: { title: string, subtitle: string, options: string[] }) {
-  const [selected, setSelected] = React.useState<number | null>(null);
+interface QuestionStepProps {
+  title: string;
+  subtitle: string;
+  options: string[];
+  selected?: number;
+  onSelect: (index: number) => void;
+}
 
+function QuestionStep({ title, subtitle, options, selected, onSelect }: QuestionStepProps) {
   return (
     <div className="w-full animate-in fade-in slide-in-from-right-8 duration-500">
       <h2 className="text-3xl md:text-4xl font-bold font-display mb-3">{title}</h2>
@@ -113,14 +130,15 @@ function QuestionStep({ title, subtitle, options }: { title: string, subtitle: s
         {options.map((opt, i) => (
           <button
             key={i}
-            onClick={() => setSelected(i)}
-            className={`w-full text-left p-6 rounded-xl border transition-all duration-200 ${
+            type="button"
+            onClick={() => onSelect(i)}
+            className={`w-full text-left p-6 rounded-xl border transition-all duration-200 cursor-pointer ${
               selected === i 
                 ? "bg-primary/10 border-primary text-primary" 
                 : "bg-secondary/50 border-white/5 hover:border-white/20 hover:bg-secondary text-foreground"
             }`}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pointer-events-none">
               <span className="font-medium">{opt}</span>
               <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
                 selected === i ? "border-primary" : "border-muted-foreground"
