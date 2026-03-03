@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import Blueprint from "@/pages/blueprint";
 import Onboarding from "@/pages/onboarding";
 import Nutrition from "@/pages/nutrition";
+import Workouts from "@/pages/workouts";
 
 function Navigation() {
   const [location] = useLocation();
@@ -57,8 +58,8 @@ function Router() {
         <Route path="/onboarding" component={Onboarding} />
         <Route path="/blueprint" component={Blueprint} />
         <Route path="/nutrition" component={Nutrition} />
+        <Route path="/workouts" component={Workouts} />
         {/* Placeholder for missing routes mapping back to blueprint for demo */}
-        <Route path="/workouts" component={Blueprint} />
         <Route path="/progress" component={Blueprint} />
         <Route path="/profile" component={Blueprint} />
         <Route component={NotFound} />
