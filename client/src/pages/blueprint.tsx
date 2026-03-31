@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ChevronRight, Flame, Target, Trophy, Clock, CheckCircle2, Circle } from "lucide-react";
+import { ChevronRight, Flame, Target, Trophy, Clock, CheckCircle2, Circle, Quote } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import transformImg from "@/assets/transformation-placeholder.png";
 
 export default function Blueprint() {
@@ -96,18 +97,42 @@ export default function Blueprint() {
           </section>
 
           {/* Vision/Why */}
-          <section className="rounded-2xl overflow-hidden relative border border-white/10 group">
-            <img 
-              src={transformImg} 
-              alt="Goal Physique" 
-              className="w-full h-64 object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-6 w-full">
-              <div className="text-xs font-display text-primary tracking-widest mb-1">THE VISION</div>
-              <h3 className="font-bold text-lg leading-tight text-glow">REMEMBER WHY YOU STARTED</h3>
-            </div>
-          </section>
+          <Dialog>
+            <DialogTrigger asChild>
+              <section className="rounded-2xl overflow-hidden relative border border-white/10 group cursor-pointer">
+                <img 
+                  src={transformImg} 
+                  alt="Goal Physique" 
+                  className="w-full h-64 object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent transition-opacity duration-500 group-hover:opacity-80" />
+                <div className="absolute bottom-0 left-0 p-6 w-full transform transition-transform duration-500 group-hover:-translate-y-1">
+                  <div className="text-xs font-display text-primary tracking-widest mb-1 flex items-center gap-2">
+                    THE VISION
+                  </div>
+                  <h3 className="font-bold text-lg leading-tight text-glow">REMEMBER WHY YOU STARTED</h3>
+                </div>
+              </section>
+            </DialogTrigger>
+            <DialogContent className="glass-panel border-primary/20 bg-background/95 backdrop-blur-xl sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-display font-bold text-primary flex items-center gap-2 mb-2">
+                  <Quote className="w-6 h-6" /> THE MANIFESTO
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 text-muted-foreground mt-4">
+                <p className="italic text-lg text-foreground/90 border-l-2 border-primary pl-4">
+                  "I was tired of feeling invisible in my own body. Tired of shirts hanging loose off my shoulders. Tired of the excuses I kept telling myself."
+                </p>
+                <p>
+                  This blueprint isn't just about building muscle; it's about building an unbreakable frame and mind. The next 3 years will pass anyway. You can either look exactly the same, or you can look in the mirror and finally respect the man looking back at you.
+                </p>
+                <p className="font-bold text-primary">
+                  Stay disciplined. Do the work. Your future self is watching.
+                </p>
+              </div>
+            </DialogContent>
+          </Dialog>
 
         </div>
 
