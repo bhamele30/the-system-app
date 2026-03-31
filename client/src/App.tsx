@@ -3,7 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Dumbbell, LayoutDashboard, Target, Apple, UserCircle } from "lucide-react";
+import { Dumbbell, LayoutDashboard, Target, Apple, HeartPulse } from "lucide-react";
 import NotFound from "@/pages/not-found";
 
 import Home from "@/pages/home";
@@ -11,6 +11,7 @@ import Blueprint from "@/pages/blueprint";
 import Onboarding from "@/pages/onboarding";
 import Nutrition from "@/pages/nutrition";
 import Workouts from "@/pages/workouts";
+import Recovery from "@/pages/recovery";
 
 function Navigation() {
   const [location] = useLocation();
@@ -21,8 +22,8 @@ function Navigation() {
     { href: "/blueprint", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/workouts", icon: Dumbbell, label: "Workouts" },
     { href: "/nutrition", icon: Apple, label: "Fuel" },
+    { href: "/recovery", icon: HeartPulse, label: "Recovery" },
     { href: "/progress", icon: Target, label: "Progress" },
-    { href: "/profile", icon: UserCircle, label: "Profile" },
   ];
 
   return (
@@ -59,6 +60,7 @@ function Router() {
         <Route path="/blueprint" component={Blueprint} />
         <Route path="/nutrition" component={Nutrition} />
         <Route path="/workouts" component={Workouts} />
+        <Route path="/recovery" component={Recovery} />
         {/* Placeholder for missing routes mapping back to blueprint for demo */}
         <Route path="/progress" component={Blueprint} />
         <Route path="/profile" component={Blueprint} />

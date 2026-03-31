@@ -1,0 +1,14 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "2aqG8ku-pNLVNSWHP50ax"
+uri = "file://client/src/assets/nutrition-bg.png"
+type = "image"
+title = "Dark cinematic food prep plate"
+
+[[generated]]
+id = "9hj4VZ8ABHob5VsIKTaqT"
+uri = "file://client/src/assets/recovery-bg.png"
+type = "image"
+title = "Dark cinematic recovery tools"
