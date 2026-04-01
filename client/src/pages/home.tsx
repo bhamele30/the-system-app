@@ -5,14 +5,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Dumbbell, Utensils, Bed, Target, Zap, Clock, CalendarDays, Crosshair } from "lucide-react";
+import { Dumbbell, Utensils, Bed, Target, Zap, Clock, CalendarDays, Crosshair, Trophy } from "lucide-react";
 import { useSystem } from "@/hooks/use-system";
 
 export default function Home() {
-  const { state, submitDay } = useSystem();
-  const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "REST">("PUSH");
+  const { state, submitDay, setHasSeenPhase2Celebration } = useSystem();
+  const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "UPPER" | "LOWER" | "REST">("PUSH");
   const [focusLine, setFocusLine] = useState("");
   const [showCheckin, setShowCheckin] = useState(false);
+  const [showPhaseCelebration, setShowPhaseCelebration] = useState(false);
   const [checks, setChecks] = useState({ train: false, nutrition: false, recovery: false });
 
   // Generate daily protocol based on system execution logic
@@ -23,9 +24,13 @@ export default function Home() {
     // Check if in phase 1 (first 84 days) or phase 2 (after 84 days)
     const isPhase2 = state.totalDays >= 84;
     
+    if (isPhase2 && !state.hasSeenPhase2Celebration) {
+      setShowPhaseCelebration(true);
+    }
+    
     let cycle;
     if (isPhase2) {
-      // Phase 2: Hypertrophy Focus (Push/Pull/Legs/Upper/Lower)
+      // Phase 2: Hypertrophy Focus (Push/Pull/Legs/Upper/Lower/Rest)
       cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][dayOfYear % 6] as any;
     } else {
       // Phase 1: Foundation (Push/Pull/Legs/Arms/Rest)
@@ -184,6 +189,43 @@ export default function Home() {
           >
             Submit Data
           </Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Phase 2 Celebration Modal */}
+      <Dialog open={showPhaseCelebration} onOpenChange={() => {}}>
+        <DialogContent className="bg-black border-primary/50 shadow-[0_0_50px_hsl(var(--primary)/0.2)] rounded-none sm:max-w-lg overflow-hidden hide-close">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+          
+          <div className="flex flex-col items-center justify-center text-center space-y-6 py-8">
+            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center border border-primary/30 mb-2 relative">
+              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
+              <Trophy className="w-10 h-10 text-primary relative z-10" />
+            </div>
+            
+            <div className="space-y-2">
+              <h2 className="font-display text-primary text-sm uppercase tracking-[0.3em] font-bold">Foundation Complete</h2>
+              <h3 className="text-4xl md:text-5xl font-bold uppercase tracking-tighter text-glow leading-none">
+                PHASE 1<br/>CONQUERED
+              </h3>
+            </div>
+            
+            <p className="text-muted-foreground max-w-sm text-sm leading-relaxed border-y border-white/5 py-6 my-2">
+              You showed up for 84 days. You executed the protocol. You built the discipline required to transform. 
+              <br/><br/>
+              Welcome to Phase 2. The training wheels are off. New programming has been unlocked in your Training Library.
+            </p>
+            
+            <Button 
+              onClick={() => {
+                setHasSeenPhase2Celebration();
+                setShowPhaseCelebration(false);
+              }}
+              className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-widest text-sm shadow-[0_0_20px_hsl(var(--primary)/0.3)] transition-all duration-300 hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
+            >
+              Enter Phase 2
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 

@@ -99,3 +99,7 @@
   border: 1px solid hsl(217 32% 17% / 0.5);
   border-top: 1px solid hsl(210 100% 50% / 0.2);
 }
+
+.hide-close > button {
+  display: none !important;
+}

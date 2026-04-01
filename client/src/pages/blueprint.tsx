@@ -14,7 +14,26 @@ export default function Blueprint() {
   const { state } = useSystem();
   const currentWeek = Math.floor(state.totalDays / 7) + 1;
   const currentDay = (state.totalDays % 7) + 1;
-  const phaseCompletion = Math.min(100, Math.round((state.completedDays / 84) * 100)); // 12 weeks = 84 days
+  const isPhase2 = state.totalDays >= 84;
+  const phaseCompletion = isPhase2 ? 100 : Math.min(100, Math.round((state.completedDays / 84) * 100)); // 12 weeks = 84 days
+  
+  const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
+  
+  let cycleName = "";
+  let cycleDuration = "";
+  let cycleType = "";
+  
+  if (isPhase2) {
+    const p2Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Upper Body Power", "Lower Body Power", "Active Recovery"][dayOfYear % 6];
+    cycleName = p2Cycle;
+    cycleDuration = p2Cycle === "Active Recovery" ? "45 Min" : "65-75 Min";
+    cycleType = p2Cycle === "Active Recovery" ? "Recovery" : "Hypertrophy / Power";
+  } else {
+    const p1Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Strict Arms", "Active Recovery"][dayOfYear % 5];
+    cycleName = p1Cycle;
+    cycleDuration = p1Cycle === "Active Recovery" || p1Cycle === "Strict Arms" ? "45 Min" : "60-75 Min";
+    cycleType = p1Cycle === "Active Recovery" ? "Recovery" : "Foundation";
+  }
 
   const [metrics, setMetrics] = useState({
     bodyweight: "174.5",
@@ -57,7 +76,9 @@ export default function Blueprint() {
       {/* Header */}
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="text-primary font-display font-medium tracking-widest text-xs mb-2">PHASE 1: FOUNDATION</div>
+          <div className="text-primary font-display font-medium tracking-widest text-xs mb-2">
+            {isPhase2 ? "PHASE 2: HYPERTROPHY" : "PHASE 1: FOUNDATION"}
+          </div>
           <h1 className="text-4xl font-bold text-glow">COMMAND CENTER</h1>
         </div>
         <div className="flex items-center gap-4 bg-secondary/50 px-4 py-2 rounded-lg border border-white/5">
@@ -87,12 +108,12 @@ export default function Blueprint() {
             <Link href="/workouts">
               <div className="bg-secondary/80 border border-white/5 rounded-xl p-5 mb-4 hover:border-primary/30 transition-colors cursor-pointer group">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-bold text-lg group-hover:text-primary transition-colors">Upper Body Power (Push/Pull)</h3>
+                  <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{cycleName}</h3>
                   <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
                 <p className="text-sm text-muted-foreground flex items-center gap-3">
-                  <span className="flex items-center gap-1"><Clock className="w-4 h-4"/> 65 Min</span>
-                  <span className="flex items-center gap-1"><DumbbellIcon /> Heavy Compounds</span>
+                  <span className="flex items-center gap-1"><Clock className="w-4 h-4"/> {cycleDuration}</span>
+                  <span className="flex items-center gap-1"><DumbbellIcon /> {cycleType}</span>
                 </p>
               </div>
             </Link>
@@ -199,8 +220,12 @@ export default function Blueprint() {
               <div className="flex gap-4 items-start">
                 <div className="mt-1"><Trophy className="w-5 h-5 text-primary" /></div>
                 <div>
-                  <h4 className="font-bold text-sm">Next Milestone</h4>
-                  <p className="text-xs text-muted-foreground">Hit 150g protein consistently for 14 days.</p>
+                  <h4 className="font-bold text-sm">{isPhase2 ? "Current Milestone" : "Next Milestone"}</h4>
+                  <p className="text-xs text-muted-foreground">
+                    {isPhase2 
+                      ? "Phase 2 active. Increase compound lifts by 5% this block." 
+                      : "Hit 150g protein consistently for 14 days."}
+                  </p>
                 </div>
               </div>
             </div>

@@ -6,6 +6,7 @@ interface SystemState {
   totalDays: number;
   completedDays: number;
   lastCompletedDate: string | null;
+  hasSeenPhase2Celebration: boolean;
 }
 
 const defaultState: SystemState = {
@@ -14,6 +15,7 @@ const defaultState: SystemState = {
   totalDays: 0,
   completedDays: 0,
   lastCompletedDate: null,
+  hasSeenPhase2Celebration: false,
 };
 
 export function useSystem() {
@@ -59,5 +61,12 @@ export function useSystem() {
     }));
   };
 
-  return { state, submitDay };
+  const setHasSeenPhase2Celebration = () => {
+    setState(prev => ({
+      ...prev,
+      hasSeenPhase2Celebration: true
+    }));
+  };
+
+  return { state, submitDay, setHasSeenPhase2Celebration };
 }
