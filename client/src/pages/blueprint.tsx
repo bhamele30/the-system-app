@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ChevronRight, Flame, Target, Trophy, Clock, CheckCircle2, Circle, Quote, Save } from "lucide-react";
@@ -25,6 +26,22 @@ export default function Blueprint() {
     toast({
       title: "Metrics Updated",
       description: "Your new baseline has been recorded.",
+    });
+  };
+
+  const [tasks, setTasks] = useState([
+    { id: 1, text: "Log Morning Fasted Weight", completed: false },
+    { id: 2, text: "Complete Lifting Session", completed: false },
+    { id: 3, text: "Hit Protein Target (180g)", completed: false }
+  ]);
+
+  const toggleTask = (id: number) => {
+    setTasks(tasks.map(t => 
+      t.id === id ? { ...t, completed: !t.completed } : t
+    ));
+    toast({
+      title: "Task Updated",
+      description: "Daily protocol progress recorded.",
     });
   };
 
@@ -61,21 +78,28 @@ export default function Blueprint() {
               <span className="text-sm text-muted-foreground">Week 3 / Day 2</span>
             </div>
 
-            <div className="bg-secondary/80 border border-white/5 rounded-xl p-5 mb-4 hover:border-primary/30 transition-colors cursor-pointer group">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-bold text-lg group-hover:text-primary transition-colors">Upper Body Power (Push/Pull)</h3>
-                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+            <Link href="/workouts">
+              <div className="bg-secondary/80 border border-white/5 rounded-xl p-5 mb-4 hover:border-primary/30 transition-colors cursor-pointer group">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-bold text-lg group-hover:text-primary transition-colors">Upper Body Power (Push/Pull)</h3>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                </div>
+                <p className="text-sm text-muted-foreground flex items-center gap-3">
+                  <span className="flex items-center gap-1"><Clock className="w-4 h-4"/> 65 Min</span>
+                  <span className="flex items-center gap-1"><DumbbellIcon /> Heavy Compounds</span>
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground flex items-center gap-3">
-                <span className="flex items-center gap-1"><Clock className="w-4 h-4"/> 65 Min</span>
-                <span className="flex items-center gap-1"><DumbbellIcon /> Heavy Compounds</span>
-              </p>
-            </div>
+            </Link>
 
             <div className="space-y-3">
-              <TaskItem text="Log Morning Fasted Weight" completed={true} />
-              <TaskItem text="Complete Lifting Session" completed={false} />
-              <TaskItem text="Hit Protein Target (180g)" completed={false} />
+              {tasks.map(task => (
+                <TaskItem 
+                  key={task.id}
+                  text={task.text} 
+                  completed={task.completed} 
+                  onClick={() => toggleTask(task.id)}
+                />
+              ))}
             </div>
           </section>
 
@@ -221,9 +245,16 @@ export default function Blueprint() {
   );
 }
 
-function TaskItem({ text, completed }: { text: string, completed: boolean }) {
+function TaskItem({ text, completed, onClick }: { text: string, completed: boolean, onClick: () => void }) {
   return (
-    <div className={`flex items-center gap-3 p-3 rounded-lg border ${completed ? 'bg-primary/5 border-primary/20 text-muted-foreground' : 'bg-secondary/30 border-white/5 hover:border-white/10'}`}>
+    <div 
+      onClick={onClick}
+      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors duration-200 ${
+        completed 
+          ? 'bg-primary/5 border-primary/20 text-muted-foreground' 
+          : 'bg-secondary/30 border-white/5 hover:border-primary/50'
+      }`}
+    >
       {completed ? (
         <CheckCircle2 className="w-5 h-5 text-primary" />
       ) : (
