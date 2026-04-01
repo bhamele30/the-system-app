@@ -19,18 +19,32 @@ export default function Home() {
   useEffect(() => {
     // Simple cycle based on day of year for demo purposes
     const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
-    const cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][dayOfYear % 5] as any;
+    
+    // Check if in phase 1 (first 84 days) or phase 2 (after 84 days)
+    const isPhase2 = state.totalDays >= 84;
+    
+    let cycle;
+    if (isPhase2) {
+      // Phase 2: Hypertrophy Focus (Push/Pull/Legs/Upper/Lower)
+      cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][dayOfYear % 6] as any;
+    } else {
+      // Phase 1: Foundation (Push/Pull/Legs/Arms/Rest)
+      cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][dayOfYear % 5] as any;
+    }
+    
     setDayType(cycle);
 
     const focusLines = ["Execute.", "No negotiation.", "Stay consistent.", "Repeat.", "No thinking."];
     setFocusLine(focusLines[Math.floor(Math.random() * focusLines.length)]);
-  }, []);
+  }, [state.totalDays]);
 
   const getWorkout = () => {
     if (dayType === "PUSH") return "Chest & Triceps";
     if (dayType === "PULL") return "Back & Biceps";
     if (dayType === "LEGS") return "Shoulders & Legs";
     if (dayType === "ARMS") return "Strict Arms";
+    if (dayType === "UPPER") return "Upper Body Power";
+    if (dayType === "LOWER") return "Lower Body Power";
     return "Active Recovery";
   };
 

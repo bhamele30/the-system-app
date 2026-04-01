@@ -62,6 +62,32 @@ const WORKOUT_PLANS = [
     ]
   },
   {
+    id: "upper-power",
+    title: "Upper Body Power (Phase 2)",
+    description: "Heavy compound movements for maximum strength and density.",
+    duration: "65 min",
+    intensity: "High",
+    exercises: [
+      { name: "Barbell Bench Press", sets: "4", reps: "5-8" },
+      { name: "Bent Over Rows", sets: "4", reps: "8-10" },
+      { name: "Overhead Press", sets: "3", reps: "8-10" },
+      { name: "Pull Ups", sets: "3", reps: "Failure" },
+    ]
+  },
+  {
+    id: "lower-power",
+    title: "Lower Body Power (Phase 2)",
+    description: "Foundational leg strength focusing on the posterior chain.",
+    duration: "70 min",
+    intensity: "Extreme",
+    exercises: [
+      { name: "Back Squats", sets: "5", reps: "5" },
+      { name: "Romanian Deadlifts", sets: "4", reps: "10-12" },
+      { name: "Leg Press", sets: "3", reps: "12-15" },
+      { name: "Calf Raises", sets: "4", reps: "15-20" },
+    ]
+  },
+  {
     id: "active-recovery",
     title: "Active Recovery",
     description: "Low-intensity movement to promote blood flow and tissue repair.",
