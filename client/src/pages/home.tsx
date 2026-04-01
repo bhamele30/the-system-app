@@ -30,7 +30,7 @@ export default function Home() {
     if (dayType === "PUSH") return "Chest & Triceps";
     if (dayType === "PULL") return "Back & Biceps";
     if (dayType === "LEGS") return "Shoulders & Legs";
-    return "Active Recovery";
+    return "Strict Arms";
   };
 
   const handleCheckinSubmit = () => {

@@ -7,42 +7,58 @@ import { toast } from "@/hooks/use-toast";
 
 const WORKOUT_PLANS = [
   {
-    id: "upper-power",
-    title: "Upper Body Power",
-    description: "Heavy compound movements for maximum strength and density.",
+    id: "chest-triceps",
+    title: "Push: Chest & Triceps",
+    description: "Heavy compound pushing movements focused on chest and triceps development.",
+    duration: "60 min",
+    intensity: "High",
+    exercises: [
+      { name: "Incline Barbell Bench Press", sets: "4", reps: "6-8" },
+      { name: "Flat Dumbbell Press", sets: "3", reps: "8-10" },
+      { name: "Cable Crossovers", sets: "3", reps: "12-15" },
+      { name: "Overhead Tricep Extension", sets: "4", reps: "10-12" },
+      { name: "Tricep Rope Pushdowns", sets: "3", reps: "12-15" },
+    ]
+  },
+  {
+    id: "back-biceps",
+    title: "Pull: Back & Biceps",
+    description: "Vertical and horizontal pulling to build back width and bicep peaks.",
     duration: "65 min",
     intensity: "High",
     exercises: [
-      { name: "Barbell Bench Press", sets: "4", reps: "5-8" },
-      { name: "Bent Over Rows", sets: "4", reps: "8-10" },
-      { name: "Overhead Press", sets: "3", reps: "8-10" },
-      { name: "Pull Ups", sets: "3", reps: "Failure" },
+      { name: "Weighted Pull Ups", sets: "4", reps: "6-8" },
+      { name: "Barbell Rows", sets: "4", reps: "8-10" },
+      { name: "Lat Pulldowns", sets: "3", reps: "10-12" },
+      { name: "Barbell Bicep Curls", sets: "4", reps: "8-10" },
+      { name: "Hammer Curls", sets: "3", reps: "12-15" },
     ]
   },
   {
-    id: "lower-power",
-    title: "Lower Body Power",
-    description: "Foundational leg strength focusing on the posterior chain.",
-    duration: "70 min",
+    id: "shoulders-legs",
+    title: "Shoulders & Legs",
+    description: "Lower body foundation combined with shoulder pressing.",
+    duration: "75 min",
     intensity: "Extreme",
     exercises: [
-      { name: "Back Squats", sets: "5", reps: "5" },
-      { name: "Romanian Deadlifts", sets: "4", reps: "10-12" },
-      { name: "Leg Press", sets: "3", reps: "12-15" },
-      { name: "Calf Raises", sets: "4", reps: "15-20" },
+      { name: "Barbell Back Squats", sets: "4", reps: "6-8" },
+      { name: "Romanian Deadlifts", sets: "4", reps: "8-10" },
+      { name: "Leg Extensions", sets: "3", reps: "12-15" },
+      { name: "Seated Dumbbell Press", sets: "4", reps: "8-10" },
+      { name: "Lateral Raises", sets: "4", reps: "15-20" },
     ]
   },
   {
-    id: "push-hypertrophy",
-    title: "Push Hypertrophy",
-    description: "High volume chest, shoulders, and triceps isolation.",
-    duration: "60 min",
-    intensity: "Medium-High",
+    id: "strict-arms",
+    title: "Strict Arms",
+    description: "Dedicated arm day for maximum isolation and pump.",
+    duration: "45 min",
+    intensity: "Medium",
     exercises: [
-      { name: "Incline DB Press", sets: "3", reps: "10-12" },
-      { name: "Lateral Raises", sets: "4", reps: "15-20" },
-      { name: "Cable Flyes", sets: "3", reps: "12-15" },
-      { name: "Tricep Pushdowns", sets: "3", reps: "12-15" },
+      { name: "Close Grip Bench Press", sets: "4", reps: "8-10" },
+      { name: "Preacher Curls", sets: "4", reps: "10-12" },
+      { name: "Skull Crushers", sets: "4", reps: "12-15" },
+      { name: "Incline Dumbbell Curls", sets: "4", reps: "10-12" },
     ]
   }
 ];
@@ -133,7 +149,7 @@ export default function Workouts() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {WORKOUT_PLANS.map((plan) => (
           <Card key={plan.id} className="glass-panel overflow-hidden border-white/5 hover:border-primary/30 transition-all group">
             <div className="p-6">
