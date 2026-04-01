@@ -1,10 +1,33 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ChevronRight, Flame, Target, Trophy, Clock, CheckCircle2, Circle, Quote } from "lucide-react";
+import { ChevronRight, Flame, Target, Trophy, Clock, CheckCircle2, Circle, Quote, Save } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
 import transformImg from "@/assets/transformation-placeholder.png";
 
 export default function Blueprint() {
+  const [metrics, setMetrics] = useState({
+    bodyweight: "174.5",
+    fat: "14",
+    bench: "225",
+    squat: "315"
+  });
+  
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [tempMetrics, setTempMetrics] = useState(metrics);
+
+  const handleUpdateMetrics = () => {
+    setMetrics(tempMetrics);
+    setIsUpdating(false);
+    toast({
+      title: "Metrics Updated",
+      description: "Your new baseline has been recorded.",
+    });
+  };
+
   return (
     <div className="p-6 md:p-10 max-w-6xl mx-auto animate-in fade-in duration-700">
       
@@ -60,14 +83,71 @@ export default function Blueprint() {
           <section className="glass-panel p-6 rounded-2xl">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-display font-bold">CURRENT METRICS</h2>
-              <Button variant="ghost" size="sm" className="text-primary h-8">Update</Button>
+              <Dialog open={isUpdating} onOpenChange={setIsUpdating}>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-primary h-8 hover:bg-primary/20">Update</Button>
+                </DialogTrigger>
+                <DialogContent className="glass-panel border-primary/20 bg-background/95 backdrop-blur-xl sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-display font-bold text-primary mb-2">
+                      LOG METRICS
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-xs uppercase tracking-widest text-muted-foreground">Bodyweight (lbs)</Label>
+                        <Input 
+                          type="number" 
+                          value={tempMetrics.bodyweight} 
+                          onChange={e => setTempMetrics({...tempMetrics, bodyweight: e.target.value})}
+                          className="bg-black/50 border-white/10 font-mono text-lg"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs uppercase tracking-widest text-muted-foreground">Est. Fat (%)</Label>
+                        <Input 
+                          type="number" 
+                          value={tempMetrics.fat} 
+                          onChange={e => setTempMetrics({...tempMetrics, fat: e.target.value})}
+                          className="bg-black/50 border-white/10 font-mono text-lg"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs uppercase tracking-widest text-muted-foreground">Bench PR (lbs)</Label>
+                        <Input 
+                          type="number" 
+                          value={tempMetrics.bench} 
+                          onChange={e => setTempMetrics({...tempMetrics, bench: e.target.value})}
+                          className="bg-black/50 border-white/10 font-mono text-lg"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs uppercase tracking-widest text-muted-foreground">Squat PR (lbs)</Label>
+                        <Input 
+                          type="number" 
+                          value={tempMetrics.squat} 
+                          onChange={e => setTempMetrics({...tempMetrics, squat: e.target.value})}
+                          className="bg-black/50 border-white/10 font-mono text-lg"
+                        />
+                      </div>
+                    </div>
+                    <Button 
+                      onClick={handleUpdateMetrics}
+                      className="w-full mt-4 font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90"
+                    >
+                      <Save className="w-4 h-4 mr-2" /> Save Progress
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <MetricBox label="BODYWEIGHT" value="174.5" unit="lbs" trend="+1.2" />
-              <MetricBox label="EST. FAT" value="14" unit="%" trend="-0.5" positive={true} />
-              <MetricBox label="BENCH PR" value="225" unit="lbs" trend="+5.0" positive={true} />
-              <MetricBox label="SQUAT PR" value="315" unit="lbs" trend="+10.0" positive={true} />
+              <MetricBox label="BODYWEIGHT" value={metrics.bodyweight} unit="lbs" trend="+1.2" />
+              <MetricBox label="EST. FAT" value={metrics.fat} unit="%" trend="-0.5" positive={true} />
+              <MetricBox label="BENCH PR" value={metrics.bench} unit="lbs" trend="+5.0" positive={true} />
+              <MetricBox label="SQUAT PR" value={metrics.squat} unit="lbs" trend="+10.0" positive={true} />
             </div>
           </section>
 
