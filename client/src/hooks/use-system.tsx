@@ -41,6 +41,7 @@ export function useSystem() {
     let newStreak = state.streak;
     let newScore = state.score;
     let newCompleted = state.completedDays;
+    let status = "ACTIVE";
 
     if (train && nutrition && recovery) {
       newStreak += 1;
@@ -48,7 +49,7 @@ export function useSystem() {
       newCompleted += 1;
     } else {
       newStreak = 0;
-      newScore += 0.5; // partial score
+      status = "FAILING";
     }
 
     setState(prev => ({
@@ -59,6 +60,8 @@ export function useSystem() {
       completedDays: newCompleted,
       lastCompletedDate: today
     }));
+    
+    return { success: train && nutrition && recovery };
   };
 
   const setHasSeenPhase2Celebration = () => {

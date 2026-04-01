@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Dumbbell, Utensils, Bed, Target, Zap, Clock, CalendarDays, Crosshair, Trophy } from "lucide-react";
 import { useSystem } from "@/hooks/use-system";
+import { toast } from "@/hooks/use-toast";
 
 export default function Home() {
   const { state, submitDay, setHasSeenPhase2Celebration } = useSystem();
@@ -54,12 +55,26 @@ export default function Home() {
   };
 
   const handleCheckinSubmit = () => {
-    submitDay(checks.train, checks.nutrition, checks.recovery);
+    const result = submitDay(checks.train, checks.nutrition, checks.recovery);
     setShowCheckin(false);
+    
+    if (result.success) {
+      toast({
+        title: "SYSTEM MAINTAINED",
+        description: "STAY IN THE SYSTEM.",
+        variant: "default",
+      });
+    } else {
+      toast({
+        title: "SYSTEM BROKEN",
+        description: "YOU BROKE THE SYSTEM. ZERO TOLERANCE.",
+        variant: "destructive",
+      });
+    }
   };
 
   const isTodayCompleted = state.lastCompletedDate === new Date().toISOString().split('T')[0];
-  const systemScore = state.totalDays > 0 ? Math.round((state.completedDays / state.totalDays) * 100) : 0;
+  const allChecked = checks.train && checks.nutrition && checks.recovery;
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
@@ -67,11 +82,11 @@ export default function Home() {
       {/* Top Bar Stats */}
       <div className="w-full max-w-md flex justify-between items-center mb-12 border-b border-primary/20 pb-4">
         <div className="flex flex-col">
-          <span className="text-muted-foreground uppercase tracking-widest text-[10px]">System Score</span>
-          <span className="text-xl font-bold text-primary">{systemScore}%</span>
+          <span className="text-muted-foreground uppercase tracking-widest text-[10px]">CONSISTENCY</span>
+          <span className="text-xl font-bold text-primary">{state.totalDays > 0 ? Math.round((state.completedDays / state.totalDays) * 100) : 0}%</span>
         </div>
         <div className="flex flex-col text-right">
-          <span className="text-muted-foreground uppercase tracking-widest text-[10px]">Active Streak</span>
+          <span className="text-muted-foreground uppercase tracking-widest text-[10px]">STREAK</span>
           <span className="text-xl font-bold text-primary flex items-center justify-end gap-1">
             <Zap className="w-4 h-4 fill-primary" /> {state.streak}
           </span>
@@ -86,6 +101,7 @@ export default function Home() {
             Day Type: {dayType}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-tighter text-glow">THE SYSTEM</h1>
+          <div className="text-primary mt-2 text-sm uppercase tracking-widest font-bold">SYSTEM STATUS: {state.streak > 0 ? "ACTIVE" : "FAILING"}</div>
         </div>
 
         {/* Protocol Sections */}
@@ -93,14 +109,14 @@ export default function Home() {
           
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-              <Dumbbell className="w-3 h-3" /> Train
+              <Dumbbell className="w-3 h-3" /> ACTION REQUIRED
             </div>
             <div className="font-bold text-lg">{getWorkout()}</div>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-              <Utensils className="w-3 h-3" /> Nutrition
+              <Utensils className="w-3 h-3" /> FOLLOW PROTOCOL
             </div>
             <ul className="text-muted-foreground space-y-1">
               <li>- Protein priority</li>
@@ -111,7 +127,7 @@ export default function Home() {
 
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-              <Bed className="w-3 h-3" /> Recovery
+              <Bed className="w-3 h-3" /> COMPLETE REQUIREMENTS
             </div>
             <ul className="text-muted-foreground space-y-1">
               <li>- Walk 20 minutes</li>
@@ -121,65 +137,112 @@ export default function Home() {
 
           <div className="bg-primary/5 border border-primary/20 p-4 text-center mt-6">
             <div className="text-[10px] text-primary uppercase tracking-widest mb-1 flex justify-center items-center gap-1">
-              <Target className="w-3 h-3" /> Focus
+              <Target className="w-3 h-3" /> NO NEGOTIATION
             </div>
             <div className="font-bold text-xl uppercase tracking-widest text-glow">{focusLine}</div>
           </div>
         </Card>
 
         {isTodayCompleted ? (
-          <div className="w-full py-4 text-center border border-white/10 bg-white/5 text-muted-foreground uppercase tracking-widest text-xs">
-            Day Locked. See you tomorrow.
+          <div className="w-full py-4 text-center border border-primary bg-primary/10 text-primary font-bold uppercase tracking-widest text-xs">
+            SYSTEM MAINTAINED
           </div>
         ) : (
-          <Button 
-            onClick={() => setShowCheckin(true)}
-            className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-widest text-sm"
-          >
-            Complete Day
-          </Button>
+          <div className="space-y-2">
+            <div className="text-center text-destructive uppercase tracking-widest text-xs font-bold animate-pulse">
+              DAY INCOMPLETE - EXECUTION REQUIRED
+            </div>
+            <Button 
+              onClick={() => setShowCheckin(true)}
+              className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-widest text-sm"
+            >
+              EXECUTE DAY
+            </Button>
+          </div>
         )}
 
       </main>
 
       {/* Check-in Modal */}
       <Dialog open={showCheckin} onOpenChange={setShowCheckin}>
-        <DialogContent className="bg-black border-primary/20 rounded-none sm:max-w-md">
+        <DialogContent className="bg-black border-primary/20 rounded-none sm:max-w-md hide-close">
           <DialogHeader>
             <DialogTitle className="font-mono uppercase tracking-widest text-xl text-center border-b border-white/10 pb-4 mb-4 text-glow">
-              DID YOU EXECUTE?
+              DID YOU EXECUTE
             </DialogTitle>
           </DialogHeader>
           
           <div className="space-y-6 py-4">
-            <div className="flex items-center space-x-3 bg-white/5 p-4 border border-white/5">
-              <Checkbox 
-                id="check-train" 
-                checked={checks.train} 
-                onCheckedChange={(c) => setChecks(p => ({...p, train: c as boolean}))} 
-                className="w-6 h-6 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-black rounded-none"
-              />
-              <Label htmlFor="check-train" className="font-mono text-base uppercase cursor-pointer">Training Protocol</Label>
+            <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
+              <Label className="font-mono text-base uppercase">TRAIN</Label>
+              <div className="flex gap-4">
+                <Label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="radio" 
+                    name="train" 
+                    checked={checks.train === true} 
+                    onChange={() => setChecks(p => ({...p, train: true}))} 
+                    className="accent-primary w-4 h-4"
+                  /> YES
+                </Label>
+                <Label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="radio" 
+                    name="train" 
+                    checked={checks.train === false} 
+                    onChange={() => setChecks(p => ({...p, train: false}))} 
+                    className="accent-primary w-4 h-4"
+                  /> NO
+                </Label>
+              </div>
             </div>
             
-            <div className="flex items-center space-x-3 bg-white/5 p-4 border border-white/5">
-              <Checkbox 
-                id="check-nut" 
-                checked={checks.nutrition} 
-                onCheckedChange={(c) => setChecks(p => ({...p, nutrition: c as boolean}))} 
-                className="w-6 h-6 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-black rounded-none"
-              />
-              <Label htmlFor="check-nut" className="font-mono text-base uppercase cursor-pointer">Nutrition Ruleset</Label>
+            <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
+              <Label className="font-mono text-base uppercase">NUTRITION</Label>
+              <div className="flex gap-4">
+                <Label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="radio" 
+                    name="nutrition" 
+                    checked={checks.nutrition === true} 
+                    onChange={() => setChecks(p => ({...p, nutrition: true}))} 
+                    className="accent-primary w-4 h-4"
+                  /> YES
+                </Label>
+                <Label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="radio" 
+                    name="nutrition" 
+                    checked={checks.nutrition === false} 
+                    onChange={() => setChecks(p => ({...p, nutrition: false}))} 
+                    className="accent-primary w-4 h-4"
+                  /> NO
+                </Label>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-3 bg-white/5 p-4 border border-white/5">
-              <Checkbox 
-                id="check-rec" 
-                checked={checks.recovery} 
-                onCheckedChange={(c) => setChecks(p => ({...p, recovery: c as boolean}))} 
-                className="w-6 h-6 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-black rounded-none"
-              />
-              <Label htmlFor="check-rec" className="font-mono text-base uppercase cursor-pointer">Recovery Baseline</Label>
+            <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
+              <Label className="font-mono text-base uppercase">RECOVERY</Label>
+              <div className="flex gap-4">
+                <Label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="radio" 
+                    name="recovery" 
+                    checked={checks.recovery === true} 
+                    onChange={() => setChecks(p => ({...p, recovery: true}))} 
+                    className="accent-primary w-4 h-4"
+                  /> YES
+                </Label>
+                <Label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="radio" 
+                    name="recovery" 
+                    checked={checks.recovery === false} 
+                    onChange={() => setChecks(p => ({...p, recovery: false}))} 
+                    className="accent-primary w-4 h-4"
+                  /> NO
+                </Label>
+              </div>
             </div>
           </div>
 

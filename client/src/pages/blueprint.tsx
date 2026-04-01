@@ -81,10 +81,20 @@ export default function Blueprint() {
           </div>
           <h1 className="text-4xl font-bold text-glow">COMMAND CENTER</h1>
         </div>
-        <div className="flex items-center gap-4 bg-secondary/50 px-4 py-2 rounded-lg border border-white/5">
+        <div className="flex items-center gap-4 bg-secondary/50 px-4 py-2 rounded-none border border-white/5">
+          <div className="flex items-center gap-2">
+            <span className="font-display font-bold uppercase">SYSTEM STATUS: {state.streak > 0 ? 'ACTIVE' : 'FAILING'}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 bg-secondary/50 px-4 py-2 rounded-none border border-white/5">
           <div className="flex items-center gap-2">
             <Flame className={`w-5 h-5 ${state.streak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
-            <span className="font-display font-bold">{state.streak} DAY STREAK</span>
+            <span className="font-display font-bold">STREAK: {state.streak} DAYS</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 bg-secondary/50 px-4 py-2 rounded-none border border-white/5">
+          <div className="flex items-center gap-2">
+            <span className="font-display font-bold uppercase">CONSISTENCY: {state.totalDays > 0 ? Math.round((state.completedDays / state.totalDays) * 100) : 0}%</span>
           </div>
         </div>
       </header>
