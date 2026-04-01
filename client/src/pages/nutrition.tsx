@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity, CheckCircle2, ChevronRight } from "lucide-react";
 import nutritionBg from "@/assets/nutrition-bg.png";
 
@@ -46,12 +48,19 @@ const MEALS = [
 
 export default function Nutrition() {
   const [loggedMeals, setLoggedMeals] = useState<string[]>([]);
+  const [customMeals, setCustomMeals] = useState<any[]>([]);
   const [currentMacros, setCurrentMacros] = useState({ p: 0, c: 0, f: 0, kcal: 0 });
+  const [showCustomModal, setShowCustomModal] = useState(false);
+  const [newMeal, setNewMeal] = useState({
+    name: "",
+    p: "", c: "", f: "", kcal: ""
+  });
 
   // Recalculate macros whenever logged meals change
   useEffect(() => {
+    const allMeals = [...MEALS, ...customMeals];
     const newMacros = loggedMeals.reduce((acc, mealId) => {
-      const meal = MEALS.find(m => m.id === mealId);
+      const meal = allMeals.find(m => m.id === mealId);
       if (meal) {
         acc.p += meal.macros.p;
         acc.c += meal.macros.c;
@@ -62,7 +71,7 @@ export default function Nutrition() {
     }, { p: 0, c: 0, f: 0, kcal: 0 });
     
     setCurrentMacros(newMacros);
-  }, [loggedMeals]);
+  }, [loggedMeals, customMeals]);
 
   const toggleMeal = (mealId: string) => {
     setLoggedMeals(prev => 
@@ -70,6 +79,27 @@ export default function Nutrition() {
         ? prev.filter(id => id !== mealId)
         : [...prev, mealId]
     );
+  };
+
+  const handleAddCustomMeal = () => {
+    if (!newMeal.name) return;
+    const meal = {
+      id: `custom-${Date.now()}`,
+      time: "Custom Meal",
+      name: newMeal.name,
+      desc: "Manually entered meal.",
+      macros: {
+        p: parseInt(newMeal.p) || 0,
+        c: parseInt(newMeal.c) || 0,
+        f: parseInt(newMeal.f) || 0,
+        kcal: parseInt(newMeal.kcal) || 0
+      }
+    };
+    
+    setCustomMeals([...customMeals, meal]);
+    setLoggedMeals([...loggedMeals, meal.id]);
+    setShowCustomModal(false);
+    setNewMeal({ name: "", p: "", c: "", f: "", kcal: "" });
   };
 
   return (
@@ -94,8 +124,8 @@ export default function Nutrition() {
                 QUICK LOG MEAL
               </DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              {MEALS.map((meal) => (
+            <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto">
+              {[...MEALS, ...customMeals].map((meal) => (
                 <div 
                   key={`quick-${meal.id}`}
                   onClick={() => toggleMeal(meal.id)}
@@ -153,13 +183,18 @@ export default function Nutrition() {
           </section>
 
           <section className="glass-panel p-6 rounded-2xl">
-            <h2 className="text-xl font-display font-bold mb-6 flex items-center gap-2">
-              <Apple className="w-5 h-5 text-primary" />
-              APPROVED MEAL TEMPLATES
-            </h2>
-            <p className="text-sm text-muted-foreground mb-6">Click to log your meals. Rotate these to hit your macros effortlessly. Precision beats variety.</p>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-display font-bold flex items-center gap-2">
+                <Apple className="w-5 h-5 text-primary" />
+                MEALS
+              </h2>
+              <Button size="sm" variant="secondary" className="border-white/10" onClick={() => setShowCustomModal(true)}>
+                <Plus className="w-4 h-4 mr-2" /> Custom
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground mb-6">Click to log your meals. Rotate these templates or add your own.</p>
             <div className="grid gap-4">
-              {MEALS.map((meal) => (
+              {[...MEALS, ...customMeals].map((meal) => (
                 <MealCard 
                   key={meal.id}
                   meal={meal}
@@ -231,6 +266,72 @@ export default function Nutrition() {
         </div>
 
       </div>
+
+      <Dialog open={showCustomModal} onOpenChange={setShowCustomModal}>
+        <DialogContent className="glass-panel border-primary/20 bg-background/95 backdrop-blur-xl sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-display font-bold text-primary mb-2">
+              ADD CUSTOM MEAL
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label className="text-xs uppercase tracking-widest text-muted-foreground">Meal Name</Label>
+              <Input 
+                value={newMeal.name} 
+                onChange={e => setNewMeal({...newMeal, name: e.target.value})}
+                placeholder="e.g., Protein Shake"
+                className="bg-black/50 border-white/10 font-mono"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Calories</Label>
+                <Input 
+                  type="number" 
+                  value={newMeal.kcal} 
+                  onChange={e => setNewMeal({...newMeal, kcal: e.target.value})}
+                  className="bg-black/50 border-white/10 font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Protein (g)</Label>
+                <Input 
+                  type="number" 
+                  value={newMeal.p} 
+                  onChange={e => setNewMeal({...newMeal, p: e.target.value})}
+                  className="bg-black/50 border-white/10 font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Carbs (g)</Label>
+                <Input 
+                  type="number" 
+                  value={newMeal.c} 
+                  onChange={e => setNewMeal({...newMeal, c: e.target.value})}
+                  className="bg-black/50 border-white/10 font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Fats (g)</Label>
+                <Input 
+                  type="number" 
+                  value={newMeal.f} 
+                  onChange={e => setNewMeal({...newMeal, f: e.target.value})}
+                  className="bg-black/50 border-white/10 font-mono"
+                />
+              </div>
+            </div>
+            <Button 
+              onClick={handleAddCustomMeal}
+              className="w-full mt-4 font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              Add to Log
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
