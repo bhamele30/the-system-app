@@ -8,8 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import transformImg from "@/assets/transformation-placeholder.png";
+import { useSystem } from "@/hooks/use-system";
 
 export default function Blueprint() {
+  const { state } = useSystem();
+  const currentWeek = Math.floor(state.totalDays / 7) + 1;
+  const currentDay = (state.totalDays % 7) + 1;
+  const phaseCompletion = Math.min(100, Math.round((state.completedDays / 84) * 100)); // 12 weeks = 84 days
+
   const [metrics, setMetrics] = useState({
     bodyweight: "174.5",
     fat: "14",
@@ -56,8 +62,8 @@ export default function Blueprint() {
         </div>
         <div className="flex items-center gap-4 bg-secondary/50 px-4 py-2 rounded-lg border border-white/5">
           <div className="flex items-center gap-2">
-            <Flame className="w-5 h-5 text-orange-500" />
-            <span className="font-display font-bold">12 DAY STREAK</span>
+            <Flame className={`w-5 h-5 ${state.streak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
+            <span className="font-display font-bold">{state.streak} DAY STREAK</span>
           </div>
         </div>
       </header>
@@ -75,7 +81,7 @@ export default function Blueprint() {
               <h2 className="text-xl font-display font-bold flex items-center gap-2">
                 <Target className="w-5 h-5 text-primary" /> TODAY'S PROTOCOL
               </h2>
-              <span className="text-sm text-muted-foreground">Week 3 / Day 2</span>
+              <span className="text-sm text-muted-foreground">Week {currentWeek} / Day {currentDay}</span>
             </div>
 
             <Link href="/workouts">
@@ -185,9 +191,9 @@ export default function Blueprint() {
             <h2 className="text-xl font-display font-bold mb-4">PHASE PROGRESS</h2>
             <div className="mb-2 flex justify-between text-sm">
               <span className="text-muted-foreground">Completion</span>
-              <span className="font-bold text-primary">25%</span>
+              <span className="font-bold text-primary">{phaseCompletion}%</span>
             </div>
-            <Progress value={25} className="h-2 mb-6" />
+            <Progress value={phaseCompletion} className="h-2 mb-6" />
             
             <div className="space-y-4">
               <div className="flex gap-4 items-start">
