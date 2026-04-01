@@ -60,6 +60,18 @@ const WORKOUT_PLANS = [
       { name: "Skull Crushers", sets: "4", reps: "12-15" },
       { name: "Incline Dumbbell Curls", sets: "4", reps: "10-12" },
     ]
+  },
+  {
+    id: "active-recovery",
+    title: "Active Recovery",
+    description: "Low-intensity movement to promote blood flow and tissue repair.",
+    duration: "45 min",
+    intensity: "Low",
+    exercises: [
+      { name: "Zone 2 Cardio (Bike/Walk)", sets: "1", reps: "30 mins" },
+      { name: "Dynamic Stretching", sets: "1", reps: "10 mins" },
+      { name: "Foam Rolling", sets: "1", reps: "5 mins" }
+    ]
   }
 ];
 

@@ -10,7 +10,7 @@ import { useSystem } from "@/hooks/use-system";
 
 export default function Home() {
   const { state, submitDay } = useSystem();
-  const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "REST">("PUSH");
+  const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "REST">("PUSH");
   const [focusLine, setFocusLine] = useState("");
   const [showCheckin, setShowCheckin] = useState(false);
   const [checks, setChecks] = useState({ train: false, nutrition: false, recovery: false });
@@ -19,7 +19,7 @@ export default function Home() {
   useEffect(() => {
     // Simple cycle based on day of year for demo purposes
     const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
-    const cycle = ["PUSH", "PULL", "LEGS", "REST"][dayOfYear % 4] as any;
+    const cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][dayOfYear % 5] as any;
     setDayType(cycle);
 
     const focusLines = ["Execute.", "No negotiation.", "Stay consistent.", "Repeat.", "No thinking."];
@@ -30,7 +30,8 @@ export default function Home() {
     if (dayType === "PUSH") return "Chest & Triceps";
     if (dayType === "PULL") return "Back & Biceps";
     if (dayType === "LEGS") return "Shoulders & Legs";
-    return "Strict Arms";
+    if (dayType === "ARMS") return "Strict Arms";
+    return "Active Recovery";
   };
 
   const handleCheckinSubmit = () => {
