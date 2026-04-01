@@ -3,7 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Dumbbell, LayoutDashboard, Target, Apple, HeartPulse } from "lucide-react";
+import { Dumbbell, LayoutDashboard, Target, Apple, HeartPulse, ShieldCheck } from "lucide-react";
 import NotFound from "@/pages/not-found";
 
 import Home from "@/pages/home";
@@ -16,18 +16,18 @@ import Recovery from "@/pages/recovery";
 function Navigation() {
   const [location] = useLocation();
 
-  if (location === "/" || location === "/onboarding") return null;
+  if (location === "/onboarding") return null;
 
   const navItems = [
+    { href: "/", icon: ShieldCheck, label: "System" },
     { href: "/blueprint", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/workouts", icon: Dumbbell, label: "Workouts" },
     { href: "/nutrition", icon: Apple, label: "Fuel" },
     { href: "/recovery", icon: HeartPulse, label: "Recovery" },
-    { href: "/progress", icon: Target, label: "Progress" },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 glass-panel md:bottom-auto md:top-0 md:h-screen md:w-20 md:border-r md:border-t-0 md:flex md:flex-col md:items-center md:py-8">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 glass-panel md:bottom-auto md:top-0 md:h-screen md:w-20 md:border-r md:border-t-0 md:flex md:flex-col md:items-center md:py-8 bg-black/90">
       <div className="flex md:flex-col items-center justify-around md:justify-start md:gap-8 h-16 md:h-full w-full">
         <div className="hidden md:flex flex-col items-center gap-1 mb-8">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/50 text-primary font-display font-bold">
