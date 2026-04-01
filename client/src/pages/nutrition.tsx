@@ -1,9 +1,77 @@
+import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity, CheckCircle2, ChevronRight } from "lucide-react";
 import nutritionBg from "@/assets/nutrition-bg.png";
 
+// Daily Targets
+const TARGETS = {
+  kcal: 2850,
+  protein: 180,
+  carbs: 300,
+  fats: 80
+};
+
+const MEALS = [
+  {
+    id: "m1",
+    time: "Meal 1: Breakfast",
+    name: "Anabolic Oats",
+    macros: { p: 45, c: 60, f: 15, kcal: 555 },
+    desc: "80g Oats, 1.5 scoops whey isolate, 50g mixed berries, 15g natural peanut butter."
+  },
+  {
+    id: "m2",
+    time: "Meal 2: Pre-Workout",
+    name: "Power Rice & Chicken",
+    macros: { p: 40, c: 70, f: 5, kcal: 485 },
+    desc: "150g Chicken breast, 200g white rice, light soy sauce. Fast digesting carbs."
+  },
+  {
+    id: "m3",
+    time: "Meal 3: Post-Workout",
+    name: "Recovery Shake & Fast Carbs",
+    macros: { p: 50, c: 60, f: 2, kcal: 458 },
+    desc: "2 scoops whey isolate, 40g rice krispies or cream of rice, 1 banana."
+  },
+  {
+    id: "m4",
+    time: "Meal 4: Dinner",
+    name: "Steak & Potatoes",
+    macros: { p: 55, c: 60, f: 20, kcal: 640 },
+    desc: "200g Lean sirloin steak, 250g sweet potato, 100g asparagus."
+  }
+];
+
 export default function Nutrition() {
+  const [loggedMeals, setLoggedMeals] = useState<string[]>([]);
+  const [currentMacros, setCurrentMacros] = useState({ p: 0, c: 0, f: 0, kcal: 0 });
+
+  // Recalculate macros whenever logged meals change
+  useEffect(() => {
+    const newMacros = loggedMeals.reduce((acc, mealId) => {
+      const meal = MEALS.find(m => m.id === mealId);
+      if (meal) {
+        acc.p += meal.macros.p;
+        acc.c += meal.macros.c;
+        acc.f += meal.macros.f;
+        acc.kcal += meal.macros.kcal;
+      }
+      return acc;
+    }, { p: 0, c: 0, f: 0, kcal: 0 });
+    
+    setCurrentMacros(newMacros);
+  }, [loggedMeals]);
+
+  const toggleMeal = (mealId: string) => {
+    setLoggedMeals(prev => 
+      prev.includes(mealId) 
+        ? prev.filter(id => id !== mealId)
+        : [...prev, mealId]
+    );
+  };
+
   return (
     <div className="p-6 md:p-10 max-w-6xl mx-auto animate-in fade-in duration-700 relative">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 relative z-10">
@@ -14,9 +82,41 @@ export default function Nutrition() {
           </h1>
           <p className="text-muted-foreground mt-2">Phase 1: Maintenance / Slight Surplus. Fuel the machine, don't feed the fat.</p>
         </div>
-        <Button className="font-display uppercase tracking-wider text-xs bg-primary text-primary-foreground hover:bg-primary/90">
-          <Plus className="w-4 h-4 mr-2" /> Log Meal
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="font-display uppercase tracking-wider text-xs bg-primary text-primary-foreground hover:bg-primary/90">
+              <Plus className="w-4 h-4 mr-2" /> Quick Log
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="glass-panel border-primary/20 bg-background/95 backdrop-blur-xl sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-display font-bold text-primary mb-2">
+                QUICK LOG MEAL
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              {MEALS.map((meal) => (
+                <div 
+                  key={`quick-${meal.id}`}
+                  onClick={() => toggleMeal(meal.id)}
+                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                    loggedMeals.includes(meal.id) 
+                      ? 'bg-primary/10 border-primary text-primary' 
+                      : 'bg-secondary/30 border-white/5 hover:border-primary/50'
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold">{meal.name}</span>
+                    {loggedMeals.includes(meal.id) ? <CheckCircle2 className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                  </div>
+                  <div className="text-xs mt-1 opacity-70">
+                    {meal.macros.kcal} kcal | {meal.macros.p}g P
+                  </div>
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
@@ -34,15 +134,20 @@ export default function Nutrition() {
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-xl font-display font-bold">DAILY TARGETS</h2>
                 <div className="text-right">
-                  <div className="text-3xl font-bold text-primary font-display">2,850</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-widest">Kcal Goal</div>
+                  <div className="flex items-baseline justify-end gap-1">
+                    <span className={`text-3xl font-bold font-display ${currentMacros.kcal >= TARGETS.kcal ? 'text-green-500 text-glow' : 'text-primary'}`}>
+                      {currentMacros.kcal}
+                    </span>
+                    <span className="text-xl text-muted-foreground font-display">/ {TARGETS.kcal}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Kcal Logged</div>
                 </div>
               </div>
 
               <div className="space-y-6">
-                <MacroBar icon={Beef} label="PROTEIN" current={120} target={180} unit="g" color="bg-primary" description="Muscle building blocks. Non-negotiable." />
-                <MacroBar icon={Cookie} label="CARBS" current={150} target={300} unit="g" color="bg-blue-400" description="Primary energy source. Cycle around workouts." />
-                <MacroBar icon={Droplets} label="FATS" current={45} target={80} unit="g" color="bg-cyan-600" description="Hormone regulation. Keep moderate." />
+                <MacroBar icon={Beef} label="PROTEIN" current={currentMacros.p} target={TARGETS.protein} unit="g" color="bg-primary" description="Muscle building blocks. Non-negotiable." />
+                <MacroBar icon={Cookie} label="CARBS" current={currentMacros.c} target={TARGETS.carbs} unit="g" color="bg-blue-400" description="Primary energy source. Cycle around workouts." />
+                <MacroBar icon={Droplets} label="FATS" current={currentMacros.f} target={TARGETS.fats} unit="g" color="bg-cyan-600" description="Hormone regulation. Keep moderate." />
               </div>
             </div>
           </section>
@@ -52,32 +157,16 @@ export default function Nutrition() {
               <Apple className="w-5 h-5 text-primary" />
               APPROVED MEAL TEMPLATES
             </h2>
-            <p className="text-sm text-muted-foreground mb-6">Rotate these meals to hit your macros effortlessly. Precision beats variety.</p>
+            <p className="text-sm text-muted-foreground mb-6">Click to log your meals. Rotate these to hit your macros effortlessly. Precision beats variety.</p>
             <div className="grid gap-4">
-              <MealCard 
-                time="Meal 1: Breakfast" 
-                name="Anabolic Oats" 
-                macros="P: 45g | C: 60g | F: 15g | 555 kcal"
-                desc="80g Oats, 1.5 scoops whey isolate, 50g mixed berries, 15g natural peanut butter."
-              />
-              <MealCard 
-                time="Meal 2: Pre-Workout" 
-                name="Power Rice & Chicken" 
-                macros="P: 40g | C: 70g | F: 5g | 485 kcal"
-                desc="150g Chicken breast, 200g white rice, light soy sauce. Fast digesting carbs."
-              />
-              <MealCard 
-                time="Meal 3: Post-Workout" 
-                name="Recovery Shake & Fast Carbs" 
-                macros="P: 50g | C: 60g | F: 2g | 458 kcal"
-                desc="2 scoops whey isolate, 40g rice krispies or cream of rice, 1 banana."
-              />
-              <MealCard 
-                time="Meal 4: Dinner" 
-                name="Steak & Potatoes" 
-                macros="P: 55g | C: 60g | F: 20g | 640 kcal"
-                desc="200g Lean sirloin steak, 250g sweet potato, 100g asparagus."
-              />
+              {MEALS.map((meal) => (
+                <MealCard 
+                  key={meal.id}
+                  meal={meal}
+                  isLogged={loggedMeals.includes(meal.id)}
+                  onToggle={() => toggleMeal(meal.id)}
+                />
+              ))}
             </div>
           </section>
         </div>
@@ -172,15 +261,37 @@ function MacroBar({ icon: Icon, label, current, target, unit, color, description
   );
 }
 
-function MealCard({ time, name, macros, desc }: { time: string, name: string, macros: string, desc: string }) {
+function MealCard({ meal, isLogged, onToggle }: { meal: any, isLogged: boolean, onToggle: () => void }) {
   return (
-    <div className="p-5 rounded-xl bg-secondary/30 border border-white/5 hover:border-primary/30 transition-colors">
+    <div 
+      onClick={onToggle}
+      className={`p-5 rounded-xl border cursor-pointer transition-all duration-300 relative overflow-hidden group ${
+        isLogged 
+          ? 'bg-primary/5 border-primary/50 shadow-[0_0_15px_hsl(var(--primary)/0.1)]' 
+          : 'bg-secondary/30 border-white/5 hover:border-primary/30'
+      }`}
+    >
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
-        <span className="text-xs text-primary font-display tracking-widest uppercase">{time}</span>
-        <span className="text-xs font-mono text-muted-foreground bg-black/20 px-2 py-1 rounded">{macros}</span>
+        <span className="text-xs text-primary font-display tracking-widest uppercase flex items-center gap-2">
+          {meal.time}
+        </span>
+        <span className="text-xs font-mono text-muted-foreground bg-black/40 px-2 py-1 rounded border border-white/5">
+          P: {meal.macros.p}g | C: {meal.macros.c}g | F: {meal.macros.f}g | {meal.macros.kcal} kcal
+        </span>
       </div>
-      <h4 className="font-bold text-lg mb-2">{name}</h4>
-      <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+      
+      <div className="flex justify-between items-center mb-2">
+        <h4 className={`font-bold text-lg transition-colors ${isLogged ? 'text-primary' : 'group-hover:text-primary/80'}`}>
+          {meal.name}
+        </h4>
+        <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${
+          isLogged ? 'bg-primary border-primary text-black' : 'border-white/20 text-transparent'
+        }`}>
+          <CheckCircle2 className="w-4 h-4" />
+        </div>
+      </div>
+      
+      <p className="text-sm text-muted-foreground leading-relaxed pr-8">{meal.desc}</p>
     </div>
   );
 }
