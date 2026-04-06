@@ -149,8 +149,9 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-2">
-            <div className="text-center text-destructive uppercase tracking-widest text-xs font-bold animate-pulse">
-              DAY INCOMPLETE - EXECUTION REQUIRED
+            <div className="text-center text-destructive uppercase tracking-widest text-xs font-bold animate-pulse flex flex-col gap-1">
+              <span>DAY INCOMPLETE</span>
+              <span>EXECUTION REQUIRED</span>
             </div>
             <Button 
               onClick={() => setShowCheckin(true)}
