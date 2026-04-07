@@ -180,98 +180,120 @@ export default function Home() {
 
       {/* Check-in Modal */}
       <Dialog open={showCheckin} onOpenChange={setShowCheckin}>
-        <DialogContent className="bg-black border-primary/20 rounded-none sm:max-w-md hide-close">
+        <DialogContent className="bg-black border-primary/20 rounded-none sm:max-w-md hide-close max-h-[92vh] flex flex-col overflow-hidden">
           <DialogHeader>
             <DialogTitle className="font-mono uppercase tracking-widest text-xl text-center border-b border-white/10 pb-4 mb-4 text-glow">
               DID YOU EXECUTE
             </DialogTitle>
           </DialogHeader>
           
-          <div className="space-y-6 py-4">
-            {error && (
-              <div className="bg-destructive/10 border border-destructive text-destructive p-3 text-xs font-bold text-center animate-pulse uppercase tracking-widest">
-                {error}
+          <div className="flex-1 overflow-y-auto pr-1">
+            <div className="space-y-4 py-2">
+              {error && (
+                <div className="bg-destructive/10 border border-destructive text-destructive p-3 text-xs font-bold text-center animate-pulse uppercase tracking-widest">
+                  {error}
+                </div>
+              )}
+              <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
+                <div className="font-mono text-base uppercase font-medium">TRAIN</div>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="train" 
+                      checked={checks.train === true} 
+                      onChange={() => {
+                        setChecks(p => ({...p, train: true}));
+                        setError("");
+                      }} 
+                      className="accent-primary w-4 h-4"
+                    /> YES
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="train" 
+                      checked={checks.train === false} 
+                      onChange={() => {
+                        setChecks(p => ({...p, train: false}));
+                        setError("");
+                      }} 
+                      className="accent-primary w-4 h-4"
+                    /> NO
+                  </label>
+                </div>
               </div>
-            )}
-            <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
-              <div className="font-mono text-base uppercase font-medium">TRAIN</div>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer text-sm">
-                  <input 
-                    type="radio" 
-                    name="train" 
-                    checked={checks.train === true} 
-                    onChange={() => setChecks(p => ({...p, train: true}))} 
-                    className="accent-primary w-4 h-4"
-                  /> YES
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-sm">
-                  <input 
-                    type="radio" 
-                    name="train" 
-                    checked={checks.train === false} 
-                    onChange={() => setChecks(p => ({...p, train: false}))} 
-                    className="accent-primary w-4 h-4"
-                  /> NO
-                </label>
+              
+              <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
+                <div className="font-mono text-base uppercase font-medium">NUTRITION</div>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="nutrition" 
+                      checked={checks.nutrition === true} 
+                      onChange={() => {
+                        setChecks(p => ({...p, nutrition: true}));
+                        setError("");
+                      }} 
+                      className="accent-primary w-4 h-4"
+                    /> YES
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="nutrition" 
+                      checked={checks.nutrition === false} 
+                      onChange={() => {
+                        setChecks(p => ({...p, nutrition: false}));
+                        setError("");
+                      }} 
+                      className="accent-primary w-4 h-4"
+                    /> NO
+                  </label>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
-              <div className="font-mono text-base uppercase font-medium">NUTRITION</div>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer text-sm">
-                  <input 
-                    type="radio" 
-                    name="nutrition" 
-                    checked={checks.nutrition === true} 
-                    onChange={() => setChecks(p => ({...p, nutrition: true}))} 
-                    className="accent-primary w-4 h-4"
-                  /> YES
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-sm">
-                  <input 
-                    type="radio" 
-                    name="nutrition" 
-                    checked={checks.nutrition === false} 
-                    onChange={() => setChecks(p => ({...p, nutrition: false}))} 
-                    className="accent-primary w-4 h-4"
-                  /> NO
-                </label>
-              </div>
-            </div>
 
-            <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
-              <div className="font-mono text-base uppercase font-medium">RECOVERY</div>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer text-sm">
-                  <input 
-                    type="radio" 
-                    name="recovery" 
-                    checked={checks.recovery === true} 
-                    onChange={() => setChecks(p => ({...p, recovery: true}))} 
-                    className="accent-primary w-4 h-4"
-                  /> YES
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-sm">
-                  <input 
-                    type="radio" 
-                    name="recovery" 
-                    checked={checks.recovery === false} 
-                    onChange={() => setChecks(p => ({...p, recovery: false}))} 
-                    className="accent-primary w-4 h-4"
-                  /> NO
-                </label>
+              <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
+                <div className="font-mono text-base uppercase font-medium">RECOVERY</div>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="recovery" 
+                      checked={checks.recovery === true} 
+                      onChange={() => {
+                        setChecks(p => ({...p, recovery: true}));
+                        setError("");
+                      }} 
+                      className="accent-primary w-4 h-4"
+                    /> YES
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="recovery" 
+                      checked={checks.recovery === false} 
+                      onChange={() => {
+                        setChecks(p => ({...p, recovery: false}));
+                        setError("");
+                      }} 
+                      className="accent-primary w-4 h-4"
+                    /> NO
+                  </label>
+                </div>
               </div>
             </div>
           </div>
 
-          <Button 
-            onClick={handleCheckinSubmit}
-            className="w-full h-12 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-widest text-sm mt-4"
-          >
-            LOG EXECUTION
-          </Button>
+          <div className="pt-4 mt-4 border-t border-white/10 sticky bottom-0 bg-black">
+            <Button 
+              onClick={handleCheckinSubmit}
+              className="w-full h-12 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-widest text-sm"
+            >
+              LOG EXECUTION
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
