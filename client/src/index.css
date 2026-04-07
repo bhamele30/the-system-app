@@ -103,3 +103,61 @@
 .hide-close > button {
   display: none !important;
 }
+
+/* SYSTEM DEGRADATION EFFECTS */
+.system-failing {
+  filter: grayscale(0.8) contrast(1.5) sepia(1) hue-rotate(-50deg) saturate(2);
+  animation: main-glitch 4s infinite;
+}
+
+.system-failing::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px);
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanlines 10s linear infinite;
+}
+
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; }
+}
+
+@keyframes main-glitch {
+  0%, 96%, 98%, 100% { 
+    transform: none; 
+    filter: grayscale(0.8) contrast(1.5) sepia(1) hue-rotate(-50deg) saturate(2); 
+  }
+  97% { 
+    transform: translate(-5px, 5px); 
+    filter: grayscale(0) contrast(2) hue-rotate(90deg) invert(1); 
+  }
+  99% { 
+    transform: translate(5px, -5px); 
+    filter: grayscale(1) contrast(3) invert(1); 
+  }
+}
+
+.system-failing .glass-panel {
+  border-color: rgba(255, 0, 0, 0.5) !important;
+  background: rgba(20, 0, 0, 0.8) !important;
+}
+
+.system-failing .text-glow {
+  text-shadow: 0 0 15px rgba(255, 0, 0, 0.8) !important;
+}
+
+.system-failing .bg-primary {
+  background-color: #ff3333 !important;
+  color: black !important;
+}
+
+.system-failing .text-primary {
+  color: #ff3333 !important;
+}
+
+.system-failing .border-primary {
+  border-color: #ff3333 !important;
+}

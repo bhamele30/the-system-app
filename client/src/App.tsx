@@ -12,6 +12,7 @@ import Onboarding from "@/pages/onboarding";
 import Nutrition from "@/pages/nutrition";
 import Workouts from "@/pages/workouts";
 import Recovery from "@/pages/recovery";
+import { useSystem } from "@/hooks/use-system";
 
 function Navigation() {
   const [location] = useLocation();
@@ -71,12 +72,18 @@ function Router() {
 }
 
 function App() {
+  const { state } = useSystem();
+  // System is failing if they've completed days but streak is 0 (broken)
+  const isFailing = state.totalDays > 0 && state.streak === 0;
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Navigation />
-        <Router />
-        <Toaster />
+        <div className={isFailing ? "system-failing min-h-screen w-full" : "min-h-screen w-full"}>
+          <Navigation />
+          <Router />
+          <Toaster />
+        </div>
       </TooltipProvider>
     </QueryClientProvider>
   );
