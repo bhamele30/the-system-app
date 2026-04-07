@@ -73,13 +73,13 @@ function Router() {
 
 function App() {
   const { state } = useSystem();
-  // System is failing if they've completed days but streak is 0 (broken)
-  const isFailing = state.totalDays > 0 && state.streak === 0;
+  const isFailing = state.recoveryState === "breached";
+  const isRebuilding = state.recoveryState === "rebuilding";
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <div className={isFailing ? "system-failing min-h-screen w-full" : "min-h-screen w-full"}>
+        <div className={`${isFailing ? "system-failing" : ""} ${isRebuilding ? "system-rebuilding" : ""} min-h-screen w-full`}>
           <Navigation />
           <Router />
           <Toaster />

@@ -5,12 +5,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Dumbbell, Utensils, Bed, Target, Zap, Clock, CalendarDays, Crosshair, Trophy } from "lucide-react";
+import { Dumbbell, Utensils, Bed, Target, Zap, Trophy, ShieldAlert, RefreshCw } from "lucide-react";
 import { useSystem } from "@/hooks/use-system";
 import { toast } from "@/hooks/use-toast";
 
 export default function Home() {
-  const { state, submitDay, setHasSeenPhase2Celebration } = useSystem();
+  const { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol } = useSystem();
   const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "UPPER" | "LOWER" | "REST">("PUSH");
   const [focusLine, setFocusLine] = useState("");
   const [showCheckin, setShowCheckin] = useState(false);
@@ -86,6 +86,14 @@ export default function Home() {
   const isTodayCompleted = state.lastCompletedDate === new Date().toISOString().split('T')[0];
   const allChecked = checks.train && checks.nutrition && checks.recovery;
 
+  const handleStartRecovery = () => {
+    startRecoveryProtocol();
+    toast({
+      title: "REBUILD MODE ACTIVE",
+      description: "FULL EXECUTION RESTORES SYSTEM INTEGRITY.",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
       
@@ -152,6 +160,51 @@ export default function Home() {
             <div className="font-bold text-xl uppercase tracking-widest text-glow">{focusLine}</div>
           </div>
         </Card>
+
+        {state.recoveryState === "breached" && (
+          <Card className="border border-destructive/40 bg-destructive/5 p-5 rounded-none space-y-4">
+            <div className="flex items-start gap-3">
+              <ShieldAlert className="w-5 h-5 text-destructive mt-0.5" />
+              <div>
+                <div className="text-destructive text-[10px] uppercase tracking-[0.3em] font-bold">System Breach Detected</div>
+                <h3 className="text-2xl font-bold text-destructive mt-1">REBUILD REQUIRED</h3>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              You do not erase failure. You answer it. Activate rebuild mode, then complete one full execution day to restore system integrity.
+            </p>
+            <div className="grid gap-2 text-[11px] uppercase tracking-widest text-foreground/80">
+              <div className="border border-white/10 px-3 py-2">1. Acknowledge the breach</div>
+              <div className="border border-white/10 px-3 py-2">2. Enter rebuild mode</div>
+              <div className="border border-white/10 px-3 py-2">3. Win the next full day</div>
+            </div>
+            <Button 
+              onClick={handleStartRecovery}
+              data-testid="button-begin-rebuild"
+              className="w-full rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold uppercase tracking-widest"
+            >
+              BEGIN REBUILD PROTOCOL
+            </Button>
+          </Card>
+        )}
+
+        {state.recoveryState === "rebuilding" && (
+          <Card className="border border-yellow-500/40 bg-yellow-500/5 p-5 rounded-none space-y-4">
+            <div className="flex items-start gap-3">
+              <RefreshCw className="w-5 h-5 text-yellow-400 mt-0.5 animate-spin [animation-duration:3s]" />
+              <div>
+                <div className="text-yellow-400 text-[10px] uppercase tracking-[0.3em] font-bold">Rebuild Mode Active</div>
+                <h3 className="text-2xl font-bold text-yellow-300 mt-1">SYSTEM RECOVERY IN PROGRESS</h3>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              The system is not restored yet. Your next complete day clears the breach and returns the interface to full integrity.
+            </p>
+            <div className="border border-yellow-500/30 bg-black/30 px-3 py-3 text-xs uppercase tracking-widest text-yellow-200">
+              Next condition: train, nutrition, and recovery must all be marked YES on your next log.
+            </div>
+          </Card>
+        )}
 
         {isTodayCompleted ? (
           <div className={`w-full py-4 text-center border font-bold uppercase tracking-widest text-xs ${

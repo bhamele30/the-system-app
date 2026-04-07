@@ -7,6 +7,7 @@ interface SystemState {
   completedDays: number;
   lastCompletedDate: string | null;
   hasSeenPhase2Celebration: boolean;
+  recoveryState: "idle" | "breached" | "rebuilding";
 }
 
 const defaultState: SystemState = {
@@ -16,6 +17,7 @@ const defaultState: SystemState = {
   completedDays: 0,
   lastCompletedDate: null,
   hasSeenPhase2Celebration: false,
+  recoveryState: "idle",
 };
 
 export function useSystem() {
@@ -41,15 +43,16 @@ export function useSystem() {
     let newStreak = state.streak;
     let newScore = state.score;
     let newCompleted = state.completedDays;
-    let status = "ACTIVE";
+    let recoveryState: SystemState["recoveryState"] = state.recoveryState;
 
     if (train && nutrition && recovery) {
       newStreak += 1;
       newScore += 1;
       newCompleted += 1;
+      recoveryState = "idle";
     } else {
       newStreak = 0;
-      status = "FAILING";
+      recoveryState = "breached";
     }
 
     setState(prev => ({
@@ -58,7 +61,8 @@ export function useSystem() {
       score: newScore,
       totalDays: prev.totalDays + 1,
       completedDays: newCompleted,
-      lastCompletedDate: today
+      lastCompletedDate: today,
+      recoveryState
     }));
     
     return { success: train && nutrition && recovery };
@@ -71,5 +75,12 @@ export function useSystem() {
     }));
   };
 
-  return { state, submitDay, setHasSeenPhase2Celebration };
+  const startRecoveryProtocol = () => {
+    setState(prev => ({
+      ...prev,
+      recoveryState: "rebuilding"
+    }));
+  };
+
+  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol };
 }
