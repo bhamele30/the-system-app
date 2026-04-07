@@ -8,6 +8,7 @@ interface SystemState {
   lastCompletedDate: string | null;
   hasSeenPhase2Celebration: boolean;
   recoveryState: "idle" | "breached" | "rebuilding";
+  lastOutcome: "maintained" | "broken" | "restored" | null;
 }
 
 const defaultState: SystemState = {
@@ -18,6 +19,7 @@ const defaultState: SystemState = {
   lastCompletedDate: null,
   hasSeenPhase2Celebration: false,
   recoveryState: "idle",
+  lastOutcome: null,
 };
 
 const normalizeState = (savedState: Partial<SystemState>): SystemState => {
@@ -52,20 +54,25 @@ export function useSystem() {
 
   const submitDay = (train: boolean, nutrition: boolean, recovery: boolean) => {
     const today = new Date().toISOString().split('T')[0];
-    
+    const success = train && nutrition && recovery;
+    const wasRecovering = state.recoveryState === "breached" || state.recoveryState === "rebuilding";
+
     let newStreak = state.streak;
     let newScore = state.score;
     let newCompleted = state.completedDays;
     let recoveryState: SystemState["recoveryState"] = state.recoveryState;
+    let lastOutcome: SystemState["lastOutcome"] = state.lastOutcome;
 
-    if (train && nutrition && recovery) {
+    if (success) {
       newStreak += 1;
       newScore += 1;
       newCompleted += 1;
       recoveryState = "idle";
+      lastOutcome = wasRecovering ? "restored" : "maintained";
     } else {
       newStreak = 0;
       recoveryState = "breached";
+      lastOutcome = "broken";
     }
 
     setState(prev => ({
@@ -75,10 +82,11 @@ export function useSystem() {
       totalDays: prev.totalDays + 1,
       completedDays: newCompleted,
       lastCompletedDate: today,
-      recoveryState
+      recoveryState,
+      lastOutcome
     }));
     
-    return { success: train && nutrition && recovery };
+    return { success, restored: success && wasRecovering };
   };
 
   const setHasSeenPhase2Celebration = () => {

@@ -65,10 +65,15 @@ export default function Home() {
     const result = submitDay(checks.train, checks.nutrition, checks.recovery);
     setShowCheckin(false);
     
-    // Reset checks for the next day
     setChecks({ train: null, nutrition: null, recovery: null });
     
-    if (result.success) {
+    if (result.restored) {
+      toast({
+        title: "SYSTEM RESTORED",
+        description: "REBUILD COMPLETE. RETURN TO STANDARD EXECUTION.",
+        variant: "default",
+      });
+    } else if (result.success) {
       toast({
         title: "SYSTEM MAINTAINED",
         description: "STAY IN THE SYSTEM.",
@@ -263,11 +268,17 @@ export default function Home() {
 
         {!canExecuteToday ? (
           <div className={`w-full py-4 text-center border font-bold uppercase tracking-widest text-xs ${
-            state.streak > 0 
-              ? "border-primary bg-primary/10 text-primary" 
-              : "border-destructive bg-destructive/10 text-destructive"
+            state.lastOutcome === "restored"
+              ? "border-primary bg-primary/10 text-primary"
+              : state.streak > 0 
+                ? "border-primary bg-primary/10 text-primary" 
+                : "border-destructive bg-destructive/10 text-destructive"
           }`}>
-            {state.streak > 0 ? "SYSTEM MAINTAINED" : "SYSTEM BROKEN"}
+            {state.lastOutcome === "restored"
+              ? "SYSTEM RESTORED"
+              : state.streak > 0
+                ? "SYSTEM MAINTAINED"
+                : "SYSTEM BROKEN"}
           </div>
         ) : (
           <div className="space-y-2">
