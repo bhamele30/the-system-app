@@ -51,12 +51,14 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply font-mono antialiased bg-background text-foreground;
     font-family: 'JetBrains Mono', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: hsl(var(--foreground));
     background-color: hsl(var(--background));
     background-image:
       radial-gradient(circle at top, rgba(0, 132, 255, 0.12), transparent 40%),
