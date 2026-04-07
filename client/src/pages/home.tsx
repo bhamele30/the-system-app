@@ -85,7 +85,8 @@ export default function Home() {
 
   const isTodayCompleted = state.lastCompletedDate === new Date().toISOString().split('T')[0];
   const allChecked = checks.train && checks.nutrition && checks.recovery;
-  const isBreached = state.recoveryState === "breached";
+  const hasLegacyFailureLock = isTodayCompleted && state.totalDays > 0 && state.streak === 0 && state.recoveryState === "idle";
+  const isBreached = state.recoveryState === "breached" || hasLegacyFailureLock;
   const isRebuilding = state.recoveryState === "rebuilding";
   const canExecuteToday = !isTodayCompleted || isBreached || isRebuilding;
   const systemStatusLabel = isBreached ? "BREACHED" : isRebuilding ? "REBUILDING" : state.streak > 0 ? "ACTIVE" : "STANDBY";

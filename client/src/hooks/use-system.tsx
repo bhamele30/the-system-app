@@ -20,12 +20,25 @@ const defaultState: SystemState = {
   recoveryState: "idle",
 };
 
+const normalizeState = (savedState: Partial<SystemState>): SystemState => {
+  const merged = {
+    ...defaultState,
+    ...savedState,
+  } as SystemState;
+
+  if (!savedState.recoveryState) {
+    merged.recoveryState = merged.totalDays > 0 && merged.streak === 0 ? "breached" : "idle";
+  }
+
+  return merged;
+};
+
 export function useSystem() {
   const [state, setState] = useState<SystemState>(() => {
     const saved = localStorage.getItem('system-execution-state');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        return normalizeState(JSON.parse(saved));
       } catch (e) {
         return defaultState;
       }
