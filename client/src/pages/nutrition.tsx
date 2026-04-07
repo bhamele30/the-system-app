@@ -25,24 +25,66 @@ const MEALS = [
   },
   {
     id: "m2",
+    time: "Meal 1: Breakfast (Alt)",
+    name: "Steak & Eggs",
+    macros: { p: 50, c: 5, f: 25, kcal: 445 },
+    desc: "150g Lean flank steak, 3 whole eggs, spinach."
+  },
+  {
+    id: "m3",
     time: "Meal 2: Pre-Workout",
     name: "Power Rice & Chicken",
     macros: { p: 40, c: 70, f: 5, kcal: 485 },
     desc: "150g Chicken breast, 200g white rice, light soy sauce. Fast digesting carbs."
   },
   {
-    id: "m3",
+    id: "m4",
+    time: "Meal 2: Pre-Workout (Alt)",
+    name: "Cream of Rice & Whey",
+    macros: { p: 50, c: 60, f: 2, kcal: 458 },
+    desc: "60g Cream of rice, 2 scoops whey isolate, 1/2 banana, cinnamon."
+  },
+  {
+    id: "m5",
     time: "Meal 3: Post-Workout",
     name: "Recovery Shake & Fast Carbs",
     macros: { p: 50, c: 60, f: 2, kcal: 458 },
     desc: "2 scoops whey isolate, 40g rice krispies or cream of rice, 1 banana."
   },
   {
-    id: "m4",
+    id: "m6",
+    time: "Meal 3: Post-Workout (Alt)",
+    name: "Lean Beef & Potato",
+    macros: { p: 45, c: 65, f: 10, kcal: 530 },
+    desc: "200g 95/5 Lean ground beef, 300g sweet potato, asparagus."
+  },
+  {
+    id: "m7",
     time: "Meal 4: Dinner",
+    name: "Salmon & Greens",
+    macros: { p: 40, c: 10, f: 22, kcal: 398 },
+    desc: "200g Wild caught salmon, massive spinach salad, 1 tbsp olive oil."
+  },
+  {
+    id: "m8",
+    time: "Meal 4: Dinner (Alt)",
     name: "Steak & Potatoes",
     macros: { p: 55, c: 60, f: 20, kcal: 640 },
     desc: "200g Lean sirloin steak, 250g sweet potato, 100g asparagus."
+  },
+  {
+    id: "m9",
+    time: "Snack / Anytime",
+    name: "Greek Yogurt Bowl",
+    macros: { p: 35, c: 20, f: 5, kcal: 265 },
+    desc: "300g Non-fat plain greek yogurt, 100g berries, 15g almonds."
+  },
+  {
+    id: "m10",
+    time: "Snack / Anytime",
+    name: "Cottage Cheese & Almonds",
+    macros: { p: 30, c: 15, f: 10, kcal: 270 },
+    desc: "250g Low-fat cottage cheese, 20g almonds, cinnamon."
   }
 ];
 
