@@ -276,6 +276,12 @@ export default function Nutrition() {
                 essential
               />
               <SuppItem 
+                name="Essential Amino Acids (EAAs)" 
+                dose="10g" 
+                timing="Intra-Workout for muscle preservation" 
+                essential
+              />
+              <SuppItem 
                 name="Fish Oil (Omega-3)" 
                 dose="2g EPA/DHA" 
                 timing="With meals for joint health" 
