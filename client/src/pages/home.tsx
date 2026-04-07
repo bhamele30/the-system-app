@@ -87,6 +87,7 @@ export default function Home() {
   const allChecked = checks.train && checks.nutrition && checks.recovery;
   const isBreached = state.recoveryState === "breached";
   const isRebuilding = state.recoveryState === "rebuilding";
+  const canExecuteToday = !isTodayCompleted || isBreached || isRebuilding;
   const systemStatusLabel = isBreached ? "BREACHED" : isRebuilding ? "REBUILDING" : state.streak > 0 ? "ACTIVE" : "STANDBY";
   const executionButtonLabel = isRebuilding ? "RESTORE SYSTEM" : "EXECUTE DAY";
   const modalTitle = isRebuilding ? "LOG REBUILD EXECUTION" : "DID YOU EXECUTE";
@@ -249,19 +250,17 @@ export default function Home() {
             <div className="border border-yellow-500/30 bg-black/30 px-3 py-3 text-xs uppercase tracking-widest text-yellow-200 leading-relaxed">
               Recovery condition: train, nutrition, and recovery must all be marked YES on the next log. One weak link keeps the system damaged.
             </div>
-            {!isTodayCompleted && (
-              <Button 
-                onClick={() => setShowCheckin(true)}
-                data-testid="button-open-rebuild-log"
-                className="w-full rounded-none bg-yellow-400 text-black hover:bg-yellow-300 font-bold uppercase tracking-widest h-12 shadow-[0_0_20px_rgba(250,204,21,0.18)]"
-              >
-                OPEN REBUILD LOG
-              </Button>
-            )}
+            <Button 
+              onClick={() => setShowCheckin(true)}
+              data-testid="button-open-rebuild-log"
+              className="w-full rounded-none bg-yellow-400 text-black hover:bg-yellow-300 font-bold uppercase tracking-widest h-12 shadow-[0_0_20px_rgba(250,204,21,0.18)]"
+            >
+              OPEN REBUILD LOG
+            </Button>
           </Card>
         )}
 
-        {isTodayCompleted ? (
+        {!canExecuteToday ? (
           <div className={`w-full py-4 text-center border font-bold uppercase tracking-widest text-xs ${
             state.streak > 0 
               ? "border-primary bg-primary/10 text-primary" 
@@ -272,10 +271,10 @@ export default function Home() {
         ) : (
           <div className="space-y-2">
             <div className={`text-center uppercase tracking-widest text-xs font-bold flex flex-col gap-1 ${
-              isRebuilding ? "text-yellow-300" : "text-destructive animate-pulse"
+              isRebuilding ? "text-yellow-300" : isBreached ? "text-destructive animate-pulse" : "text-destructive animate-pulse"
             }`}>
-              <span>{isRebuilding ? "REBUILD WINDOW ACTIVE" : "DAY INCOMPLETE"}</span>
-              <span>{isRebuilding ? "RESTORATION REQUIRED" : "EXECUTION REQUIRED"}</span>
+              <span>{isRebuilding ? "REBUILD WINDOW ACTIVE" : isBreached ? "SYSTEM DAMAGE DETECTED" : "DAY INCOMPLETE"}</span>
+              <span>{isRebuilding ? "RESTORATION REQUIRED" : isBreached ? "REBUILD REQUIRED" : "EXECUTION REQUIRED"}</span>
             </div>
             <Button 
               onClick={() => setShowCheckin(true)}
@@ -283,10 +282,12 @@ export default function Home() {
               className={`w-full h-14 rounded-none font-bold uppercase tracking-widest text-sm ${
                 isRebuilding
                   ? "bg-yellow-400 text-black hover:bg-yellow-300 shadow-[0_0_24px_rgba(250,204,21,0.18)]"
-                  : "bg-primary text-black hover:bg-primary/90"
+                  : isBreached
+                    ? "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[0_0_24px_rgba(255,0,0,0.18)]"
+                    : "bg-primary text-black hover:bg-primary/90"
               }`}
             >
-              {executionButtonLabel}
+              {isBreached ? "BEGIN REPAIR" : executionButtonLabel}
             </Button>
           </div>
         )}
