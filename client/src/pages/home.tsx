@@ -15,7 +15,8 @@ export default function Home() {
   const [focusLine, setFocusLine] = useState("");
   const [showCheckin, setShowCheckin] = useState(false);
   const [showPhaseCelebration, setShowPhaseCelebration] = useState(false);
-  const [checks, setChecks] = useState({ train: false, nutrition: false, recovery: false });
+  const [checks, setChecks] = useState<{train: boolean | null, nutrition: boolean | null, recovery: boolean | null}>({ train: null, nutrition: null, recovery: null });
+  const [error, setError] = useState("");
 
   // Generate daily protocol based on system execution logic
   useEffect(() => {
@@ -55,8 +56,17 @@ export default function Home() {
   };
 
   const handleCheckinSubmit = () => {
+    if (checks.train === null || checks.nutrition === null || checks.recovery === null) {
+      setError("YOU MUST REPORT ALL METRICS TO LOG EXECUTION.");
+      return;
+    }
+    
+    setError("");
     const result = submitDay(checks.train, checks.nutrition, checks.recovery);
     setShowCheckin(false);
+    
+    // Reset checks for the next day
+    setChecks({ train: null, nutrition: null, recovery: null });
     
     if (result.success) {
       toast({
@@ -144,8 +154,12 @@ export default function Home() {
         </Card>
 
         {isTodayCompleted ? (
-          <div className="w-full py-4 text-center border border-primary bg-primary/10 text-primary font-bold uppercase tracking-widest text-xs">
-            SYSTEM MAINTAINED
+          <div className={`w-full py-4 text-center border font-bold uppercase tracking-widest text-xs ${
+            state.streak > 0 
+              ? "border-primary bg-primary/10 text-primary" 
+              : "border-destructive bg-destructive/10 text-destructive"
+          }`}>
+            {state.streak > 0 ? "SYSTEM MAINTAINED" : "SYSTEM BROKEN"}
           </div>
         ) : (
           <div className="space-y-2">
@@ -174,10 +188,15 @@ export default function Home() {
           </DialogHeader>
           
           <div className="space-y-6 py-4">
+            {error && (
+              <div className="bg-destructive/10 border border-destructive text-destructive p-3 text-xs font-bold text-center animate-pulse uppercase tracking-widest">
+                {error}
+              </div>
+            )}
             <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
-              <Label className="font-mono text-base uppercase">TRAIN</Label>
+              <div className="font-mono text-base uppercase font-medium">TRAIN</div>
               <div className="flex gap-4">
-                <Label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer text-sm">
                   <input 
                     type="radio" 
                     name="train" 
@@ -185,8 +204,8 @@ export default function Home() {
                     onChange={() => setChecks(p => ({...p, train: true}))} 
                     className="accent-primary w-4 h-4"
                   /> YES
-                </Label>
-                <Label className="flex items-center gap-2 cursor-pointer">
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer text-sm">
                   <input 
                     type="radio" 
                     name="train" 
@@ -194,14 +213,14 @@ export default function Home() {
                     onChange={() => setChecks(p => ({...p, train: false}))} 
                     className="accent-primary w-4 h-4"
                   /> NO
-                </Label>
+                </label>
               </div>
             </div>
             
             <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
-              <Label className="font-mono text-base uppercase">NUTRITION</Label>
+              <div className="font-mono text-base uppercase font-medium">NUTRITION</div>
               <div className="flex gap-4">
-                <Label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer text-sm">
                   <input 
                     type="radio" 
                     name="nutrition" 
@@ -209,8 +228,8 @@ export default function Home() {
                     onChange={() => setChecks(p => ({...p, nutrition: true}))} 
                     className="accent-primary w-4 h-4"
                   /> YES
-                </Label>
-                <Label className="flex items-center gap-2 cursor-pointer">
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer text-sm">
                   <input 
                     type="radio" 
                     name="nutrition" 
@@ -218,14 +237,14 @@ export default function Home() {
                     onChange={() => setChecks(p => ({...p, nutrition: false}))} 
                     className="accent-primary w-4 h-4"
                   /> NO
-                </Label>
+                </label>
               </div>
             </div>
 
             <div className="flex items-center justify-between bg-white/5 p-4 border border-white/5">
-              <Label className="font-mono text-base uppercase">RECOVERY</Label>
+              <div className="font-mono text-base uppercase font-medium">RECOVERY</div>
               <div className="flex gap-4">
-                <Label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer text-sm">
                   <input 
                     type="radio" 
                     name="recovery" 
@@ -233,8 +252,8 @@ export default function Home() {
                     onChange={() => setChecks(p => ({...p, recovery: true}))} 
                     className="accent-primary w-4 h-4"
                   /> YES
-                </Label>
-                <Label className="flex items-center gap-2 cursor-pointer">
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer text-sm">
                   <input 
                     type="radio" 
                     name="recovery" 
@@ -242,7 +261,7 @@ export default function Home() {
                     onChange={() => setChecks(p => ({...p, recovery: false}))} 
                     className="accent-primary w-4 h-4"
                   /> NO
-                </Label>
+                </label>
               </div>
             </div>
           </div>
@@ -251,7 +270,7 @@ export default function Home() {
             onClick={handleCheckinSubmit}
             className="w-full h-12 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-widest text-sm mt-4"
           >
-            Submit Data
+            LOG EXECUTION
           </Button>
         </DialogContent>
       </Dialog>
