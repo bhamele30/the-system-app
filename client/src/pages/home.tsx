@@ -20,11 +20,11 @@ export default function Home() {
 
   // Generate daily protocol based on system execution logic
   useEffect(() => {
-    // Simple cycle based on day of year for demo purposes
-    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
+    // Determine the current cycle step based on the number of completed days.
+    // This means the user stays on their current workout until they log a successful execution.
     
     // Check if in phase 1 (first 84 days) or phase 2 (after 84 days)
-    const isPhase2 = state.totalDays >= 84;
+    const isPhase2 = state.completedDays >= 84;
     
     if (isPhase2 && !state.hasSeenPhase2Celebration) {
       setShowPhaseCelebration(true);
@@ -33,17 +33,17 @@ export default function Home() {
     let cycle;
     if (isPhase2) {
       // Phase 2: Hypertrophy Focus (Push/Pull/Legs/Upper/Lower/Rest)
-      cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][dayOfYear % 6] as any;
+      cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][state.completedDays % 6] as any;
     } else {
       // Phase 1: Foundation (Push/Pull/Legs/Arms/Rest)
-      cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][dayOfYear % 5] as any;
+      cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][state.completedDays % 5] as any;
     }
     
     setDayType(cycle);
 
     const focusLines = ["Execute.", "No negotiation.", "Stay consistent.", "Repeat.", "No thinking."];
     setFocusLine(focusLines[Math.floor(Math.random() * focusLines.length)]);
-  }, [state.totalDays]);
+  }, [state.completedDays, state.hasSeenPhase2Celebration]);
 
   const getWorkout = () => {
     if (dayType === "PUSH") return "Chest & Triceps";
@@ -106,14 +106,17 @@ export default function Home() {
     });
   };
 
+  const currentWeek = Math.floor(state.completedDays / 7) + 1;
+  const currentDay = (state.completedDays % 7) + 1;
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
       
       {/* Top Bar Stats */}
       <div className="w-full max-w-md flex justify-between items-center mb-12 border-b border-primary/20 pb-4">
         <div className="flex flex-col">
-          <span className="text-muted-foreground uppercase tracking-widest text-[10px]">CONSISTENCY</span>
-          <span className="text-xl font-bold text-primary">{state.totalDays > 0 ? Math.round((state.completedDays / state.totalDays) * 100) : 0}%</span>
+          <span className="text-muted-foreground uppercase tracking-widest text-[10px]">TIME IN SYSTEM</span>
+          <span className="text-xl font-bold text-primary">WEEK {currentWeek} / DAY {currentDay}</span>
         </div>
         <div className="flex flex-col text-right">
           <span className="text-muted-foreground uppercase tracking-widest text-[10px]">STREAK</span>
