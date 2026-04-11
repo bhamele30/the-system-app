@@ -32,10 +32,10 @@ export default function Home() {
     
     let cycle;
     if (isPhase2) {
-      // Phase 2: Hypertrophy Focus (Push/Pull/Legs/Upper/Lower/Rest)
+      // Phase 2: 5 workouts + 1 rest day = 6 day cycle
       cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][state.completedDays % 6] as any;
     } else {
-      // Phase 1: Foundation (Push/Pull/Legs/Arms/Rest)
+      // Phase 1: 4 workouts + 1 rest day = 5 day cycle
       cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][state.completedDays % 5] as any;
     }
     
