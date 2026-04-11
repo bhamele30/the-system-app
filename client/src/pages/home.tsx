@@ -166,33 +166,69 @@ export default function Home() {
               : "border-white/10"
         }`}>
           
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-              <Dumbbell className="w-3 h-3" /> ACTION REQUIRED
-            </div>
-            <div className="font-bold text-lg">{getWorkout()}</div>
-          </div>
+          {dayType === "REST" ? (
+            <>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
+                  <RefreshCw className="w-3 h-3" /> RECOVERY PROTOCOL
+                </div>
+                <div className="font-bold text-lg">Active Recovery & Mobility</div>
+                <div className="text-muted-foreground text-sm">No heavy lifting. Allow the nervous system to reset.</div>
+              </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-              <Utensils className="w-3 h-3" /> FOLLOW PROTOCOL
-            </div>
-            <ul className="text-muted-foreground space-y-1">
-              <li>- Protein priority</li>
-              <li>- Moderate carbs</li>
-              <li>- No excess calories</li>
-            </ul>
-          </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
+                  <Utensils className="w-3 h-3" /> RECOVERY NUTRITION
+                </div>
+                <ul className="text-muted-foreground space-y-1">
+                  <li>- Maintain protein target (1g/lb)</li>
+                  <li>- Lower carbohydrates (no training fuel needed)</li>
+                  <li>- Hydration focus (1 gallon minimum)</li>
+                </ul>
+              </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-              <Bed className="w-3 h-3" /> COMPLETE REQUIREMENTS
-            </div>
-            <ul className="text-muted-foreground space-y-1">
-              <li>- Walk 20 minutes</li>
-              <li>- Sleep 7-8 hours</li>
-            </ul>
-          </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
+                  <Bed className="w-3 h-3" /> REGENERATION TASKS
+                </div>
+                <ul className="text-muted-foreground space-y-1">
+                  <li>- 45 minute light walk (Zone 1 heart rate)</li>
+                  <li>- 15-20 minutes dedicated mobility/stretching</li>
+                  <li>- Absolute minimum 8 hours of sleep</li>
+                </ul>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
+                  <Dumbbell className="w-3 h-3" /> ACTION REQUIRED
+                </div>
+                <div className="font-bold text-lg">{getWorkout()}</div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
+                  <Utensils className="w-3 h-3" /> FOLLOW PROTOCOL
+                </div>
+                <ul className="text-muted-foreground space-y-1">
+                  <li>- Protein priority</li>
+                  <li>- Moderate carbs</li>
+                  <li>- No excess calories</li>
+                </ul>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
+                  <Bed className="w-3 h-3" /> COMPLETE REQUIREMENTS
+                </div>
+                <ul className="text-muted-foreground space-y-1">
+                  <li>- Walk 20 minutes</li>
+                  <li>- Sleep 7-8 hours</li>
+                </ul>
+              </div>
+            </>
+          )}
 
           <div className="bg-primary/5 border border-primary/20 p-4 text-center mt-6">
             <div className="text-[10px] text-primary uppercase tracking-widest mb-1 flex justify-center items-center gap-1">
