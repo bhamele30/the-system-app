@@ -9,6 +9,7 @@ interface SystemState {
   hasSeenPhase2Celebration: boolean;
   recoveryState: "idle" | "breached" | "rebuilding";
   lastOutcome: "maintained" | "broken" | "restored" | null;
+  exerciseLogs: Record<string, { weight: string, date: string }[]>;
 }
 
 const defaultState: SystemState = {
@@ -20,6 +21,7 @@ const defaultState: SystemState = {
   hasSeenPhase2Celebration: false,
   recoveryState: "idle",
   lastOutcome: null,
+  exerciseLogs: {},
 };
 
 const normalizeState = (savedState: Partial<SystemState>): SystemState => {
@@ -103,5 +105,22 @@ export function useSystem() {
     }));
   };
 
-  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol };
+  const logExerciseWeight = (exerciseName: string, weight: string) => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    setState(prev => {
+      const logs = prev.exerciseLogs || {};
+      const history = logs[exerciseName] || [];
+      
+      return {
+        ...prev,
+        exerciseLogs: {
+          ...logs,
+          [exerciseName]: [...history, { weight, date: today }]
+        }
+      };
+    });
+  };
+
+  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight };
 }

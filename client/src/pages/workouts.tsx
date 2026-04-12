@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dumbbell, Clock, Zap, ChevronRight, PlayCircle, CheckCircle2, ArrowLeft } from "lucide-react";
+import { Dumbbell, Clock, Zap, ChevronRight, PlayCircle, CheckCircle2, ArrowLeft, TrendingUp } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useSystem } from "@/hooks/use-system";
+import { Input } from "@/components/ui/input";
 
 const WORKOUT_PLANS = [
   {
@@ -102,21 +104,35 @@ const WORKOUT_PLANS = [
 ];
 
 export default function Workouts() {
+  const { state, logExerciseWeight } = useSystem();
   const [activeWorkout, setActiveWorkout] = useState<typeof WORKOUT_PLANS[0] | null>(null);
   const [completedSets, setCompletedSets] = useState<Record<string, boolean>>({});
+  const [activeWeights, setActiveWeights] = useState<Record<string, string>>({});
 
   const toggleSet = (exerciseName: string, setIndex: number) => {
     const key = `${exerciseName}-${setIndex}`;
     setCompletedSets(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const handleWeightChange = (exerciseName: string, weight: string) => {
+    setActiveWeights(prev => ({ ...prev, [exerciseName]: weight }));
+  };
+
   const finishWorkout = () => {
+    // Log weights for any exercises where the user entered a weight
+    Object.entries(activeWeights).forEach(([exerciseName, weight]) => {
+      if (weight.trim()) {
+        logExerciseWeight(exerciseName, weight);
+      }
+    });
+
     toast({
       title: "Workout Complete!",
       description: `Great job finishing ${activeWorkout?.title}. Progression logged.`,
     });
     setActiveWorkout(null);
     setCompletedSets({});
+    setActiveWeights({});
   };
 
   if (activeWorkout) {
@@ -136,35 +152,60 @@ export default function Workouts() {
         </header>
 
         <div className="space-y-8">
-          {activeWorkout.exercises.map((ex, i) => (
-            <section key={i} className="glass-panel p-6 rounded-2xl border-white/5">
-              <h3 className="text-xl font-bold mb-4 flex items-center justify-between">
-                {ex.name}
-                <Badge variant="outline" className="text-[10px] font-display uppercase tracking-widest">
-                  {ex.sets} Sets × {ex.reps}
-                </Badge>
-              </h3>
-              
-              <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
-                {Array.from({ length: parseInt(ex.sets) }).map((_, setIdx) => {
-                  const isDone = completedSets[`${ex.name}-${setIdx}`];
-                  return (
-                    <button
-                      key={setIdx}
-                      onClick={() => toggleSet(ex.name, setIdx)}
-                      className={`h-12 rounded-lg border font-display text-sm transition-all duration-200 ${
-                        isDone 
-                          ? "bg-primary border-primary text-primary-foreground" 
-                          : "bg-secondary/50 border-white/5 hover:border-primary/50"
-                      }`}
-                    >
-                      {isDone ? <CheckCircle2 className="w-5 h-5 mx-auto" /> : setIdx + 1}
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
+          {activeWorkout.exercises.map((ex, i) => {
+            const previousLogs = state.exerciseLogs?.[ex.name] || [];
+            const lastLoggedWeight = previousLogs.length > 0 ? previousLogs[previousLogs.length - 1].weight : null;
+
+            return (
+              <section key={i} className="glass-panel p-6 rounded-2xl border-white/5 relative">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
+                  <div>
+                    <h3 className="text-xl font-bold flex items-center gap-2">
+                      {ex.name}
+                    </h3>
+                    <div className="flex gap-2 mt-1">
+                      <Badge variant="outline" className="text-[10px] font-display uppercase tracking-widest">
+                        {ex.sets} Sets × {ex.reps}
+                      </Badge>
+                      {lastLoggedWeight && (
+                        <Badge variant="secondary" className="text-[10px] font-display uppercase tracking-widest bg-primary/10 text-primary border-primary/20">
+                          <TrendingUp className="w-3 h-3 mr-1 inline" /> Last: {lastLoggedWeight} lbs
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="w-full sm:w-32 flex items-center gap-2">
+                    <Input 
+                      type="number" 
+                      placeholder={lastLoggedWeight ? "Weight (lbs)" : "Log weight"} 
+                      className="h-10 bg-black/50 border-white/10 focus-visible:ring-primary focus-visible:border-primary font-display text-center"
+                      value={activeWeights[ex.name] || ""}
+                      onChange={(e) => handleWeightChange(ex.name, e.target.value)}
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+                  {Array.from({ length: parseInt(ex.sets) }).map((_, setIdx) => {
+                    const isDone = completedSets[`${ex.name}-${setIdx}`];
+                    return (
+                      <button
+                        key={setIdx}
+                        onClick={() => toggleSet(ex.name, setIdx)}
+                        className={`h-12 rounded-lg border font-display text-sm transition-all duration-200 ${
+                          isDone 
+                            ? "bg-primary border-primary text-primary-foreground" 
+                            : "bg-secondary/50 border-white/5 hover:border-primary/50"
+                        }`}
+                      >
+                        {isDone ? <CheckCircle2 className="w-5 h-5 mx-auto" /> : setIdx + 1}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })}
         </div>
 
         <Button 
