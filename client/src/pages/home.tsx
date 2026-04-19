@@ -106,8 +106,10 @@ export default function Home() {
     });
   };
 
-  const currentWeek = Math.floor(state.completedDays / 7) + 1;
-  const currentDay = (state.completedDays % 7) + 1;
+  // Calculate week and day based on current completed days (0-indexed to 1-indexed)
+  // We want Week 1 / Day 1 on the very first day.
+  const currentWeek = Math.floor((state.completedDays || 0) / 7) + 1;
+  const currentDay = ((state.completedDays || 0) % 7) + 1;
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
@@ -123,6 +125,25 @@ export default function Home() {
           <span className="text-xl font-bold text-primary flex items-center justify-end gap-1">
             <Zap className="w-4 h-4 fill-primary" /> {state.streak}
           </span>
+        </div>
+      </div>
+
+      {/* Philosophy / Overview */}
+      <div className="w-full max-w-md mb-8 p-5 border border-white/10 bg-black/40 rounded-none relative">
+        <div className="absolute top-0 left-0 w-2 h-full bg-primary/80"></div>
+        <h2 className="font-display text-lg font-bold text-primary uppercase tracking-wider mb-2">Strength Without Noise</h2>
+        <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+          This is not a workout program. It is a system of consistency, discipline, and execution. You do not negotiate with the protocol. You show up, you execute, and you raise your baseline standards.
+        </p>
+        <div className="grid grid-cols-2 gap-4 text-xs font-mono">
+          <div className="border border-white/5 p-3 bg-white/5">
+            <div className="text-primary font-bold mb-1">PHASE 1 (12 WEEKS)</div>
+            <div className="text-muted-foreground">Foundation & Hypertrophy. 4 days on, 1 day off.</div>
+          </div>
+          <div className="border border-white/5 p-3 bg-white/5">
+            <div className="text-primary font-bold mb-1">PHASE 2 (12 WEEKS)</div>
+            <div className="text-muted-foreground">Density & Power. 5 days on, 1 day off.</div>
+          </div>
         </div>
       </div>
 
@@ -494,9 +515,10 @@ export default function Home() {
             </div>
             
             <p className="text-muted-foreground max-w-sm text-sm leading-relaxed border-y border-white/5 py-6 my-2">
-              You showed up for 84 days. You executed the protocol. You built the discipline required to transform. 
+              You have executed the foundation for 12 weeks. Your physical and mental baseline has been elevated. 
               <br/><br/>
-              Welcome to Phase 2. The training wheels are off. New programming has been unlocked in your Training Library.
+              <strong className="text-foreground">Phase 2: Density & Power</strong> begins now. 
+              The protocol escalates to 5 lifting days per week.
             </p>
             
             <Button 
@@ -504,14 +526,13 @@ export default function Home() {
                 setHasSeenPhase2Celebration();
                 setShowPhaseCelebration(false);
               }}
-              className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-widest text-sm shadow-[0_0_20px_hsl(var(--primary)/0.3)] transition-all duration-300 hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
+              className="w-full mt-4 h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-display font-bold uppercase tracking-widest text-sm shadow-[0_0_30px_hsl(var(--primary)/0.3)] transition-all"
             >
-              Enter Phase 2
+              ACCEPT NEW PROTOCOL
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }
