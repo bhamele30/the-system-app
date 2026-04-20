@@ -41,7 +41,15 @@ export default function Home() {
     
     setDayType(cycle);
 
-    const focusLines = ["Execute.", "No negotiation.", "Stay consistent.", "Repeat.", "No thinking."];
+    const focusLines = [
+      "Do the hard thing now.", 
+      "You don't negotiate with weakness.", 
+      "No one cares. Execute.", 
+      "Feelings are irrelevant.", 
+      "Raise your baseline.",
+      "Suffer the pain of discipline.",
+      "Show up."
+    ];
     setFocusLine(focusLines[Math.floor(Math.random() * focusLines.length)]);
   }, [state.completedDays, state.hasSeenPhase2Celebration]);
 
