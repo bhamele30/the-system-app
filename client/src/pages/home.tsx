@@ -10,7 +10,7 @@ import { useSystem } from "@/hooks/use-system";
 import { toast } from "@/hooks/use-toast";
 
 export default function Home() {
-  const { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol } = useSystem();
+  const { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, setMode } = useSystem();
   const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "UPPER" | "LOWER" | "REST">("PUSH");
   const [focusLine, setFocusLine] = useState("");
   const [showCheckin, setShowCheckin] = useState(false);
@@ -62,6 +62,38 @@ export default function Home() {
     if (dayType === "LOWER") return "Lower Body Power";
     return "Active Recovery";
   };
+
+  const getModeSpecificAdvice = () => {
+    switch (state.mode) {
+      case "cut":
+        return {
+          train: "Maintain intensity. Drop volume if needed. Do not drop weight.",
+          nutrition: "Caloric deficit active. Protein priority (1.2g/lb). Strict adherence required.",
+          recovery: "Fatigue will be high. Sleep is non-negotiable."
+        };
+      case "build":
+        return {
+          train: "Push volume and intensity. Chase progressive overload.",
+          nutrition: "Caloric surplus active. Fuel the machine. Eat to grow.",
+          recovery: "Tissue repair requires 8+ hours of sleep and high hydration."
+        };
+      case "lock-in":
+        return {
+          train: "Absolute focus. No distractions. Execute perfectly.",
+          nutrition: "100% adherence. Zero deviations allowed.",
+          recovery: "Total isolation for recovery. Disconnect and repair."
+        };
+      case "maintain":
+      default:
+        return {
+          train: "Execute standard protocol. Form over ego.",
+          nutrition: "Maintenance calories. Hit protein targets.",
+          recovery: "Standard recovery protocols active."
+        };
+    }
+  };
+
+  const modeAdvice = getModeSpecificAdvice();
 
   const handleCheckinSubmit = () => {
     if (checks.train === null || checks.nutrition === null || checks.recovery === null) {
@@ -153,6 +185,27 @@ export default function Home() {
             <div className="text-muted-foreground">Density & Power. 5 days on, 1 day off.</div>
           </div>
         </div>
+
+        <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2">SYSTEM MODE</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {(["cut", "build", "maintain", "lock-in"] as const).map((modeOption) => (
+              <Button
+                key={modeOption}
+                variant="outline"
+                size="sm"
+                onClick={() => setMode(modeOption)}
+                className={`font-display uppercase tracking-widest text-[10px] h-8 rounded-none border-white/10 ${
+                  state.mode === modeOption 
+                    ? "bg-primary text-black hover:bg-primary/90 border-primary" 
+                    : "bg-black/50 text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                }`}
+              >
+                {modeOption.replace("-", " ")}
+              </Button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Main Display */}
@@ -234,27 +287,28 @@ export default function Home() {
                   <Dumbbell className="w-3 h-3" /> ACTION REQUIRED
                 </div>
                 <div className="font-bold text-lg">{getWorkout()}</div>
+                <div className="text-muted-foreground text-sm border-l-2 border-primary/50 pl-3 mt-2 py-1 bg-primary/5">
+                  <span className="font-bold text-primary text-xs uppercase tracking-widest block mb-1">MODE DIRECTIVE:</span>
+                  {modeAdvice.train}
+                </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
                   <Utensils className="w-3 h-3" /> FOLLOW PROTOCOL
                 </div>
-                <ul className="text-muted-foreground space-y-1">
-                  <li>- Protein priority</li>
-                  <li>- Moderate carbs</li>
-                  <li>- No excess calories</li>
-                </ul>
+                <div className="text-muted-foreground text-sm border-l-2 border-primary/50 pl-3 mt-2 py-1 bg-primary/5">
+                  {modeAdvice.nutrition}
+                </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
                   <Bed className="w-3 h-3" /> COMPLETE REQUIREMENTS
                 </div>
-                <ul className="text-muted-foreground space-y-1">
-                  <li>- Walk 20 minutes</li>
-                  <li>- Sleep 7-8 hours</li>
-                </ul>
+                <div className="text-muted-foreground text-sm border-l-2 border-primary/50 pl-3 mt-2 py-1 bg-primary/5">
+                  {modeAdvice.recovery}
+                </div>
               </div>
             </>
           )}

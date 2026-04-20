@@ -10,6 +10,7 @@ interface SystemState {
   recoveryState: "idle" | "breached" | "rebuilding";
   lastOutcome: "maintained" | "broken" | "restored" | null;
   exerciseLogs: Record<string, { weight: string, date: string }[]>;
+  mode: "cut" | "build" | "maintain" | "lock-in";
 }
 
 const defaultState: SystemState = {
@@ -22,6 +23,7 @@ const defaultState: SystemState = {
   recoveryState: "idle",
   lastOutcome: null,
   exerciseLogs: {},
+  mode: "maintain",
 };
 
 const normalizeState = (savedState: Partial<SystemState>): SystemState => {
@@ -122,5 +124,9 @@ export function useSystem() {
     });
   };
 
-  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight };
+  const setMode = (mode: SystemState["mode"]) => {
+    setState(prev => ({ ...prev, mode }));
+  };
+
+  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, setMode };
 }
