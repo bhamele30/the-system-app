@@ -67,30 +67,63 @@ export function useSystem() {
     let recoveryState: SystemState["recoveryState"] = state.recoveryState;
     let lastOutcome: SystemState["lastOutcome"] = state.lastOutcome;
 
+    // For workouts, we only need training to be true to increment completed days
+    if (train) {
+      newCompleted += 1;
+    }
+
     if (success) {
       newStreak += 1;
       newScore += 1;
-      newCompleted += 1;
       recoveryState = "idle";
       lastOutcome = wasRecovering ? "restored" : "maintained";
     } else {
-      newStreak = 0;
-      recoveryState = "breached";
-      lastOutcome = "broken";
+      // If we're just submitting training and not the full day, don't break the streak yet
+      if (!train || (train && !nutrition && !recovery)) {
+        // Do nothing to streak if it's a partial submission
+      } else {
+        newStreak = 0;
+        recoveryState = "breached";
+        lastOutcome = "broken";
+      }
     }
 
     setState(prev => ({
       ...prev,
       streak: newStreak,
       score: newScore,
-      totalDays: prev.totalDays + 1,
+      totalDays: success || (!train && !nutrition && !recovery) ? prev.totalDays + 1 : prev.totalDays,
       completedDays: newCompleted,
-      lastCompletedDate: today,
+      lastCompletedDate: success ? today : prev.lastCompletedDate,
       recoveryState,
       lastOutcome
     }));
     
     return { success, restored: success && wasRecovering };
+  };
+
+  const completeWorkout = () => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    setState(prev => {
+      // Only increment streak once per day to prevent spamming, 
+      // but we can increment completedDays to move them through the program.
+      // Actually, for mockup purposes, let's just increment every time so they can test it easily.
+      const newStreak = prev.streak + 1;
+      const newCompleted = prev.completedDays + 1;
+      const newTotal = prev.totalDays + 1;
+      
+      return {
+        ...prev,
+        streak: newStreak,
+        score: prev.score + 1,
+        totalDays: newTotal,
+        completedDays: newCompleted,
+        lastCompletedDate: today,
+        recoveryState: "idle",
+        lastOutcome: "maintained"
+      };
+    });
   };
 
   const setHasSeenPhase2Celebration = () => {
@@ -128,5 +161,5 @@ export function useSystem() {
     setState(prev => ({ ...prev, mode }));
   };
 
-  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, setMode };
+  return { state, submitDay, completeWorkout, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, setMode };
 }

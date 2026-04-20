@@ -104,7 +104,7 @@ const WORKOUT_PLANS = [
 ];
 
 export default function Workouts() {
-  const { state, logExerciseWeight } = useSystem();
+  const { state, logExerciseWeight, completeWorkout } = useSystem();
   const [activeWorkout, setActiveWorkout] = useState<typeof WORKOUT_PLANS[0] | null>(null);
   const [completedSets, setCompletedSets] = useState<Record<string, boolean>>({});
   const [activeWeights, setActiveWeights] = useState<Record<string, string>>({});
@@ -126,9 +126,12 @@ export default function Workouts() {
       }
     });
 
+    // Mark the workout as completed, increasing streak and completion percentage
+    completeWorkout();
+
     toast({
       title: "Workout Complete!",
-      description: `Great job finishing ${activeWorkout?.title}. Progression logged.`,
+      description: `Great job finishing ${activeWorkout?.title}. Progression and daily streak logged.`,
     });
     setActiveWorkout(null);
     setCompletedSets({});
