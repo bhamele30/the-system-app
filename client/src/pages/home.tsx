@@ -564,8 +564,8 @@ export default function Home() {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
           
           <div className="flex flex-col items-center justify-center text-center space-y-6 py-8">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center border border-primary/30 mb-2 relative">
-              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
+            <div className="w-20 h-20 bg-primary/10 rounded-none flex items-center justify-center border border-primary/30 mb-2 relative">
+              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-none"></div>
               <Trophy className="w-10 h-10 text-primary relative z-10" />
             </div>
             

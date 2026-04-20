@@ -31,13 +31,13 @@ function Navigation() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 glass-panel md:bottom-auto md:top-0 md:h-screen md:w-20 md:border-r md:border-t-0 md:flex md:flex-col md:items-center md:py-8 bg-black/90">
       <div className="flex md:flex-col items-center justify-around md:justify-start md:gap-8 h-16 md:h-full w-full">
         <div className="hidden md:flex flex-col items-center gap-1 mb-8">
-          <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/50 text-primary font-display font-bold">
+          <div className="w-10 h-10 bg-primary/20 rounded-none flex items-center justify-center border border-primary/50 text-primary font-display font-bold">
             B
           </div>
         </div>
         {navItems.map((item) => (
           <Link key={item.href} href={item.href}>
-            <span className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors cursor-pointer ${
+            <span className={`flex flex-col items-center gap-1 p-2 rounded-none transition-colors cursor-pointer ${
               location.startsWith(item.href) 
                 ? "text-primary bg-primary/10" 
                 : "text-muted-foreground hover:text-foreground hover:bg-white/5"

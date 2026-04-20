@@ -157,7 +157,7 @@ export default function Workouts() {
             const lastLoggedWeight = previousLogs.length > 0 ? previousLogs[previousLogs.length - 1].weight : null;
 
             return (
-              <section key={i} className="glass-panel p-6 rounded-2xl border-white/5 relative">
+              <section key={i} className="glass-panel p-6 rounded-none border-white/5 relative">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
                   <div>
                     <h3 className="text-xl font-bold flex items-center gap-2">
@@ -192,7 +192,7 @@ export default function Workouts() {
                       <button
                         key={setIdx}
                         onClick={() => toggleSet(ex.name, setIdx)}
-                        className={`h-12 rounded-lg border font-display text-sm transition-all duration-200 ${
+                        className={`h-12 rounded-none border font-display text-sm transition-all duration-200 ${
                           isDone 
                             ? "bg-primary border-primary text-primary-foreground" 
                             : "bg-secondary/50 border-white/5 hover:border-primary/50"
@@ -233,7 +233,7 @@ export default function Workouts() {
           <Card key={plan.id} className="glass-panel overflow-hidden border-white/5 hover:border-primary/30 transition-all group">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
-                <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                <div className="p-2 bg-primary/10 rounded-none text-primary">
                   <Dumbbell className="w-6 h-6" />
                 </div>
                 <Badge variant="secondary" className="bg-secondary/50 text-[10px] font-display uppercase tracking-wider">

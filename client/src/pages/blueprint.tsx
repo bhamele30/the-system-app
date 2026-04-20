@@ -105,8 +105,8 @@ export default function Blueprint() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Today's Action */}
-          <section className="glass-panel p-6 rounded-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
+          <section className="glass-panel p-6 rounded-none relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-none pointer-events-none" />
             
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-xl font-display font-bold flex items-center gap-2">
@@ -116,7 +116,7 @@ export default function Blueprint() {
             </div>
 
             <Link href="/workouts">
-              <div className="bg-secondary/80 border border-white/5 rounded-xl p-5 mb-4 hover:border-primary/30 transition-colors cursor-pointer group">
+              <div className="bg-secondary/80 border border-white/5 rounded-none p-5 mb-4 hover:border-primary/30 transition-colors cursor-pointer group">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{cycleName}</h3>
                   <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -141,7 +141,7 @@ export default function Blueprint() {
           </section>
 
           {/* Progress Overview */}
-          <section className="glass-panel p-6 rounded-2xl">
+          <section className="glass-panel p-6 rounded-none">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-display font-bold">CURRENT METRICS</h2>
               <Dialog open={isUpdating} onOpenChange={setIsUpdating}>
@@ -218,7 +218,7 @@ export default function Blueprint() {
         <div className="space-y-6">
           
           {/* Phase Progress */}
-          <section className="glass-panel p-6 rounded-2xl">
+          <section className="glass-panel p-6 rounded-none">
             <h2 className="text-xl font-display font-bold mb-4">PHASE PROGRESS</h2>
             <div className="mb-2 flex justify-between text-sm">
               <span className="text-muted-foreground">Completion</span>
@@ -244,7 +244,7 @@ export default function Blueprint() {
           {/* Vision/Why */}
           <Dialog>
             <DialogTrigger asChild>
-              <section className="rounded-2xl overflow-hidden relative border border-white/10 group cursor-pointer">
+              <section className="rounded-none overflow-hidden relative border border-white/10 group cursor-pointer">
                 <img 
                   src={transformImg} 
                   alt="Goal Physique" 
@@ -290,7 +290,7 @@ function TaskItem({ text, completed, onClick }: { text: string, completed: boole
   return (
     <div 
       onClick={onClick}
-      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors duration-200 ${
+      className={`flex items-center gap-3 p-3 rounded-none border cursor-pointer transition-colors duration-200 ${
         completed 
           ? 'bg-primary/5 border-primary/20 text-muted-foreground' 
           : 'bg-secondary/30 border-white/5 hover:border-primary/50'
@@ -308,7 +308,7 @@ function TaskItem({ text, completed, onClick }: { text: string, completed: boole
 
 function MetricBox({ label, value, unit, trend, positive = false }: { label: string, value: string, unit: string, trend: string, positive?: boolean }) {
   return (
-    <div className="bg-secondary/50 rounded-xl p-4 border border-white/5 flex flex-col justify-center">
+    <div className="bg-secondary/50 rounded-none p-4 border border-white/5 flex flex-col justify-center">
       <span className="text-[10px] font-display text-muted-foreground tracking-widest mb-1">{label}</span>
       <div className="flex items-baseline gap-1">
         <span className="text-2xl font-bold font-display">{value}</span>

@@ -171,7 +171,7 @@ export default function Nutrition() {
                 <div 
                   key={`quick-${meal.id}`}
                   onClick={() => toggleMeal(meal.id)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                  className={`p-4 rounded-none border cursor-pointer transition-all ${
                     loggedMeals.includes(meal.id) 
                       ? 'bg-primary/10 border-primary text-primary' 
                       : 'bg-secondary/30 border-white/5 hover:border-primary/50'
@@ -195,7 +195,7 @@ export default function Nutrition() {
         
         {/* Macros & Caloric Breakdown */}
         <div className="lg:col-span-2 space-y-6">
-          <section className="glass-panel p-6 rounded-2xl relative overflow-hidden">
+          <section className="glass-panel p-6 rounded-none relative overflow-hidden">
             <div 
               className="absolute top-0 right-0 w-64 h-full bg-cover bg-right opacity-10 pointer-events-none"
               style={{ backgroundImage: `url(${nutritionBg})` }}
@@ -224,7 +224,7 @@ export default function Nutrition() {
             </div>
           </section>
 
-          <section className="glass-panel p-6 rounded-2xl">
+          <section className="glass-panel p-6 rounded-none">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-display font-bold flex items-center gap-2">
                 <Apple className="w-5 h-5 text-primary" />
@@ -250,7 +250,7 @@ export default function Nutrition() {
 
         {/* Supplement Stack */}
         <div className="space-y-6">
-          <section className="glass-panel p-6 rounded-2xl border-primary/20 bg-primary/5">
+          <section className="glass-panel p-6 rounded-none border-primary/20 bg-primary/5">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center text-primary">
                 <Info className="w-4 h-4" />
@@ -299,7 +299,7 @@ export default function Nutrition() {
             </div>
           </section>
 
-          <section className="glass-panel p-6 rounded-2xl border-t-primary/50">
+          <section className="glass-panel p-6 rounded-none border-t-primary/50">
              <h2 className="text-xl font-display font-bold mb-4 flex items-center gap-2">
               <Activity className="w-5 h-5 text-primary" />
               HYDRATION
@@ -400,7 +400,7 @@ function MacroBar({ icon: Icon, label, current, target, unit, color, description
         </span>
       </div>
       <p className="text-xs text-muted-foreground mb-2">{description}</p>
-      <div className="h-3 w-full bg-secondary rounded-full overflow-hidden">
+      <div className="h-3 w-full bg-secondary rounded-none overflow-hidden">
         <div 
           className={`h-full ${color} transition-all duration-1000 ease-out`}
           style={{ width: `${percent}%` }}
@@ -414,7 +414,7 @@ function MealCard({ meal, isLogged, onToggle }: { meal: any, isLogged: boolean, 
   return (
     <div 
       onClick={onToggle}
-      className={`p-5 rounded-xl border cursor-pointer transition-all duration-300 relative overflow-hidden group ${
+      className={`p-5 rounded-none border cursor-pointer transition-all duration-300 relative overflow-hidden group ${
         isLogged 
           ? 'bg-primary/5 border-primary/50 shadow-[0_0_15px_hsl(var(--primary)/0.1)]' 
           : 'bg-secondary/30 border-white/5 hover:border-primary/30'
@@ -433,7 +433,7 @@ function MealCard({ meal, isLogged, onToggle }: { meal: any, isLogged: boolean, 
         <h4 className={`font-bold text-lg transition-colors ${isLogged ? 'text-primary' : 'group-hover:text-primary/80'}`}>
           {meal.name}
         </h4>
-        <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${
+        <div className={`w-6 h-6 rounded-none border flex items-center justify-center transition-colors ${
           isLogged ? 'bg-primary border-primary text-black' : 'border-white/20 text-transparent'
         }`}>
           <CheckCircle2 className="w-4 h-4" />

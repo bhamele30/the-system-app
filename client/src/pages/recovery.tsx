@@ -20,7 +20,7 @@ export default function Recovery() {
       </header>
 
       {/* Hero Section */}
-      <div className="relative rounded-2xl overflow-hidden mb-10 border border-white/10 group">
+      <div className="relative rounded-none overflow-hidden mb-10 border border-white/10 group">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 transition-opacity duration-700 group-hover:opacity-50"
           style={{ backgroundImage: `url(${recoveryBg})` }}
@@ -36,9 +36,9 @@ export default function Recovery() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Sleep Rules */}
         <Card className="glass-panel p-6 border-t-primary/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[50px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[50px] rounded-none pointer-events-none" />
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-primary/10 rounded-lg text-primary">
+            <div className="p-2 bg-primary/10 rounded-none text-primary">
               <Moon className="w-5 h-5" />
             </div>
             <h3 className="text-xl font-display font-bold">Sleep Hygiene</h3>
@@ -54,7 +54,7 @@ export default function Recovery() {
         {/* Active Recovery */}
         <Card className="glass-panel p-6 relative overflow-hidden">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400">
+            <div className="p-2 bg-blue-500/10 rounded-none text-blue-400">
               <ActivitySquare className="w-5 h-5" />
             </div>
             <h3 className="text-xl font-display font-bold">Active Recovery</h3>
@@ -70,7 +70,7 @@ export default function Recovery() {
         {/* Tissue Prep & Repair */}
         <Card className="glass-panel p-6 relative overflow-hidden">
            <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-cyan-500/10 rounded-lg text-cyan-400">
+            <div className="p-2 bg-cyan-500/10 rounded-none text-cyan-400">
               <Zap className="w-5 h-5" />
             </div>
             <h3 className="text-xl font-display font-bold">Tissue Repair</h3>
@@ -84,7 +84,7 @@ export default function Recovery() {
         </Card>
       </div>
 
-      <div className="mt-10 glass-panel p-6 md:p-8 rounded-2xl border-dashed border-white/20 text-center flex flex-col items-center">
+      <div className="mt-10 glass-panel p-6 md:p-8 rounded-none border-dashed border-white/20 text-center flex flex-col items-center">
         <Battery className="w-10 h-10 text-primary mb-4" />
         <h3 className="text-2xl font-display font-bold mb-2">Listen To Your Body</h3>
         <p className="text-muted-foreground max-w-2xl mx-auto">
