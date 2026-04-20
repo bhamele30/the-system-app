@@ -25,6 +25,7 @@ export default function Home() {
     
     // Check if in phase 1 (first 84 days) or phase 2 (after 84 days)
     const isPhase2 = state.completedDays >= 84;
+    const phaseDays = state.completedDays % 84;
     
     if (isPhase2 && !state.hasSeenPhase2Celebration) {
       setShowPhaseCelebration(true);
@@ -33,10 +34,10 @@ export default function Home() {
     let cycle;
     if (isPhase2) {
       // Phase 2: 5 workouts + 1 rest day = 6 day cycle
-      cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][state.completedDays % 6] as any;
+      cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][phaseDays % 6] as any;
     } else {
       // Phase 1: 4 workouts + 1 rest day = 5 day cycle
-      cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][state.completedDays % 5] as any;
+      cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][phaseDays % 5] as any;
     }
     
     setDayType(cycle);
@@ -148,8 +149,11 @@ export default function Home() {
 
   // Calculate week and day based on current completed days (0-indexed to 1-indexed)
   // We want Week 1 / Day 1 on the very first day.
-  const currentWeek = Math.floor((state.completedDays || 0) / 7) + 1;
-  const currentDay = ((state.completedDays || 0) % 7) + 1;
+  const isPhase2 = state.completedDays >= 84;
+  const phaseDays = state.completedDays % 84;
+  
+  const currentWeek = Math.floor((phaseDays || 0) / 7) + 1;
+  const currentDay = ((phaseDays || 0) % 7) + 1;
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">

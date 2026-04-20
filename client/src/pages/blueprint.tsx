@@ -14,22 +14,23 @@ export default function Blueprint() {
   const { state } = useSystem();
   // Calculate current week and day based on completed days
   // e.g., if completedDays is 0, week is 1 and day is 1.
-  const currentWeek = Math.floor(state.completedDays / 7) + 1;
-  const currentDay = (state.completedDays % 7) + 1;
   const isPhase2 = state.completedDays >= 84;
-  const phaseCompletion = isPhase2 ? 100 : Math.min(100, Math.round((state.completedDays / 84) * 100)); // 12 weeks = 84 days
+  const phaseDays = state.completedDays % 84;
+  const currentWeek = Math.floor(phaseDays / 7) + 1;
+  const currentDay = (phaseDays % 7) + 1;
+  const phaseCompletion = Math.min(100, Math.round((phaseDays / 84) * 100)); // 12 weeks = 84 days
   
   let cycleName = "";
   let cycleDuration = "";
   let cycleType = "";
   
   if (isPhase2) {
-    const p2Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Upper Body Power", "Lower Body Power", "Active Recovery"][state.completedDays % 6];
+    const p2Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Upper Body Power", "Lower Body Power", "Active Recovery"][phaseDays % 6];
     cycleName = p2Cycle;
     cycleDuration = p2Cycle === "Active Recovery" ? "45 Min" : "65-75 Min";
     cycleType = p2Cycle === "Active Recovery" ? "Recovery" : "Hypertrophy / Power";
   } else {
-    const p1Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Strict Arms", "Active Recovery"][state.completedDays % 5];
+    const p1Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Strict Arms", "Active Recovery"][phaseDays % 5];
     cycleName = p1Cycle;
     cycleDuration = p1Cycle === "Active Recovery" || p1Cycle === "Strict Arms" ? "45 Min" : "60-75 Min";
     cycleType = p1Cycle === "Active Recovery" ? "Recovery" : "Foundation";
@@ -234,7 +235,7 @@ export default function Blueprint() {
                   <p className="text-xs text-muted-foreground">
                     {isPhase2 
                       ? "Phase 2 active. Increase compound lifts by 5% this block." 
-                      : "Hit 150g protein consistently for 14 days."}
+                      : "Complete Phase 1 (12 Weeks)"}
                   </p>
                 </div>
               </div>
