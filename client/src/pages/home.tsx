@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Dumbbell, Utensils, Bed, Target, Zap, Trophy, ShieldAlert, RefreshCw } from "lucide-react";
 import { useSystem } from "@/hooks/use-system";
 import { toast } from "@/hooks/use-toast";
 
 export default function Home() {
+  const [, setLocation] = useLocation();
   const { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, setMode } = useSystem();
   const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "UPPER" | "LOWER" | "REST">("PUSH");
   const [focusLine, setFocusLine] = useState("");
@@ -130,15 +129,13 @@ export default function Home() {
   };
 
   const isTodayCompleted = state.lastCompletedDate === new Date().toISOString().split('T')[0];
-  const allChecked = checks.train && checks.nutrition && checks.recovery;
   const hasLegacyFailureLock = isTodayCompleted && state.totalDays > 0 && state.streak === 0 && state.recoveryState === "idle";
   const isBreached = state.recoveryState === "breached" || hasLegacyFailureLock;
   const isRebuilding = state.recoveryState === "rebuilding";
   const canExecuteToday = !isTodayCompleted || isBreached || isRebuilding;
   const systemStatusLabel = isBreached ? "BREACHED" : isRebuilding ? "REBUILDING" : state.streak > 0 ? "ACTIVE" : "STANDBY";
-  const executionButtonLabel = isRebuilding ? "RESTORE SYSTEM" : "EXECUTE DAY";
   const modalTitle = isRebuilding ? "LOG REBUILD EXECUTION" : "DID YOU EXECUTE";
-
+  
   const handleStartRecovery = () => {
     startRecoveryProtocol();
     toast({
@@ -383,11 +380,11 @@ export default function Home() {
               Recovery condition: train, nutrition, and recovery must all be marked YES on the next log. One weak link keeps the system damaged.
             </div>
             <Button 
-              onClick={() => setShowCheckin(true)}
+              onClick={() => dayType === "REST" ? setShowCheckin(true) : setLocation('/workouts')}
               data-testid="button-open-rebuild-log"
               className="w-full rounded-none bg-yellow-400 text-black hover:bg-yellow-300 font-bold uppercase tracking-widest h-12 shadow-[0_0_20px_rgba(250,204,21,0.18)]"
             >
-              OPEN REBUILD LOG
+              {dayType === "REST" ? "OPEN REBUILD LOG" : "BEGIN REPAIR PROTOCOL (WORKOUTS)"}
             </Button>
           </Card>
         )}
@@ -415,7 +412,7 @@ export default function Home() {
               <span>{isRebuilding ? "RESTORATION REQUIRED" : isBreached ? "REBUILD REQUIRED" : "EXECUTION REQUIRED"}</span>
             </div>
             <Button 
-              onClick={() => setShowCheckin(true)}
+              onClick={() => dayType === "REST" ? setShowCheckin(true) : setLocation('/workouts')}
               data-testid="button-execute-day"
               className={`w-full h-14 rounded-none font-bold uppercase tracking-widest text-sm ${
                 isRebuilding
@@ -425,7 +422,7 @@ export default function Home() {
                     : "bg-primary text-black hover:bg-primary/90"
               }`}
             >
-              {isBreached ? "BEGIN REPAIR" : executionButtonLabel}
+              {isBreached ? "BEGIN REPAIR" : (dayType === "REST" ? "LOG REST DAY" : "EXECUTE DAY (WORKOUTS)")}
             </Button>
           </div>
         )}
