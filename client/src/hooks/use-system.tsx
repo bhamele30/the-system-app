@@ -41,7 +41,7 @@ const normalizeState = (savedState: Partial<SystemState>): SystemState => {
 
 export function useSystem() {
   const [state, setState] = useState<SystemState>(() => {
-    const saved = localStorage.getItem('system-execution-state-v3');
+    const saved = localStorage.getItem('system-execution-state-v4');
     if (saved) {
       try {
         return normalizeState(JSON.parse(saved));
@@ -53,7 +53,7 @@ export function useSystem() {
   });
 
   useEffect(() => {
-    localStorage.setItem('system-execution-state-v3', JSON.stringify(state));
+    localStorage.setItem('system-execution-state-v4', JSON.stringify(state));
   }, [state]);
 
   const submitDay = (train: boolean, nutrition: boolean, recovery: boolean) => {
