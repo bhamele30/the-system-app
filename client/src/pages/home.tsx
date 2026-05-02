@@ -156,39 +156,41 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
       
       {/* Top Bar Stats */}
-      <div className="w-full max-w-md flex justify-between items-center mb-12 border-b border-primary/20 pb-4">
+      <div className="w-full max-w-md flex justify-between items-end mb-12 border-b-2 border-white/10 pb-4">
         <div className="flex flex-col">
-          <span className="text-muted-foreground uppercase tracking-widest text-[10px]">TIME IN SYSTEM</span>
-          <span className="text-xl font-bold text-primary">WEEK {currentWeek} / DAY {currentDay}</span>
+          <span className="text-white/40 uppercase tracking-[0.3em] text-[9px] mb-1 font-bold">Execution Timeline</span>
+          <span className="text-2xl font-black text-white tracking-tighter">W{currentWeek} / D{currentDay}</span>
         </div>
         <div className="flex flex-col text-right">
-          <span className="text-muted-foreground uppercase tracking-widest text-[10px]">STREAK</span>
-          <span className="text-xl font-bold text-primary flex items-center justify-end gap-1">
-            <Zap className="w-4 h-4 fill-primary" /> {state.streak}
+          <span className="text-white/40 uppercase tracking-[0.3em] text-[9px] mb-1 font-bold">Unbroken Chain</span>
+          <span className="text-2xl font-black text-primary flex items-center justify-end tracking-tighter">
+            {state.streak} DAYS
           </span>
         </div>
       </div>
 
       {/* Philosophy / Overview */}
-      <div className="w-full max-w-md mb-8 p-5 border border-white/10 bg-black/40 rounded-none relative">
-        <div className="absolute top-0 left-0 w-2 h-full bg-primary/80"></div>
-        <h2 className="font-display text-lg font-bold text-primary uppercase tracking-wider mb-2">Strength Without Noise</h2>
-        <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-          This is not a workout program. It is a system of consistency, discipline, and execution. You do not negotiate with the protocol. You show up, you execute, and you raise your baseline standards.
-        </p>
-        <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-          <div className="border border-white/5 p-3 bg-white/5">
-            <div className="text-primary font-bold mb-1">PHASE 1 (12 WEEKS)</div>
-            <div className="text-muted-foreground">Foundation & Hypertrophy. 4 days on, 1 day off.</div>
-          </div>
-          <div className="border border-white/5 p-3 bg-white/5">
-            <div className="text-primary font-bold mb-1">PHASE 2 (12 WEEKS)</div>
-            <div className="text-muted-foreground">Density & Power. 5 days on, 1 day off.</div>
+      <div className="w-full max-w-md mb-10 border-2 border-white/10 bg-black rounded-none relative">
+        <div className="absolute top-0 left-0 w-2 h-full bg-primary"></div>
+        <div className="p-6">
+          <h2 className="font-display text-xl font-bold text-white uppercase tracking-[0.2em] mb-4">Accountability Protocol</h2>
+          <div className="text-foreground/90 text-sm leading-relaxed mb-6 font-mono space-y-4">
+            <p className="uppercase tracking-widest text-xs text-primary font-bold">
+              This is not a cute fitness app.
+            </p>
+            <p className="text-muted-foreground text-xs leading-loose">
+              It is a brutal system of consistency and absolute execution. If you want comfort, close this application now. If you want change, execute the protocol without excuse.
+            </p>
+            <ul className="space-y-3 border-l border-white/20 pl-4 mt-4">
+              <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>You do not negotiate.</li>
+              <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>Feelings are irrelevant.</li>
+              <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>Partial compliance is failure.</li>
+            </ul>
           </div>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-white/10">
-          <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2">SYSTEM MODE</div>
+        <div className="bg-white/5 p-4 border-t border-white/10">
+          <div className="text-[10px] text-primary font-bold uppercase tracking-[0.2em] mb-3">Operating Mode</div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {(["cut", "build", "maintain", "lock-in"] as const).map((modeOption) => (
               <Button
@@ -196,10 +198,10 @@ export default function Home() {
                 variant="outline"
                 size="sm"
                 onClick={() => setMode(modeOption)}
-                className={`font-display uppercase tracking-widest text-[10px] h-8 rounded-none border-white/10 ${
+                className={`font-display uppercase tracking-widest text-[10px] h-8 rounded-none border ${
                   state.mode === modeOption 
                     ? "bg-primary text-black hover:bg-primary/90 border-primary" 
-                    : "bg-black/50 text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    : "bg-black border-white/10 text-muted-foreground hover:bg-white/10 hover:text-white"
                 }`}
               >
                 {modeOption.replace("-", " ")}
@@ -212,21 +214,27 @@ export default function Home() {
       {/* Main Display */}
       <main className="w-full max-w-md space-y-6">
         
-        <div className="text-center mb-10">
-          <div className={`inline-block px-3 py-1 text-[10px] uppercase tracking-widest mb-4 border ${
+        <div className="text-center mb-10 border border-white/10 py-10 bg-black/80 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-black to-black opacity-50 pointer-events-none"></div>
+          
+          <div className={`relative z-10 inline-block px-4 py-1 text-[10px] uppercase tracking-[0.2em] font-bold mb-6 border ${
             isBreached
-              ? "border-destructive text-destructive animate-pulse"
+              ? "border-destructive text-destructive bg-destructive/10 animate-pulse"
               : isRebuilding
-                ? "border-yellow-400 text-yellow-300"
-                : "border-primary text-primary"
+                ? "border-yellow-400 text-yellow-300 bg-yellow-400/10"
+                : "border-primary text-primary bg-primary/10"
           }`}>
-            Day Type: {dayType}
+            PROTOCOL: {dayType}
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-tighter text-glow">THE SYSTEM</h1>
-          <div className={`mt-2 text-sm uppercase tracking-widest font-bold ${
-            isBreached ? "text-destructive" : isRebuilding ? "text-yellow-300" : "text-primary"
+          
+          <h1 className="relative z-10 text-6xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+            EXECUTE
+          </h1>
+          
+          <div className={`relative z-10 text-xs uppercase tracking-[0.4em] font-bold ${
+            isBreached ? "text-destructive drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]" : isRebuilding ? "text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]" : "text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]"
           }`}>
-            SYSTEM STATUS: {systemStatusLabel}
+            STATUS: {systemStatusLabel}
           </div>
         </div>
 
@@ -414,15 +422,15 @@ export default function Home() {
             <Button 
               onClick={() => dayType === "REST" ? setShowCheckin(true) : setLocation('/workouts')}
               data-testid="button-execute-day"
-              className={`w-full h-14 rounded-none font-bold uppercase tracking-widest text-sm ${
+              className={`w-full h-16 rounded-none font-black uppercase tracking-[0.2em] text-base border-2 ${
                 isRebuilding
-                  ? "bg-yellow-400 text-black hover:bg-yellow-300 shadow-[0_0_24px_rgba(250,204,21,0.18)]"
+                  ? "bg-yellow-400 text-black hover:bg-yellow-500 border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.2)]"
                   : isBreached
-                    ? "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[0_0_24px_rgba(255,0,0,0.18)]"
-                    : "bg-primary text-black hover:bg-primary/90"
+                    ? "bg-destructive text-destructive-foreground hover:bg-destructive/90 border-destructive shadow-[0_0_30px_rgba(255,0,0,0.2)]"
+                    : "bg-primary text-black hover:bg-primary/90 border-primary shadow-[0_0_30px_hsl(var(--primary)/0.2)]"
               }`}
             >
-              {isBreached ? "BEGIN REPAIR" : (dayType === "REST" ? "LOG REST DAY" : "EXECUTE DAY (WORKOUTS)")}
+              {isBreached ? "INITIATE REPAIR SEQUENCE" : (dayType === "REST" ? "LOG RECOVERY COMPLIANCE" : "ENTER TRAINING PROTOCOL")}
             </Button>
           </div>
         )}
