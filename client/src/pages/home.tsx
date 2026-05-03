@@ -176,10 +176,10 @@ export default function Home() {
           <h2 className="font-display text-xl font-bold text-white uppercase tracking-[0.2em] mb-4">Daily Execution System</h2>
           <div className="text-foreground/90 text-sm leading-relaxed mb-6 font-mono space-y-4">
             <p className="uppercase tracking-widest text-xs text-primary font-bold">
-              This is not a cute fitness app.
+              This is not motivation.<br />This is enforcement.
             </p>
-            <p className="text-muted-foreground text-xs leading-loose">
-              It is a brutal system of consistency and absolute execution. If you want comfort, close this application now. If you want change, execute the protocol without excuse.
+            <p className="text-muted-foreground text-xs leading-loose uppercase tracking-widest font-bold">
+              You either execute...<br />or you stay the same.
             </p>
             <ul className="space-y-3 border-l border-white/20 pl-4 mt-4">
               <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>You do not negotiate.</li>
