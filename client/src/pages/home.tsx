@@ -259,6 +259,11 @@ export default function Home() {
             {!isTodayCompleted && !isBreached && !isRebuilding && (
               <span className="ml-4 text-white/50 border-l border-white/20 pl-4">TIME: <span className="text-white animate-pulse">RUNNING</span></span>
             )}
+            {isTodayCompleted && !isRebuilding && !isBreached && (
+              <span className="ml-4 text-green-500 border-l border-white/20 pl-4 drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">
+                CHAIN: +1 DAY
+              </span>
+            )}
           </div>
           
           <div className="relative z-10 mt-6 inline-block bg-destructive/10 border border-destructive/30 px-3 py-1.5">
