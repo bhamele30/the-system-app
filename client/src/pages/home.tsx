@@ -215,24 +215,38 @@ export default function Home() {
         </div>
 
         <div className="bg-white/5 p-4 border-t border-white/10">
-          <div className="text-[10px] text-primary font-bold uppercase tracking-[0.2em] mb-3">Operating Mode</div>
-          <div className="grid grid-cols-3 gap-2">
-            {(["cut", "build", "lock-in"] as const).map((modeOption) => (
+          <div className="text-[10px] text-white/50 font-bold uppercase tracking-[0.2em] mb-3">Operating Mode</div>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            {(["cut", "build"] as const).map((modeOption) => (
               <Button
                 key={modeOption}
                 variant="outline"
                 size="sm"
                 onClick={() => setMode(modeOption)}
-                className={`font-display uppercase tracking-widest text-[10px] h-8 rounded-none border ${
+                className={`font-display uppercase tracking-widest text-[10px] h-10 rounded-none border ${
                   state.mode === modeOption 
-                    ? "bg-primary text-black hover:bg-primary/90 border-primary" 
+                    ? "bg-white text-black hover:bg-white/90 border-white" 
                     : "bg-black border-white/10 text-muted-foreground hover:bg-white/10 hover:text-white"
                 }`}
               >
-                {modeOption.replace("-", " ")}
+                {modeOption} (GOAL)
               </Button>
             ))}
           </div>
+          <Button
+            variant="outline"
+            onClick={() => setMode("lock-in")}
+            className={`w-full font-display font-black uppercase tracking-[0.3em] text-xs h-12 rounded-none border-2 transition-all relative overflow-hidden group ${
+              state.mode === "lock-in" 
+                ? "bg-primary text-black hover:bg-primary/90 border-primary shadow-[0_0_25px_hsl(var(--primary)/0.4)]" 
+                : "bg-primary/5 border-primary/50 text-primary hover:bg-primary/20 hover:border-primary shadow-[0_0_10px_hsl(var(--primary)/0.1)]"
+            }`}
+          >
+            {state.mode === "lock-in" && <div className="absolute inset-0 bg-white/20 animate-pulse mix-blend-overlay pointer-events-none"></div>}
+            <span className="relative z-10 flex items-center justify-center gap-2 w-full">
+              <span className="text-sm">🔥</span> LOCK IN (IDENTITY)
+            </span>
+          </Button>
         </div>
       </div>
 
