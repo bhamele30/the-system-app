@@ -115,7 +115,7 @@ export default function Home() {
       });
     } else if (result.success) {
       toast({
-        title: "SYSTEM MAINTAINED",
+        title: "SYSTEM LOCKED IN",
         description: "STAY IN THE SYSTEM.",
         variant: "default",
       });
@@ -435,7 +435,7 @@ export default function Home() {
             {state.lastOutcome === "restored"
               ? "SYSTEM RESTORED"
               : state.streak > 0
-                ? "SYSTEM MAINTAINED"
+                ? "SYSTEM LOCKED IN"
                 : "SYSTEM BROKEN"}
           </div>
         ) : (
