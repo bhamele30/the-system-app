@@ -173,6 +173,9 @@ export default function Home() {
   const currentWeek = Math.floor((phaseDays || 0) / 7) + 1;
   const currentDay = ((phaseDays || 0) % 7) + 1;
 
+  const displayDay = state.completedDays + 1;
+  const backgroundText = state.streak > 0 ? "NO MISSES" : (displayDay <= 30 ? `DAY ${displayDay}/30` : `WEEK ${Math.floor(displayDay / 7) + 1}/12`);
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
       
@@ -180,7 +183,9 @@ export default function Home() {
       <div className="w-full max-w-md flex justify-between items-end mb-12 border-b-2 border-white/10 pb-4">
         <div className="flex flex-col">
           <span className="text-white/40 uppercase tracking-[0.3em] text-[9px] mb-1 font-bold">Execution Timeline</span>
-          <span className="text-2xl font-black text-white tracking-tighter">W{currentWeek} / D{currentDay}</span>
+          <span className="text-2xl font-black text-white tracking-tighter">
+            {displayDay <= 30 ? `DAY ${displayDay}/30` : `WEEK ${Math.floor(displayDay / 7) + 1}/12`}
+          </span>
         </div>
         <div className="flex flex-col text-right">
           <span className="text-white/40 uppercase tracking-[0.3em] text-[9px] mb-1 font-bold">Unbroken Chain</span>
@@ -252,7 +257,14 @@ export default function Home() {
       {/* Main Display */}
       <main className="w-full max-w-md space-y-6">
         
-        <div className="text-center mb-10 border border-white/10 py-10 bg-black/80 relative overflow-hidden">
+        {/* DOMINANT VISUAL MOMENT */}
+        <div className="absolute top-[20vh] left-1/2 -translate-x-1/2 w-full text-center pointer-events-none z-0 overflow-hidden flex justify-center opacity-20">
+          <div className="text-[150px] font-black uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white/30 to-transparent leading-none whitespace-nowrap">
+            {backgroundText}
+          </div>
+        </div>
+
+        <div className="text-center mb-10 border border-white/10 py-10 bg-black/80 relative overflow-hidden z-10">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-black to-black opacity-50 pointer-events-none"></div>
           
           <div className={`relative z-10 inline-block px-4 py-1 text-[10px] uppercase tracking-[0.2em] font-bold mb-6 border ${
