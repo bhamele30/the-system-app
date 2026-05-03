@@ -188,6 +188,7 @@ export default function Home() {
           <span className="text-2xl font-black text-primary flex items-center justify-end tracking-tighter">
             {state.streak} DAYS
           </span>
+          <span className="text-destructive uppercase tracking-[0.2em] text-[9px] font-bold mt-1">MISS = RESET TO 0</span>
         </div>
       </div>
 
@@ -255,6 +256,12 @@ export default function Home() {
           
           <div className={`relative z-10 text-xs uppercase tracking-[0.4em] font-bold ${statusColor}`}>
             STATUS: {statusIcon} {systemStatusLabel}
+          </div>
+          
+          <div className="relative z-10 mt-6 inline-block bg-destructive/10 border border-destructive/30 px-3 py-1.5">
+            <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-destructive flex items-center gap-2">
+              <ShieldAlert className="w-3 h-3" /> MISS = RESET STREAK TO 0
+            </div>
           </div>
         </div>
 
