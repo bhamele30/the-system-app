@@ -67,23 +67,22 @@ export default function Home() {
     switch (state.mode) {
       case "cut":
         return {
-          train: "Maintain intensity. Drop volume if needed. Do not drop weight.",
-          nutrition: "Caloric deficit active. Protein priority (1.2g/lb). Strict adherence required.",
-          recovery: "Fatigue will be high. Sleep is non-negotiable."
+          train: "Push hard. Keep intensity high. No drop in weight.",
+          nutrition: "Deficit active. Strict adherence. Zero negotiation.",
+          recovery: "Fatigue will hit. Sleep is mandatory."
         };
       case "build":
         return {
-          train: "Push volume and intensity. Chase progressive overload.",
-          nutrition: "Caloric surplus active. Fuel the machine. Eat to grow.",
-          recovery: "Tissue repair requires 8+ hours of sleep and high hydration."
+          train: "Push volume. Chase overload. Leave nothing.",
+          nutrition: "Surplus active. Fuel the machine. Eat to grow.",
+          recovery: "Tissue repair required. Hydrate and sleep."
         };
       case "lock-in":
         return {
-          train: "Absolute focus. No distractions. Execute perfectly.",
+          train: "Absolute focus. No distractions. Execute.",
           nutrition: "100% adherence. Zero deviations allowed.",
-          recovery: "Total isolation for recovery. Disconnect and repair."
+          recovery: "Total isolation. Disconnect and repair."
         };
-      case "maintain":
       default:
         return {
           train: "Execute standard protocol. Form over ego.",
