@@ -254,8 +254,11 @@ export default function Home() {
             EXECUTE
           </h1>
           
-          <div className={`relative z-10 text-xs uppercase tracking-[0.4em] font-bold ${statusColor}`}>
-            STATUS: {statusIcon} {systemStatusLabel}
+          <div className="relative z-10 text-xs uppercase tracking-[0.4em] font-bold">
+            <span className={`${statusColor}`}>STATUS: {statusIcon} {systemStatusLabel}</span>
+            {!isTodayCompleted && !isBreached && !isRebuilding && (
+              <span className="ml-4 text-white/50 border-l border-white/20 pl-4">TIME: <span className="text-white animate-pulse">RUNNING</span></span>
+            )}
           </div>
           
           <div className="relative z-10 mt-6 inline-block bg-destructive/10 border border-destructive/30 px-3 py-1.5">
