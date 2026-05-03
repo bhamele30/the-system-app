@@ -133,7 +133,29 @@ export default function Home() {
   const isBreached = state.recoveryState === "breached" || hasLegacyFailureLock;
   const isRebuilding = state.recoveryState === "rebuilding";
   const canExecuteToday = !isTodayCompleted || isBreached || isRebuilding;
-  const systemStatusLabel = isBreached ? "BREACHED" : isRebuilding ? "REBUILDING" : state.streak > 0 ? "ACTIVE" : "STANDBY";
+  
+  let statusColor = "text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]";
+  let statusIcon = "🔴";
+  let systemStatusLabel = "NOT STARTED";
+
+  if (isBreached) {
+    statusColor = "text-destructive drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]";
+    statusIcon = "🔴";
+    systemStatusLabel = "BREACHED";
+  } else if (isRebuilding) {
+    statusColor = "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]";
+    statusIcon = "🟡";
+    systemStatusLabel = "REBUILDING";
+  } else if (isTodayCompleted) {
+    statusColor = "text-green-500 drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]";
+    statusIcon = "🟢";
+    systemStatusLabel = "COMPLETE";
+  } else if (state.streak > 0) {
+    // If they have a streak but haven't executed today
+    statusIcon = "🔴";
+    systemStatusLabel = "NOT STARTED";
+  }
+
   const modalTitle = isRebuilding ? "LOG REBUILD EXECUTION" : "DID YOU EXECUTE";
   
   const handleStartRecovery = () => {
@@ -231,10 +253,8 @@ export default function Home() {
             EXECUTE
           </h1>
           
-          <div className={`relative z-10 text-xs uppercase tracking-[0.4em] font-bold ${
-            isBreached ? "text-destructive drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]" : isRebuilding ? "text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]" : "text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]"
-          }`}>
-            STATUS: {systemStatusLabel}
+          <div className={`relative z-10 text-xs uppercase tracking-[0.4em] font-bold ${statusColor}`}>
+            STATUS: {statusIcon} {systemStatusLabel}
           </div>
         </div>
 
