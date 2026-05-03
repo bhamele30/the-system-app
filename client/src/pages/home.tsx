@@ -173,7 +173,7 @@ export default function Home() {
       <div className="w-full max-w-md mb-10 border-2 border-white/10 bg-black rounded-none relative">
         <div className="absolute top-0 left-0 w-2 h-full bg-primary"></div>
         <div className="p-6">
-          <h2 className="font-display text-xl font-bold text-white uppercase tracking-[0.2em] mb-4">Accountability Protocol</h2>
+          <h2 className="font-display text-xl font-bold text-white uppercase tracking-[0.2em] mb-4">Daily Execution System</h2>
           <div className="text-foreground/90 text-sm leading-relaxed mb-6 font-mono space-y-4">
             <p className="uppercase tracking-widest text-xs text-primary font-bold">
               This is not a cute fitness app.
