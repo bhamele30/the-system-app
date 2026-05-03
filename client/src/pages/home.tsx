@@ -174,7 +174,6 @@ export default function Home() {
   const currentDay = ((phaseDays || 0) % 7) + 1;
 
   const displayDay = state.completedDays + 1;
-  const backgroundText = state.streak > 0 ? "NO MISSES" : (displayDay <= 30 ? `DAY ${displayDay} / 30` : `WEEK ${Math.floor((displayDay - 1) / 7) + 1} / 12`);
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
@@ -258,13 +257,6 @@ export default function Home() {
 
       {/* Main Display */}
       <main className="w-full max-w-md space-y-6">
-        
-        {/* DOMINANT VISUAL MOMENT */}
-        <div className="absolute top-[12vh] left-1/2 -translate-x-1/2 w-full text-center pointer-events-none z-0 overflow-hidden flex justify-center">
-          <div className="text-[120px] md:text-[160px] font-black uppercase tracking-tighter text-white/20 leading-none whitespace-nowrap">
-            {backgroundText}
-          </div>
-        </div>
 
         <div className="text-center mb-10 border border-white/10 py-10 bg-black/80 relative overflow-hidden z-10">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-black to-black opacity-50 pointer-events-none"></div>
