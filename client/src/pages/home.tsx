@@ -201,9 +201,11 @@ export default function Home() {
             <p className="uppercase tracking-widest text-xs text-primary font-bold">
               This is not motivation.<br />This is enforcement.
             </p>
-            <p className="text-muted-foreground text-xs leading-loose uppercase tracking-widest font-bold">
-              EXECUTE<br />OR STAY THE SAME.
-            </p>
+            <div className="text-center py-6 my-6 space-y-4 border-y border-white/5 bg-white/[0.01]">
+              <div className="text-white font-black text-base uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">EXECUTE</div>
+              <div className="text-[10px] text-primary font-bold uppercase tracking-[0.3em]">OR</div>
+              <div className="text-white font-black text-base uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">STAY THE SAME.</div>
+            </div>
             <ul className="space-y-3 border-l border-white/20 pl-4 mt-4">
               <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>You do not negotiate.</li>
               <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>Feelings are irrelevant.</li>
