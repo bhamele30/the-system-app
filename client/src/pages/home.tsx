@@ -202,7 +202,7 @@ export default function Home() {
               This is not motivation.<br />This is enforcement.
             </p>
             <p className="text-muted-foreground text-xs leading-loose uppercase tracking-widest font-bold">
-              You either execute...<br />or you stay the same.
+              EXECUTE<br />OR STAY THE SAME.
             </p>
             <ul className="space-y-3 border-l border-white/20 pl-4 mt-4">
               <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>You do not negotiate.</li>
