@@ -174,7 +174,7 @@ export default function Home() {
   const currentDay = ((phaseDays || 0) % 7) + 1;
 
   const displayDay = state.completedDays + 1;
-  const backgroundText = state.streak > 0 ? "NO MISSES" : (displayDay <= 30 ? `DAY ${displayDay}/30` : `WEEK ${Math.floor(displayDay / 7) + 1}/12`);
+  const backgroundText = state.streak > 0 ? "NO MISSES" : (displayDay <= 30 ? `DAY ${displayDay} / 30` : `WEEK ${Math.floor((displayDay - 1) / 7) + 1} / 12`);
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
@@ -182,9 +182,11 @@ export default function Home() {
       {/* Top Bar Stats */}
       <div className="w-full max-w-md flex justify-between items-end mb-12 border-b-2 border-white/10 pb-4">
         <div className="flex flex-col">
-          <span className="text-white/40 uppercase tracking-[0.3em] text-[9px] mb-1 font-bold">Execution Timeline</span>
+          <span className="text-white/40 uppercase tracking-[0.3em] text-[9px] mb-1 font-bold">
+            {displayDay <= 30 ? "PHASE 1: LOCK IN" : "PHASE 2: EXECUTION"}
+          </span>
           <span className="text-2xl font-black text-white tracking-tighter">
-            {displayDay <= 30 ? `DAY ${displayDay}/30` : `WEEK ${Math.floor(displayDay / 7) + 1}/12`}
+            {displayDay <= 30 ? `DAY ${displayDay} / 30` : `WEEK ${Math.floor((displayDay - 1) / 7) + 1} / 12`}
           </span>
         </div>
         <div className="flex flex-col text-right">
