@@ -207,7 +207,8 @@ export default function Home() {
               This is not motivation.<br />This is enforcement.
             </p>
             <div className="text-center py-6 my-6 space-y-4 border-y border-white/5 bg-white/[0.01]">
-              <div className="text-white font-black text-base uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">EXECUTE</div>
+              <div className="text-[10px] text-white/50 font-bold uppercase tracking-[0.3em] mb-2">DECIDE.</div>
+              <div className="text-white font-black text-base uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">LEVEL UP</div>
               <div className="text-[10px] text-primary font-bold uppercase tracking-[0.3em]">OR</div>
               <div className="text-white font-black text-base uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">STAY THE SAME.</div>
             </div>
