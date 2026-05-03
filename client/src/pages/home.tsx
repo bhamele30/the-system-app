@@ -260,8 +260,8 @@ export default function Home() {
       <main className="w-full max-w-md space-y-6">
         
         {/* DOMINANT VISUAL MOMENT */}
-        <div className="absolute top-[20vh] left-1/2 -translate-x-1/2 w-full text-center pointer-events-none z-0 overflow-hidden flex justify-center opacity-20">
-          <div className="text-[150px] font-black uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white/30 to-transparent leading-none whitespace-nowrap">
+        <div className="absolute top-[12vh] left-1/2 -translate-x-1/2 w-full text-center pointer-events-none z-0 overflow-hidden flex justify-center">
+          <div className="text-[120px] md:text-[160px] font-black uppercase tracking-tighter text-white/20 leading-none whitespace-nowrap">
             {backgroundText}
           </div>
         </div>
