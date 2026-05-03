@@ -214,8 +214,8 @@ export default function Home() {
 
         <div className="bg-white/5 p-4 border-t border-white/10">
           <div className="text-[10px] text-primary font-bold uppercase tracking-[0.2em] mb-3">Operating Mode</div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {(["cut", "build", "maintain", "lock-in"] as const).map((modeOption) => (
+          <div className="grid grid-cols-3 gap-2">
+            {(["cut", "build", "lock-in"] as const).map((modeOption) => (
               <Button
                 key={modeOption}
                 variant="outline"

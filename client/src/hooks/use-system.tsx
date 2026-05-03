@@ -10,7 +10,7 @@ interface SystemState {
   recoveryState: "idle" | "breached" | "rebuilding";
   lastOutcome: "maintained" | "broken" | "restored" | null;
   exerciseLogs: Record<string, { weight: string, date: string }[]>;
-  mode: "cut" | "build" | "maintain" | "lock-in";
+  mode: "cut" | "build" | "lock-in";
 }
 
 const defaultState: SystemState = {
@@ -23,7 +23,7 @@ const defaultState: SystemState = {
   recoveryState: "idle",
   lastOutcome: null,
   exerciseLogs: {},
-  mode: "maintain",
+  mode: "lock-in",
 };
 
 const normalizeState = (savedState: Partial<SystemState>): SystemState => {
