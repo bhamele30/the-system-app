@@ -10,6 +10,8 @@ interface SystemState {
   recoveryState: "idle" | "breached" | "rebuilding";
   lastOutcome: "maintained" | "broken" | "restored" | null;
   exerciseLogs: Record<string, { weight: string, date: string }[]>;
+  nutritionLogs: Record<string, { id: string, food: string, calories: number, protein: number, carbs: number, fat: number }[]>;
+  loggedMealIds: Record<string, string[]>;
   mode: "cut" | "build" | "lock-in";
 }
 
@@ -23,6 +25,8 @@ const defaultState: SystemState = {
   recoveryState: "idle",
   lastOutcome: null,
   exerciseLogs: {},
+  nutritionLogs: {},
+  loggedMealIds: {},
   mode: "lock-in",
 };
 
@@ -124,9 +128,72 @@ export function useSystem() {
     });
   };
 
+  const logNutrition = (food: string, calories: number, protein: number, carbs: number, fat: number) => {
+    const today = new Date().toISOString().split('T')[0];
+    const newId = `custom-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    
+    setState(prev => {
+      const logs = prev.nutritionLogs || {};
+      const todayLogs = logs[today] || [];
+      const currentIds = prev.loggedMealIds?.[today] || [];
+      
+      return {
+        ...prev,
+        nutritionLogs: {
+          ...logs,
+          [today]: [...todayLogs, { 
+            id: newId, 
+            food, 
+            calories, 
+            protein, 
+            carbs, 
+            fat 
+          }]
+        },
+        loggedMealIds: {
+          ...(prev.loggedMealIds || {}),
+          [today]: [...currentIds, newId]
+        }
+      };
+    });
+  };
+
+  const removeNutritionLog = (id: string) => {
+    const today = new Date().toISOString().split('T')[0];
+    setState(prev => {
+      const logs = prev.nutritionLogs || {};
+      const todayLogs = logs[today] || [];
+      return {
+        ...prev,
+        nutritionLogs: {
+          ...logs,
+          [today]: todayLogs.filter(log => log.id !== id)
+        }
+      }
+    });
+  };
+
+  const toggleMealId = (mealId: string) => {
+    const today = new Date().toISOString().split('T')[0];
+    setState(prev => {
+        const currentIds = prev.loggedMealIds?.[today] || [];
+        const newIds = currentIds.includes(mealId) 
+            ? currentIds.filter(id => id !== mealId) 
+            : [...currentIds, mealId];
+        
+        return {
+            ...prev,
+            loggedMealIds: {
+                ...(prev.loggedMealIds || {}),
+                [today]: newIds
+            }
+        };
+    });
+  };
+
   const setMode = (mode: SystemState["mode"]) => {
     setState(prev => ({ ...prev, mode }));
   };
 
-  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, setMode };
+  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode };
 }

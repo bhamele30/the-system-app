@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity, CheckCircle2, ChevronRight } from "lucide-react";
+import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity, CheckCircle2, ChevronRight, Trash2 } from "lucide-react";
 import nutritionBg from "@/assets/nutrition-bg.png";
+
+import { useSystem } from "@/hooks/use-system";
 
 // Daily Targets
 const TARGETS = {
@@ -89,14 +91,32 @@ const MEALS = [
 ];
 
 export default function Nutrition() {
-  const [loggedMeals, setLoggedMeals] = useState<string[]>([]);
-  const [customMeals, setCustomMeals] = useState<any[]>([]);
+  const { state, logNutrition, toggleMealId, removeNutritionLog } = useSystem();
+  
+  const today = new Date().toISOString().split('T')[0];
+  const loggedMeals = state.loggedMealIds?.[today] || [];
+  
   const [currentMacros, setCurrentMacros] = useState({ p: 0, c: 0, f: 0, kcal: 0 });
   const [showCustomModal, setShowCustomModal] = useState(false);
   const [newMeal, setNewMeal] = useState({
     name: "",
     p: "", c: "", f: "", kcal: ""
   });
+  
+  // Custom meals from logs
+  const customMeals = (state.nutritionLogs[today] || []).map(log => ({
+    id: log.id,
+    time: "Custom Meal",
+    name: log.food,
+    desc: "Manually entered meal.",
+    macros: {
+        p: log.protein,
+        c: log.carbs,
+        f: log.fat,
+        kcal: log.calories
+    },
+    isCustom: true
+  }));
 
   // Recalculate macros whenever logged meals change
   useEffect(() => {
@@ -116,30 +136,20 @@ export default function Nutrition() {
   }, [loggedMeals, customMeals]);
 
   const toggleMeal = (mealId: string) => {
-    setLoggedMeals(prev => 
-      prev.includes(mealId) 
-        ? prev.filter(id => id !== mealId)
-        : [...prev, mealId]
-    );
+    toggleMealId(mealId);
   };
 
   const handleAddCustomMeal = () => {
     if (!newMeal.name) return;
-    const meal = {
-      id: `custom-${Date.now()}`,
-      time: "Custom Meal",
-      name: newMeal.name,
-      desc: "Manually entered meal.",
-      macros: {
-        p: parseInt(newMeal.p) || 0,
-        c: parseInt(newMeal.c) || 0,
-        f: parseInt(newMeal.f) || 0,
-        kcal: parseInt(newMeal.kcal) || 0
-      }
-    };
     
-    setCustomMeals([...customMeals, meal]);
-    setLoggedMeals([...loggedMeals, meal.id]);
+    logNutrition(
+      newMeal.name,
+      parseInt(newMeal.kcal) || 0,
+      parseInt(newMeal.p) || 0,
+      parseInt(newMeal.c) || 0,
+      parseInt(newMeal.f) || 0
+    );
+
     setShowCustomModal(false);
     setNewMeal({ name: "", p: "", c: "", f: "", kcal: "" });
   };
@@ -242,6 +252,10 @@ export default function Nutrition() {
                   meal={meal}
                   isLogged={loggedMeals.includes(meal.id)}
                   onToggle={() => toggleMeal(meal.id)}
+                  onRemove={meal.isCustom ? (e) => {
+                    e.stopPropagation();
+                    removeNutritionLog(meal.id);
+                  } : undefined}
                 />
               ))}
             </div>
@@ -410,7 +424,7 @@ function MacroBar({ icon: Icon, label, current, target, unit, color, description
   );
 }
 
-function MealCard({ meal, isLogged, onToggle }: { meal: any, isLogged: boolean, onToggle: () => void }) {
+function MealCard({ meal, isLogged, onToggle, onRemove }: { meal: any, isLogged: boolean, onToggle: () => void, onRemove?: (e: React.MouseEvent) => void }) {
   return (
     <div 
       onClick={onToggle}
@@ -424,9 +438,19 @@ function MealCard({ meal, isLogged, onToggle }: { meal: any, isLogged: boolean, 
         <span className="text-xs text-primary font-display tracking-widest uppercase flex items-center gap-2">
           {meal.time}
         </span>
-        <span className="text-xs font-mono text-muted-foreground bg-black/40 px-2 py-1 rounded border border-white/5">
-          P: {meal.macros.p}g | C: {meal.macros.c}g | F: {meal.macros.f}g | {meal.macros.kcal} kcal
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono text-muted-foreground bg-black/40 px-2 py-1 rounded border border-white/5">
+            P: {meal.macros.p}g | C: {meal.macros.c}g | F: {meal.macros.f}g | {meal.macros.kcal} kcal
+          </span>
+          {meal.isCustom && onRemove && (
+            <button 
+              onClick={onRemove}
+              className="text-muted-foreground hover:text-red-500 transition-colors p-1"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
       
       <div className="flex justify-between items-center mb-2">
