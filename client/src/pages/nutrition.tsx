@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -96,7 +96,6 @@ export default function Nutrition() {
   const today = new Date().toISOString().split('T')[0];
   const loggedMeals = state.loggedMealIds?.[today] || [];
   
-  const [currentMacros, setCurrentMacros] = useState({ p: 0, c: 0, f: 0, kcal: 0 });
   const [showCustomModal, setShowCustomModal] = useState(false);
   const [newMeal, setNewMeal] = useState({
     name: "",
@@ -118,10 +117,12 @@ export default function Nutrition() {
     isCustom: true
   }));
 
-  // Recalculate macros whenever logged meals change
-  useEffect(() => {
-    const allMeals = [...MEALS, ...customMeals];
-    const newMacros = loggedMeals.reduce((acc, mealId) => {
+  // Calculate current macros
+  const allMeals = [...MEALS, ...customMeals];
+  
+  // Create currentMacros via useMemo to avoid re-renders during render phase
+  const currentMacros = useMemo(() => {
+    return loggedMeals.reduce((acc, mealId) => {
       const meal = allMeals.find(m => m.id === mealId);
       if (meal) {
         acc.p += meal.macros.p;
@@ -131,9 +132,7 @@ export default function Nutrition() {
       }
       return acc;
     }, { p: 0, c: 0, f: 0, kcal: 0 });
-    
-    setCurrentMacros(newMacros);
-  }, [loggedMeals, customMeals]);
+  }, [loggedMeals, allMeals]);
 
   const toggleMeal = (mealId: string) => {
     toggleMealId(mealId);
