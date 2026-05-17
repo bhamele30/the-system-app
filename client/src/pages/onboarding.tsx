@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { useSystem } from "@/hooks/use-system";
-import { Crosshair, ShieldCheck, Target, Activity, ChevronRight } from "lucide-react";
+import { Crosshair, ShieldCheck, Target, Activity, ChevronRight, User } from "lucide-react";
 
 export default function Onboarding() {
   const [, setLocation] = useLocation();
@@ -11,9 +12,20 @@ export default function Onboarding() {
   
   const [step, setStep] = useState(0);
   const [selectedMode, setSelectedMode] = useState<"lock-in" | "cut" | "build" | null>(null);
-  const [metrics, setMetrics] = useState({ weight: "", bf: "" });
-  const [experience, setExperience] = useState<string | null>(null);
   
+  // Step 1: Body Profile
+  const [profile, setProfile] = useState({
+    age: 30,
+    sex: "M",
+    height: 70, // inches
+    weight: 185,
+    bf: 15,
+    waist: 32,
+    activity: "active",
+    trainingDays: 4
+  });
+  
+  const [experience, setExperience] = useState<string | null>(null);
   const [processingState, setProcessingState] = useState(0);
 
   useEffect(() => {
@@ -28,8 +40,8 @@ export default function Onboarding() {
   }, [step]);
 
   const handleNext = () => {
-    if (step === 1 && !selectedMode) return;
-    if (step === 2 && (!metrics.weight || !metrics.bf)) return;
+    if (step === 1 && (!profile.weight || !profile.height)) return;
+    if (step === 2 && !selectedMode) return;
     if (step === 3 && !experience) return;
     
     setStep(s => s + 1);
@@ -42,6 +54,12 @@ export default function Onboarding() {
     setLocation("/");
   };
 
+  const formatHeight = (inches: number) => {
+    const ft = Math.floor(inches / 12);
+    const inRem = inches % 12;
+    return `${ft}'${inRem}"`;
+  };
+
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 font-mono relative overflow-hidden">
       
@@ -50,7 +68,7 @@ export default function Onboarding() {
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
       <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
       
-      <div className="max-w-xl w-full relative z-10">
+      <div className="max-w-xl w-full relative z-10 py-12">
         
         {step === 0 && (
           <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center">
@@ -81,8 +99,142 @@ export default function Onboarding() {
 
         {step === 1 && (
           <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
                 <h2 className="text-primary text-xs tracking-[0.2em] font-bold">STEP 1/3</h2>
+                <span className="text-xs text-muted-foreground tracking-widest uppercase">BODY PROFILE</span>
+            </div>
+
+            <div className="space-y-8">
+              {/* Sex & Age */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
+                    Sex <span className="text-primary font-bold">{profile.sex}</span>
+                  </label>
+                  <div className="flex border border-white/10">
+                    <button 
+                      onClick={() => setProfile({...profile, sex: "M"})}
+                      className={`flex-1 py-3 text-sm font-bold transition-colors ${profile.sex === "M" ? "bg-primary/20 text-primary border-b-2 border-primary" : "text-muted-foreground hover:bg-white/5"}`}
+                    >M</button>
+                    <button 
+                      onClick={() => setProfile({...profile, sex: "F"})}
+                      className={`flex-1 py-3 text-sm font-bold transition-colors ${profile.sex === "F" ? "bg-primary/20 text-primary border-b-2 border-primary" : "text-muted-foreground hover:bg-white/5"}`}
+                    >F</button>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
+                    Age <span className="text-primary font-bold">{profile.age} yrs</span>
+                  </label>
+                  <div className="pt-3 pb-2">
+                    <Slider 
+                      value={[profile.age]} 
+                      min={18} max={80} step={1}
+                      onValueChange={([val]) => setProfile({...profile, age: val})}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Height & Weight */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
+                    Height <span className="text-primary font-bold">{formatHeight(profile.height)}</span>
+                  </label>
+                  <div className="pt-3 pb-2">
+                    <Slider 
+                      value={[profile.height]} 
+                      min={60} max={84} step={1}
+                      onValueChange={([val]) => setProfile({...profile, height: val})}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
+                    Weight <span className="text-primary font-bold">{profile.weight} lbs</span>
+                  </label>
+                  <Input 
+                    type="number" 
+                    value={profile.weight}
+                    onChange={e => setProfile({...profile, weight: parseInt(e.target.value) || 0})}
+                    className="bg-black/50 border-white/10 h-10 text-center font-bold font-mono focus-visible:ring-primary rounded-none"
+                  />
+                </div>
+              </div>
+
+              {/* BF% & Waist */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
+                    Est. Body Fat <span className="text-primary font-bold">{profile.bf}%</span>
+                  </label>
+                  <div className="pt-3 pb-2">
+                    <Slider 
+                      value={[profile.bf]} 
+                      min={5} max={40} step={1}
+                      onValueChange={([val]) => setProfile({...profile, bf: val})}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
+                    Waist <span className="text-primary font-bold">{profile.waist}"</span>
+                  </label>
+                  <div className="pt-3 pb-2">
+                    <Slider 
+                      value={[profile.waist]} 
+                      min={24} max={50} step={1}
+                      onValueChange={([val]) => setProfile({...profile, waist: val})}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Activity Level & Training Days */}
+              <div className="space-y-3 mt-4">
+                <label className="text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
+                  Activity Level <span className="text-primary font-bold capitalize">{profile.activity}</span>
+                </label>
+                <div className="grid grid-cols-3 gap-2 border border-white/10 p-1 bg-black/50">
+                  {["sedentary", "active", "intense"].map(act => (
+                    <button 
+                      key={act}
+                      onClick={() => setProfile({...profile, activity: act})}
+                      className={`py-2 text-xs font-bold transition-all uppercase tracking-wider ${profile.activity === act ? "bg-primary/20 text-primary border border-primary/50" : "text-muted-foreground hover:bg-white/5 border border-transparent"}`}
+                    >{act}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
+                  Training Days / Week <span className="text-primary font-bold">{profile.trainingDays} Days</span>
+                </label>
+                <div className="pt-3 pb-2">
+                  <Slider 
+                    value={[profile.trainingDays]} 
+                    min={0} max={7} step={1}
+                    onValueChange={([val]) => setProfile({...profile, trainingDays: val})}
+                  />
+                </div>
+              </div>
+
+            </div>
+
+            <Button 
+              onClick={handleNext}
+              className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.2em] text-sm mt-8"
+            >
+              RECORD PROFILE <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                <h2 className="text-primary text-xs tracking-[0.2em] font-bold">STEP 2/3</h2>
                 <span className="text-xs text-muted-foreground tracking-widest uppercase">Directives</span>
             </div>
 
@@ -115,49 +267,6 @@ export default function Onboarding() {
               className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.2em] text-sm disabled:opacity-50 disabled:bg-secondary disabled:text-muted-foreground disabled:border-none"
             >
               CONFIRM DIRECTIVE <ChevronRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
-        )}
-
-        {step === 2 && (
-          <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
-             <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
-                <h2 className="text-primary text-xs tracking-[0.2em] font-bold">STEP 2/3</h2>
-                <span className="text-xs text-muted-foreground tracking-widest uppercase">Metrics</span>
-            </div>
-
-            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Current Baselines</h3>
-            <p className="text-sm text-muted-foreground">Input accurate physiological data. The system cannot calibrate on lies.</p>
-            
-            <div className="space-y-6 mt-8">
-              <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-muted-foreground">Bodyweight (LBS)</label>
-                <Input 
-                  type="number" 
-                  value={metrics.weight}
-                  onChange={e => setMetrics({...metrics, weight: e.target.value})}
-                  className="bg-black/50 border-white/10 h-14 text-lg font-bold font-mono focus-visible:ring-primary focus-visible:border-primary rounded-none"
-                  placeholder="e.g. 185"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-muted-foreground">Est. Body Fat (%)</label>
-                <Input 
-                  type="number" 
-                  value={metrics.bf}
-                  onChange={e => setMetrics({...metrics, bf: e.target.value})}
-                  className="bg-black/50 border-white/10 h-14 text-lg font-bold font-mono focus-visible:ring-primary focus-visible:border-primary rounded-none"
-                  placeholder="e.g. 15"
-                />
-              </div>
-            </div>
-
-            <Button 
-              onClick={handleNext}
-              disabled={!metrics.weight || !metrics.bf}
-              className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.2em] text-sm mt-8 disabled:opacity-50 disabled:bg-secondary disabled:text-muted-foreground disabled:border-none"
-            >
-              RECORD METRICS <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         )}
@@ -205,7 +314,7 @@ export default function Onboarding() {
             <h3 className="text-2xl font-bold uppercase tracking-widest text-primary text-glow">CALIBRATING SYSTEM</h3>
             
             <div className="space-y-2 mt-8 text-left max-w-xs mx-auto font-mono text-sm">
-                <p className="text-white">&gt; Analyzing biometric data...</p>
+                <p className="text-white">&gt; Analyzing {profile.weight}lbs @ {profile.bf}% BF...</p>
                 {processingState >= 1 && <p className="text-white animate-in fade-in">&gt; Setting caloric baseline: {selectedMode === 'cut' ? 'DEFICIT' : selectedMode === 'build' ? 'SURPLUS' : 'MAINTENANCE'}</p>}
                 {processingState >= 2 && <p className="text-white animate-in fade-in">&gt; Adjusting volume for {experience?.toUpperCase()} level...</p>}
                 {processingState >= 3 && <p className="text-primary animate-in fade-in font-bold">&gt; PROTOCOLS LOCKED.</p>}
@@ -230,7 +339,7 @@ export default function Onboarding() {
               </div>
               <div className="flex justify-between border-b border-white/5 pb-2">
                 <span className="text-xs text-muted-foreground uppercase tracking-widest">Starting Wt</span>
-                <span className="text-xs text-white font-bold uppercase tracking-widest">{metrics.weight} LBS</span>
+                <span className="text-xs text-white font-bold uppercase tracking-widest">{profile.weight} LBS</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-xs text-muted-foreground uppercase tracking-widest">Level</span>
