@@ -393,7 +393,7 @@ export default function Workouts() {
         <div className="text-primary font-display font-medium tracking-widest text-xs mb-2 uppercase">Training Library</div>
         <h1 className="text-4xl font-bold text-glow">WORKOUT PLANS</h1>
         <p className="text-muted-foreground mt-2 max-w-2xl">
-          The exact lifting protocols used in the 3-year blueprint. Focus on progressive overload and perfect form.
+          The exact lifting protocols required to build an unbreakable frame. Focus on progressive overload and perfect form. Do not deviate.
         </p>
       </header>
 
