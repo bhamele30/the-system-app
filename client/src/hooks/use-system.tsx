@@ -55,22 +55,41 @@ const normalizeState = (savedState: Partial<SystemState>): SystemState => {
   return merged;
 };
 
-export function useSystem() {
-  const [state, setState] = useState<SystemState>(() => {
-    const saved = localStorage.getItem('system-execution-state-v4');
-    if (saved) {
-      try {
-        return normalizeState(JSON.parse(saved));
-      } catch (e) {
-        return defaultState;
-      }
+// Simple global state manager to ensure all components stay in sync
+let globalState: SystemState = defaultState;
+let isInitialized = false;
+
+const initGlobalState = () => {
+  if (isInitialized) return;
+  isInitialized = true;
+  const saved = localStorage.getItem('system-execution-state-v4');
+  if (saved) {
+    try {
+      globalState = normalizeState(JSON.parse(saved));
+    } catch (e) {
+      globalState = defaultState;
     }
-    return defaultState;
-  });
+  }
+};
+
+const listeners = new Set<(state: SystemState) => void>();
+
+const setGlobalState = (updater: (prev: SystemState) => SystemState) => {
+  globalState = updater(globalState);
+  localStorage.setItem('system-execution-state-v4', JSON.stringify(globalState));
+  listeners.forEach(listener => listener(globalState));
+};
+
+export function useSystem() {
+  initGlobalState();
+  const [state, setState] = useState<SystemState>(globalState);
 
   useEffect(() => {
-    localStorage.setItem('system-execution-state-v4', JSON.stringify(state));
-  }, [state]);
+    listeners.add(setState);
+    return () => {
+      listeners.delete(setState);
+    };
+  }, []);
 
   const submitDay = (train: boolean, nutrition: boolean, recovery: boolean) => {
     const today = new Date().toISOString().split('T')[0];
@@ -95,7 +114,7 @@ export function useSystem() {
       lastOutcome = "broken";
     }
 
-    setState(prev => ({
+    setGlobalState(prev => ({
       ...prev,
       streak: newStreak,
       score: newScore,
@@ -110,14 +129,14 @@ export function useSystem() {
   };
 
   const setHasSeenPhase2Celebration = () => {
-    setState(prev => ({
+    setGlobalState(prev => ({
       ...prev,
       hasSeenPhase2Celebration: true
     }));
   };
 
   const startRecoveryProtocol = () => {
-    setState(prev => ({
+    setGlobalState(prev => ({
       ...prev,
       recoveryState: "rebuilding"
     }));
@@ -126,7 +145,7 @@ export function useSystem() {
   const logExerciseWeight = (exerciseName: string, weight: string) => {
     const today = new Date().toISOString().split('T')[0];
     
-    setState(prev => {
+    setGlobalState(prev => {
       const logs = prev.exerciseLogs || {};
       const history = logs[exerciseName] || [];
       
@@ -144,7 +163,7 @@ export function useSystem() {
     const today = new Date().toISOString().split('T')[0];
     const newId = `custom-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     
-    setState(prev => {
+    setGlobalState(prev => {
       const logs = prev.nutritionLogs || {};
       const todayLogs = logs[today] || [];
       const currentIds = prev.loggedMealIds?.[today] || [];
@@ -172,7 +191,7 @@ export function useSystem() {
 
   const removeNutritionLog = (id: string) => {
     const today = new Date().toISOString().split('T')[0];
-    setState(prev => {
+    setGlobalState(prev => {
       const logs = prev.nutritionLogs || {};
       const todayLogs = logs[today] || [];
       return {
@@ -187,7 +206,7 @@ export function useSystem() {
 
   const toggleMealId = (mealId: string) => {
     const today = new Date().toISOString().split('T')[0];
-    setState(prev => {
+    setGlobalState(prev => {
         const currentIds = prev.loggedMealIds?.[today] || [];
         const newIds = currentIds.includes(mealId) 
             ? currentIds.filter(id => id !== mealId) 
@@ -204,7 +223,7 @@ export function useSystem() {
   };
 
   const setMode = (mode: SystemState["mode"], targets?: SystemState["targets"], profile?: SystemState["profile"]) => {
-    setState(prev => ({ ...prev, mode, targets: targets || prev.targets, profile: profile || prev.profile }));
+    setGlobalState(prev => ({ ...prev, mode, targets: targets || prev.targets, profile: profile || prev.profile }));
   };
 
   return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode };
