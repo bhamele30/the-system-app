@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity, CheckCircle2, ChevronRight, Trash2 } from "lucide-react";
+import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity, CheckCircle2, ChevronRight, Trash2, Edit2 } from "lucide-react";
 import nutritionBg from "@/assets/nutrition-bg.png";
 
 import { useSystem } from "@/hooks/use-system";
@@ -128,17 +128,18 @@ export default function Nutrition() {
   const loggedMeals = state.loggedMealIds?.[today] || [];
   
   const [showCustomModal, setShowCustomModal] = useState(false);
+  const [editingMealId, setEditingMealId] = useState<string | null>(null);
   const [newMeal, setNewMeal] = useState({
     name: "",
     p: "", c: "", f: "", kcal: ""
   });
   
   // Custom meals from logs
-  const customMeals = (state.nutritionLogs[today] || []).map(log => ({
+  const customMeals = (state.customMealsLibrary || []).map(log => ({
     id: log.id,
     time: "Custom Meal",
     name: log.food,
-    desc: "Manually entered meal.",
+    desc: "Saved Custom Meal",
     macros: {
         p: log.protein,
         c: log.carbs,
@@ -177,11 +178,25 @@ export default function Nutrition() {
       parseInt(newMeal.kcal) || 0,
       parseInt(newMeal.p) || 0,
       parseInt(newMeal.c) || 0,
-      parseInt(newMeal.f) || 0
+      parseInt(newMeal.f) || 0,
+      editingMealId || undefined
     );
 
     setShowCustomModal(false);
     setNewMeal({ name: "", p: "", c: "", f: "", kcal: "" });
+    setEditingMealId(null);
+  };
+
+  const handleEditCustomMeal = (meal: any) => {
+    setNewMeal({
+      name: meal.name,
+      p: meal.macros.p.toString(),
+      c: meal.macros.c.toString(),
+      f: meal.macros.f.toString(),
+      kcal: meal.macros.kcal.toString(),
+    });
+    setEditingMealId(meal.id);
+    setShowCustomModal(true);
   };
 
   const fallbackTargets = getTargets(state.mode);
@@ -275,18 +290,26 @@ export default function Nutrition() {
                 <Apple className="w-5 h-5 text-primary" />
                 MEALS
               </h2>
-              <Button size="sm" variant="secondary" className="border-white/10" onClick={() => setShowCustomModal(true)}>
+              <Button size="sm" variant="secondary" className="border-white/10" onClick={() => {
+                setEditingMealId(null);
+                setNewMeal({ name: "", p: "", c: "", f: "", kcal: "" });
+                setShowCustomModal(true);
+              }}>
                 <Plus className="w-4 h-4 mr-2" /> Custom
               </Button>
             </div>
             <p className="text-sm text-muted-foreground mb-6">Click to log your meals. Rotate these templates or add your own.</p>
             <div className="grid gap-4">
-              {[...MEALS, ...customMeals].map((meal) => (
+              {[...customMeals, ...MEALS].map((meal) => (
                 <MealCard 
                   key={meal.id}
                   meal={meal}
                   isLogged={loggedMeals.includes(meal.id)}
                   onToggle={() => toggleMeal(meal.id)}
+                  onEdit={meal.isCustom ? (e) => {
+                    e.stopPropagation();
+                    handleEditCustomMeal(meal);
+                  } : undefined}
                   onRemove={meal.isCustom ? (e) => {
                     e.stopPropagation();
                     removeNutritionLog(meal.id);
@@ -368,7 +391,7 @@ export default function Nutrition() {
         <DialogContent className="glass-panel border-primary/20 bg-background/95 backdrop-blur-xl sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-2xl font-display font-bold text-primary mb-2">
-              ADD CUSTOM MEAL
+              {editingMealId ? 'EDIT CUSTOM MEAL' : 'ADD CUSTOM MEAL'}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -423,7 +446,7 @@ export default function Nutrition() {
               onClick={handleAddCustomMeal}
               className="w-full mt-4 font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90"
             >
-              Add to Log
+              {editingMealId ? 'Save Changes' : 'Add to Log'}
             </Button>
           </div>
         </DialogContent>
@@ -459,7 +482,7 @@ function MacroBar({ icon: Icon, label, current, target, unit, color, description
   );
 }
 
-function MealCard({ meal, isLogged, onToggle, onRemove }: { meal: any, isLogged: boolean, onToggle: () => void, onRemove?: (e: React.MouseEvent) => void }) {
+function MealCard({ meal, isLogged, onToggle, onEdit, onRemove }: { meal: any, isLogged: boolean, onToggle: () => void, onEdit?: (e: React.MouseEvent) => void, onRemove?: (e: React.MouseEvent) => void }) {
   return (
     <div 
       onClick={onToggle}
@@ -477,13 +500,25 @@ function MealCard({ meal, isLogged, onToggle, onRemove }: { meal: any, isLogged:
           <span className="text-xs font-mono text-muted-foreground bg-black/40 px-2 py-1 rounded border border-white/5">
             P: {meal.macros.p}g | C: {meal.macros.c}g | F: {meal.macros.f}g | {meal.macros.kcal} kcal
           </span>
-          {meal.isCustom && onRemove && (
-            <button 
-              onClick={onRemove}
-              className="text-muted-foreground hover:text-red-500 transition-colors p-1"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
+          {meal.isCustom && (
+            <div className="flex items-center">
+              {onEdit && (
+                <button 
+                  onClick={onEdit}
+                  className="text-muted-foreground hover:text-primary transition-colors p-1"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+              )}
+              {onRemove && (
+                <button 
+                  onClick={onRemove}
+                  className="text-muted-foreground hover:text-red-500 transition-colors p-1"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>

@@ -25,6 +25,7 @@ interface SystemState {
   profile?: {
     classification: string;
   };
+  customMealsLibrary: { id: string, food: string, calories: number, protein: number, carbs: number, fat: number }[];
 }
 
 const defaultState: SystemState = {
@@ -40,6 +41,7 @@ const defaultState: SystemState = {
   nutritionLogs: {},
   loggedMealIds: {},
   mode: "lock-in",
+  customMealsLibrary: [],
 };
 
 const normalizeState = (savedState: Partial<SystemState>): SystemState => {
@@ -159,32 +161,49 @@ export function useSystem() {
     });
   };
 
-  const logNutrition = (food: string, calories: number, protein: number, carbs: number, fat: number) => {
+  const logNutrition = (food: string, calories: number, protein: number, carbs: number, fat: number, editId?: string) => {
     const today = new Date().toISOString().split('T')[0];
-    const newId = `custom-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const newId = editId || `custom-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     
     setGlobalState(prev => {
       const logs = prev.nutritionLogs || {};
       const todayLogs = logs[today] || [];
       const currentIds = prev.loggedMealIds?.[today] || [];
+      const library = prev.customMealsLibrary || [];
+      
+      let updatedLogs = todayLogs;
+      let updatedIds = currentIds;
+      let updatedLibrary = library;
+
+      if (editId) {
+        updatedLogs = todayLogs.map(log => 
+          log.id === editId 
+            ? { ...log, food, calories, protein, carbs, fat }
+            : log
+        );
+        updatedLibrary = library.map(log => 
+          log.id === editId 
+            ? { ...log, food, calories, protein, carbs, fat }
+            : log
+        );
+      } else {
+        const newMealObj = { id: newId, food, calories, protein, carbs, fat };
+        updatedLogs = [...todayLogs, newMealObj];
+        updatedIds = [...currentIds, newId];
+        updatedLibrary = [...library, newMealObj];
+      }
       
       return {
         ...prev,
         nutritionLogs: {
           ...logs,
-          [today]: [...todayLogs, { 
-            id: newId, 
-            food, 
-            calories, 
-            protein, 
-            carbs, 
-            fat 
-          }]
+          [today]: updatedLogs
         },
         loggedMealIds: {
           ...(prev.loggedMealIds || {}),
-          [today]: [...currentIds, newId]
-        }
+          [today]: updatedIds
+        },
+        customMealsLibrary: updatedLibrary
       };
     });
   };
@@ -194,12 +213,18 @@ export function useSystem() {
     setGlobalState(prev => {
       const logs = prev.nutritionLogs || {};
       const todayLogs = logs[today] || [];
+      const currentIds = prev.loggedMealIds?.[today] || [];
       return {
         ...prev,
         nutritionLogs: {
           ...logs,
           [today]: todayLogs.filter(log => log.id !== id)
-        }
+        },
+        loggedMealIds: {
+          ...(prev.loggedMealIds || {}),
+          [today]: currentIds.filter(mealId => mealId !== id)
+        },
+        customMealsLibrary: (prev.customMealsLibrary || []).filter(log => log.id !== id)
       }
     });
   };
