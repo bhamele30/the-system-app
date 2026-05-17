@@ -35,17 +35,7 @@ export default function Onboarding() {
   });
   
   const [processingState, setProcessingState] = useState(0);
-
-  useEffect(() => {
-    if (step === 5) {
-      // Fake processing animation
-      const timer1 = setTimeout(() => setProcessingState(1), 800);
-      const timer2 = setTimeout(() => setProcessingState(2), 1800);
-      const timer3 = setTimeout(() => setProcessingState(3), 2800);
-      const timer4 = setTimeout(() => setStep(6), 4000);
-      return () => { clearTimeout(timer1); clearTimeout(timer2); clearTimeout(timer3); clearTimeout(timer4); }
-    }
-  }, [step]);
+  const [generatedTargets, setGeneratedTargets] = useState<any>(null);
 
   // Calculate classification
   const getClassification = () => {
@@ -74,6 +64,90 @@ export default function Onboarding() {
 
   const classification = getClassification();
 
+  const calculateTargets = () => {
+    // 1. BMR (Mifflin-St Jeor)
+    const weightKg = profile.weight / 2.20462;
+    const heightCm = profile.height * 2.54;
+    let bmr = 10 * weightKg + 6.25 * heightCm - 5 * profile.age;
+    bmr += profile.sex === 'M' ? 5 : -161;
+
+    // 2. TDEE
+    const activityMultipliers = {
+      sedentary: 1.2,
+      active: 1.55,
+      intense: 1.725
+    };
+    const tdee = Math.round(bmr * activityMultipliers[profile.activity as keyof typeof activityMultipliers]);
+
+    // 3. Target Kcal based on mode
+    let kcal = tdee;
+    let proteinMultiplier = 0.9;
+    let fatMultiplier = 0.3;
+    let recoveryPriority = "Moderate";
+
+    switch(selectedMode) {
+      case "Operator Lean":
+        kcal -= 500;
+        proteinMultiplier = 1.1; 
+        recoveryPriority = "High (Deficit Protocol)";
+        break;
+      case "Athletic Build":
+        kcal += 0;
+        proteinMultiplier = 1.0;
+        recoveryPriority = "Moderate";
+        break;
+      case "Elite Conditioning":
+        kcal += 200;
+        proteinMultiplier = 0.9;
+        fatMultiplier = 0.25; 
+        recoveryPriority = "Critical (CNS Taxing)";
+        break;
+      case "Lean Mass Phase":
+        kcal += 300;
+        proteinMultiplier = 1.0;
+        recoveryPriority = "High (Growth Protocol)";
+        break;
+      case "Performance Build":
+        kcal += 500;
+        proteinMultiplier = 1.0;
+        recoveryPriority = "High (Heavy Load)";
+        break;
+      case "Recomp Phase":
+        kcal -= 100;
+        proteinMultiplier = 1.1; 
+        recoveryPriority = "Moderate";
+        break;
+    }
+
+    const protein = Math.round(profile.weight * proteinMultiplier);
+    const fats = Math.round(profile.weight * fatMultiplier);
+    const carbs = Math.round((kcal - (protein * 4) - (fats * 9)) / 4);
+
+    return {
+      maintenanceKcal: tdee,
+      kcal,
+      protein,
+      carbs: Math.max(carbs, 50),
+      fats,
+      recoveryPriority,
+      hydration: (profile.weight * 0.75 / 128).toFixed(1) + " Gal"
+    };
+  };
+
+  useEffect(() => {
+    if (step === 5) {
+      const targets = calculateTargets();
+      setGeneratedTargets(targets);
+      
+      // Fake processing animation
+      const timer1 = setTimeout(() => setProcessingState(1), 800);
+      const timer2 = setTimeout(() => setProcessingState(2), 1800);
+      const timer3 = setTimeout(() => setProcessingState(3), 2800);
+      const timer4 = setTimeout(() => setStep(6), 4000);
+      return () => { clearTimeout(timer1); clearTimeout(timer2); clearTimeout(timer3); clearTimeout(timer4); }
+    }
+  }, [step]);
+
   const handleNext = () => {
     if (step === 1 && (!profile.weight || !profile.height)) return;
     if (step === 2 && (!performance.bench || !performance.squat)) return;
@@ -83,8 +157,16 @@ export default function Onboarding() {
   };
 
   const handleFinish = () => {
-    if (selectedMode) {
-      setMode(selectedMode);
+    if (selectedMode && generatedTargets) {
+      setMode(selectedMode as any, {
+        kcal: generatedTargets.kcal,
+        protein: generatedTargets.protein,
+        carbs: generatedTargets.carbs,
+        fats: generatedTargets.fats,
+        maintenanceKcal: generatedTargets.maintenanceKcal,
+      }, {
+        classification
+      });
     }
     setLocation("/");
   };
@@ -447,19 +529,67 @@ export default function Onboarding() {
           </div>
         )}
 
-        {step === 6 && (
-          <div className="space-y-10 animate-in fade-in zoom-in duration-1000 text-center">
+        {step === 6 && generatedTargets && (
+          <div className="space-y-8 animate-in fade-in zoom-in duration-1000">
             
-            <div className="space-y-4">
+            <div className="text-center space-y-4">
               <h2 className="text-primary text-sm tracking-[0.3em] font-bold">CALIBRATION COMPLETE</h2>
-              <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-widest text-glow leading-tight">
-                YOU ARE IN.
+              <h1 className="text-3xl font-bold uppercase tracking-widest text-glow leading-tight">
+                SYSTEM GENERATED
               </h1>
             </div>
             
-            <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto text-sm">
-              The system is built. The only variable left is your execution. No negotiation. No excuses.
-            </p>
+            <div className="bg-white/5 border border-white/10 p-6 space-y-6 text-left">
+              <div className="space-y-2 pb-4 border-b border-white/5">
+                <div className="text-[10px] text-muted-foreground tracking-widest uppercase">System Profile</div>
+                <div className="flex justify-between items-end">
+                  <div className="font-bold text-lg text-white uppercase">{classification} Operator</div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-muted-foreground tracking-widest uppercase">Current Status</div>
+                    <div className="text-primary font-bold uppercase text-sm tracking-widest">{selectedMode}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4 pb-4 border-b border-white/5">
+                <div className="text-[10px] text-muted-foreground tracking-widest uppercase">Daily Targets</div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-3xl font-bold font-display text-white">{generatedTargets.kcal}</div>
+                    <div className="text-[10px] text-muted-foreground tracking-widest uppercase">Calories</div>
+                  </div>
+                  <div>
+                    <div className="text-xl font-bold font-display text-white">{generatedTargets.maintenanceKcal}</div>
+                    <div className="text-[10px] text-muted-foreground tracking-widest uppercase">Maintenance</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-black/30 p-2 border border-white/5">
+                    <div className="font-bold text-white text-sm">{generatedTargets.protein}g</div>
+                    <div className="text-[9px] text-muted-foreground tracking-widest uppercase">Protein</div>
+                  </div>
+                  <div className="bg-black/30 p-2 border border-white/5">
+                    <div className="font-bold text-white text-sm">{generatedTargets.carbs}g</div>
+                    <div className="text-[9px] text-muted-foreground tracking-widest uppercase">Carbs</div>
+                  </div>
+                  <div className="bg-black/30 p-2 border border-white/5">
+                    <div className="font-bold text-white text-sm">{generatedTargets.fats}g</div>
+                    <div className="text-[9px] text-muted-foreground tracking-widest uppercase">Fats</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-1">Hydration Target</div>
+                  <div className="font-bold text-white uppercase tracking-widest">{generatedTargets.hydration}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-1">Recovery Priority</div>
+                  <div className={`font-bold uppercase tracking-widest ${generatedTargets.recoveryPriority.includes('High') || generatedTargets.recoveryPriority.includes('Critical') ? 'text-primary' : 'text-white'}`}>{generatedTargets.recoveryPriority}</div>
+                </div>
+              </div>
+            </div>
 
             <Button 
               onClick={handleFinish}

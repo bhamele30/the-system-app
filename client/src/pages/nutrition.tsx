@@ -184,7 +184,8 @@ export default function Nutrition() {
     setNewMeal({ name: "", p: "", c: "", f: "", kcal: "" });
   };
 
-  const targets = getTargets(state.mode);
+  const fallbackTargets = getTargets(state.mode);
+  const targets = state.targets || fallbackTargets;
   const phaseDesc = getPhaseDescription(state.mode);
 
   return (

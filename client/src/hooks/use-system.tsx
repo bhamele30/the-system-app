@@ -13,6 +13,16 @@ interface SystemState {
   nutritionLogs: Record<string, { id: string, food: string, calories: number, protein: number, carbs: number, fat: number }[]>;
   loggedMealIds: Record<string, string[]>;
   mode: "Operator Lean" | "Athletic Build" | "Elite Conditioning" | "Lean Mass Phase" | "Performance Build" | "Recomp Phase" | "lock-in" | "cut" | "build";
+  targets?: {
+    kcal: number;
+    protein: number;
+    carbs: number;
+    fats: number;
+    maintenanceKcal: number;
+  };
+  profile?: {
+    classification: string;
+  };
 }
 
 const defaultState: SystemState = {
@@ -191,8 +201,8 @@ export function useSystem() {
     });
   };
 
-  const setMode = (mode: SystemState["mode"]) => {
-    setState(prev => ({ ...prev, mode }));
+  const setMode = (mode: SystemState["mode"], targets?: SystemState["targets"], profile?: SystemState["profile"]) => {
+    setState(prev => ({ ...prev, mode, targets: targets || prev.targets, profile: profile || prev.profile }));
   };
 
   return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode };
