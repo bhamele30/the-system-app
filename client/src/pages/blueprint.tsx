@@ -55,22 +55,6 @@ export default function Blueprint() {
     });
   };
 
-  const [tasks, setTasks] = useState([
-    { id: 1, text: "Log Morning Fasted Weight", completed: false },
-    { id: 2, text: "Complete Lifting Session", completed: false },
-    { id: 3, text: "Hit Protein Target (180g)", completed: false }
-  ]);
-
-  const toggleTask = (id: number) => {
-    setTasks(tasks.map(t => 
-      t.id === id ? { ...t, completed: !t.completed } : t
-    ));
-    toast({
-      title: "Task Updated",
-      description: "Daily protocol progress recorded.",
-    });
-  };
-
   return (
     <div className="p-6 md:p-10 max-w-6xl mx-auto animate-in fade-in duration-700">
       
@@ -122,7 +106,7 @@ export default function Blueprint() {
             </div>
 
             <Link href="/workouts">
-              <div className="bg-secondary/80 border border-white/5 rounded-none p-5 mb-4 hover:border-primary/30 transition-colors cursor-pointer group">
+              <div className="bg-secondary/80 border border-white/5 rounded-none p-5 hover:border-primary/30 transition-colors cursor-pointer group">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{cycleName}</h3>
                   <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -133,17 +117,6 @@ export default function Blueprint() {
                 </p>
               </div>
             </Link>
-
-            <div className="space-y-3">
-              {tasks.map(task => (
-                <TaskItem 
-                  key={task.id}
-                  text={task.text} 
-                  completed={task.completed} 
-                  onClick={() => toggleTask(task.id)}
-                />
-              ))}
-            </div>
           </section>
 
           {/* System Calibration Output */}
@@ -264,26 +237,6 @@ export default function Blueprint() {
         </div>
 
       </div>
-    </div>
-  );
-}
-
-function TaskItem({ text, completed, onClick }: { text: string, completed: boolean, onClick: () => void }) {
-  return (
-    <div 
-      onClick={onClick}
-      className={`flex items-center gap-3 p-3 rounded-none border cursor-pointer transition-colors duration-200 ${
-        completed 
-          ? 'bg-primary/5 border-primary/20 text-muted-foreground' 
-          : 'bg-secondary/30 border-white/5 hover:border-primary/50'
-      }`}
-    >
-      {completed ? (
-        <CheckCircle2 className="w-5 h-5 text-primary" />
-      ) : (
-        <Circle className="w-5 h-5 text-muted-foreground" />
-      )}
-      <span className={completed ? "line-through opacity-70" : "font-medium"}>{text}</span>
     </div>
   );
 }
