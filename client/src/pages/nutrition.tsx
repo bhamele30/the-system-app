@@ -1,11 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity, CheckCircle2, ChevronRight, Trash2, Edit2 } from "lucide-react";
+import { Plus, Info, Apple, Flame, Droplets, Beef, Cookie, Activity, CheckCircle2, ChevronRight, Trash2, Edit2, Calculator } from "lucide-react";
 import nutritionBg from "@/assets/nutrition-bg.png";
+import { parseAndCalculateFood } from "@/lib/food-calculator";
 
 import { useSystem } from "@/hooks/use-system";
 
@@ -129,10 +130,32 @@ export default function Nutrition() {
   
   const [showCustomModal, setShowCustomModal] = useState(false);
   const [editingMealId, setEditingMealId] = useState<string | null>(null);
+  const [autoCalcEnabled, setAutoCalcEnabled] = useState(false);
   const [newMeal, setNewMeal] = useState({
     name: "",
     p: "", c: "", f: "", kcal: ""
   });
+
+  // Auto-calculate macros when typing in the name field
+  useEffect(() => {
+    if (!editingMealId && newMeal.name.length > 2) {
+      const calculated = parseAndCalculateFood(newMeal.name);
+      if (calculated) {
+        setAutoCalcEnabled(true);
+        setNewMeal(prev => ({
+          ...prev,
+          kcal: calculated.kcal.toString(),
+          p: calculated.p.toString(),
+          c: calculated.c.toString(),
+          f: calculated.f.toString(),
+        }));
+      } else {
+        setAutoCalcEnabled(false);
+      }
+    } else {
+        setAutoCalcEnabled(false);
+    }
+  }, [newMeal.name, editingMealId]);
   
   // Custom meals from logs
   const customMeals = (state.customMealsLibrary || []).map(log => ({
@@ -396,11 +419,18 @@ export default function Nutrition() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-widest text-muted-foreground">Meal Name</Label>
+              <div className="flex justify-between items-center">
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Meal Name</Label>
+                {autoCalcEnabled && (
+                  <span className="text-[10px] text-green-400 bg-green-400/10 px-2 py-0.5 rounded border border-green-400/20 flex items-center gap-1">
+                    <Calculator className="w-3 h-3" /> Auto-calculated
+                  </span>
+                )}
+              </div>
               <Input 
                 value={newMeal.name} 
                 onChange={e => setNewMeal({...newMeal, name: e.target.value})}
-                placeholder="e.g., Protein Shake"
+                placeholder="e.g., 6oz chicken breast, 3 eggs"
                 className="bg-black/50 border-white/10 font-mono"
               />
             </div>
