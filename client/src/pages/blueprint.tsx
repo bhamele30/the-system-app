@@ -185,11 +185,11 @@ export default function Blueprint() {
               <div className="flex gap-4 items-start">
                 <div className="mt-1"><Trophy className="w-5 h-5 text-primary" /></div>
                 <div>
-                  <h4 className="font-bold text-sm">{isPhase2 ? "Current Milestone" : "Next Milestone"}</h4>
+                  <h4 className="font-bold text-sm">{isPhase2 ? "Current Objective" : "Next Objective"}</h4>
                   <p className="text-xs text-muted-foreground">
                     {isPhase2 
-                      ? "Phase 2 active. Increase compound lifts by 5% this block." 
-                      : "Complete Phase 1 (12 Weeks)"}
+                      ? "Increase compound lifts by 5% this block. Maintain tight form." 
+                      : "Execute current training block consistently to unlock Phase 2."}
                   </p>
                 </div>
               </div>
@@ -225,7 +225,7 @@ export default function Blueprint() {
                   "I was tired of feeling invisible in my own body. Tired of shirts hanging loose off my shoulders. Tired of the excuses I kept telling myself."
                 </p>
                 <p>
-                  This blueprint isn't just about building muscle; it's about building an unbreakable frame and mind. The next 3 years will pass anyway. You can either look exactly the same, or you can look in the mirror and finally respect the man looking back at you.
+                  This system is built on execution, not motivation. Every rep, every meal, and every day compounds. You are calibrating an unbreakable frame and a disciplined mind. Do not deviate from the protocol.
                 </p>
                 <p className="font-bold text-primary">
                   Stay disciplined. Do the work. Your future self is watching.
