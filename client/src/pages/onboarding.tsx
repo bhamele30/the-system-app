@@ -1,58 +1,258 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-
-const SCREENS = [
-  {
-    text: "You are not here for motivation.",
-    button: "CONTINUE"
-  },
-  {
-    text: "You are entering a system.",
-    button: "ENTER"
-  },
-  {
-    text: "Once you begin, you execute daily.",
-    button: "I UNDERSTAND"
-  },
-  {
-    text: "No negotiation. No excuses.",
-    button: "START"
-  },
-  {
-    text: "YOU ARE IN",
-    button: "EXECUTE"
-  }
-];
+import { Input } from "@/components/ui/input";
+import { useSystem } from "@/hooks/use-system";
+import { Crosshair, ShieldCheck, Target, Activity, ChevronRight } from "lucide-react";
 
 export default function Onboarding() {
   const [, setLocation] = useLocation();
+  const { setMode } = useSystem();
+  
   const [step, setStep] = useState(0);
+  const [selectedMode, setSelectedMode] = useState<"lock-in" | "cut" | "build" | null>(null);
+  const [metrics, setMetrics] = useState({ weight: "", bf: "" });
+  const [experience, setExperience] = useState<string | null>(null);
+  
+  const [processingState, setProcessingState] = useState(0);
+
+  useEffect(() => {
+    if (step === 4) {
+      // Fake processing animation
+      const timer1 = setTimeout(() => setProcessingState(1), 800);
+      const timer2 = setTimeout(() => setProcessingState(2), 1800);
+      const timer3 = setTimeout(() => setProcessingState(3), 2800);
+      const timer4 = setTimeout(() => setStep(5), 4000);
+      return () => { clearTimeout(timer1); clearTimeout(timer2); clearTimeout(timer3); clearTimeout(timer4); }
+    }
+  }, [step]);
 
   const handleNext = () => {
-    if (step < SCREENS.length - 1) {
-      setStep(step + 1);
-    } else {
-      setLocation("/");
+    if (step === 1 && !selectedMode) return;
+    if (step === 2 && (!metrics.weight || !metrics.bf)) return;
+    if (step === 3 && !experience) return;
+    
+    setStep(s => s + 1);
+  };
+
+  const handleFinish = () => {
+    if (selectedMode) {
+      setMode(selectedMode);
     }
+    setLocation("/");
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center font-mono">
-      <div className="max-w-md w-full space-y-12 animate-in fade-in zoom-in duration-1000">
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 font-mono relative overflow-hidden">
+      
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-black to-black pointer-events-none"></div>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+      
+      <div className="max-w-xl w-full relative z-10">
         
-        <h1 className={`text-3xl md:text-5xl font-bold uppercase tracking-widest text-glow leading-tight transition-opacity duration-500 ${step === SCREENS.length - 1 ? 'text-primary' : 'text-foreground'}`}>
-          {SCREENS[step].text}
-        </h1>
+        {step === 0 && (
+          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center">
+            <div className="w-20 h-20 mx-auto border border-primary/30 flex items-center justify-center bg-primary/5 text-primary mb-8 relative">
+                <div className="absolute inset-0 border border-primary animate-pulse opacity-50"></div>
+                <Activity className="w-10 h-10" />
+            </div>
+            
+            <div className="space-y-4">
+              <h2 className="text-primary text-sm tracking-[0.3em] font-bold">SYSTEM INITIATION</h2>
+              <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-widest text-glow leading-tight">
+                SYSTEM<br/>CALIBRATION
+              </h1>
+            </div>
+            
+            <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto text-sm">
+              You are not here for motivation. You are here to build a personalized performance system. Data input is required to calibrate your protocols.
+            </p>
 
-        <Button 
-          onClick={handleNext}
-          className="w-full h-16 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.3em] text-sm border border-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)] transition-all"
-        >
-          {SCREENS[step].button}
-        </Button>
+            <Button 
+              onClick={() => setStep(1)}
+              className="w-full h-16 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.3em] text-sm border border-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)] transition-all mt-10"
+            >
+              COMMENCE CALIBRATION
+            </Button>
+          </div>
+        )}
+
+        {step === 1 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                <h2 className="text-primary text-xs tracking-[0.2em] font-bold">STEP 1/3</h2>
+                <span className="text-xs text-muted-foreground tracking-widest uppercase">Directives</span>
+            </div>
+
+            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Identify Primary Directive</h3>
+            <p className="text-sm text-muted-foreground">Select your operational objective. This dictates your caloric intake and training parameters.</p>
+            
+            <div className="space-y-4 mt-8">
+              {[
+                { id: "lock-in", title: "LOCK IN", desc: "Maintain current mass. Recompose and harden.", icon: ShieldCheck },
+                { id: "cut", title: "CUT", desc: "Strip body fat. Preserve lean tissue. Deficit protocol.", icon: Target },
+                { id: "build", title: "BUILD", desc: "Accumulate lean mass. Surplus protocol.", icon: Activity }
+              ].map(mode => (
+                <div 
+                  key={mode.id}
+                  onClick={() => setSelectedMode(mode.id as any)}
+                  className={`p-5 flex items-start gap-4 cursor-pointer border transition-all ${selectedMode === mode.id ? 'border-primary bg-primary/10 shadow-[0_0_15px_hsl(var(--primary)/0.15)]' : 'border-white/10 bg-white/5 hover:border-white/30'}`}
+                >
+                  <mode.icon className={`w-6 h-6 mt-1 ${selectedMode === mode.id ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <div>
+                    <h4 className={`font-bold uppercase tracking-widest ${selectedMode === mode.id ? 'text-primary' : 'text-white'}`}>{mode.title}</h4>
+                    <p className="text-xs text-muted-foreground mt-1">{mode.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button 
+              onClick={handleNext}
+              disabled={!selectedMode}
+              className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.2em] text-sm disabled:opacity-50 disabled:bg-secondary disabled:text-muted-foreground disabled:border-none"
+            >
+              CONFIRM DIRECTIVE <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+             <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                <h2 className="text-primary text-xs tracking-[0.2em] font-bold">STEP 2/3</h2>
+                <span className="text-xs text-muted-foreground tracking-widest uppercase">Metrics</span>
+            </div>
+
+            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Current Baselines</h3>
+            <p className="text-sm text-muted-foreground">Input accurate physiological data. The system cannot calibrate on lies.</p>
+            
+            <div className="space-y-6 mt-8">
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-widest text-muted-foreground">Bodyweight (LBS)</label>
+                <Input 
+                  type="number" 
+                  value={metrics.weight}
+                  onChange={e => setMetrics({...metrics, weight: e.target.value})}
+                  className="bg-black/50 border-white/10 h-14 text-lg font-bold font-mono focus-visible:ring-primary focus-visible:border-primary rounded-none"
+                  placeholder="e.g. 185"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-widest text-muted-foreground">Est. Body Fat (%)</label>
+                <Input 
+                  type="number" 
+                  value={metrics.bf}
+                  onChange={e => setMetrics({...metrics, bf: e.target.value})}
+                  className="bg-black/50 border-white/10 h-14 text-lg font-bold font-mono focus-visible:ring-primary focus-visible:border-primary rounded-none"
+                  placeholder="e.g. 15"
+                />
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleNext}
+              disabled={!metrics.weight || !metrics.bf}
+              className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.2em] text-sm mt-8 disabled:opacity-50 disabled:bg-secondary disabled:text-muted-foreground disabled:border-none"
+            >
+              RECORD METRICS <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+             <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                <h2 className="text-primary text-xs tracking-[0.2em] font-bold">STEP 3/3</h2>
+                <span className="text-xs text-muted-foreground tracking-widest uppercase">Experience</span>
+            </div>
+
+            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Combat Experience</h3>
+            <p className="text-sm text-muted-foreground">Define your current training age. This scales volume and intensity.</p>
+            
+            <div className="space-y-4 mt-8">
+              {[
+                { id: "recruit", title: "RECRUIT", desc: "< 1 Year of consistent training." },
+                { id: "operative", title: "OPERATIVE", desc: "1-3 Years of consistent training." },
+                { id: "elite", title: "ELITE", desc: "3+ Years. Advanced protocols required." }
+              ].map(exp => (
+                <div 
+                  key={exp.id}
+                  onClick={() => setExperience(exp.id)}
+                  className={`p-5 cursor-pointer border transition-all ${experience === exp.id ? 'border-primary bg-primary/10 shadow-[0_0_15px_hsl(var(--primary)/0.15)]' : 'border-white/10 bg-white/5 hover:border-white/30'}`}
+                >
+                  <h4 className={`font-bold uppercase tracking-widest ${experience === exp.id ? 'text-primary' : 'text-white'}`}>{exp.title}</h4>
+                  <p className="text-xs text-muted-foreground mt-1">{exp.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <Button 
+              onClick={handleNext}
+              disabled={!experience}
+              className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.2em] text-sm mt-8 disabled:opacity-50 disabled:bg-secondary disabled:text-muted-foreground disabled:border-none"
+            >
+              INITIALIZE CALIBRATION <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div className="space-y-6 text-center animate-in fade-in duration-500 py-10">
+            <Crosshair className="w-16 h-16 mx-auto text-primary animate-spin" style={{ animationDuration: '3s' }} />
+            <h3 className="text-2xl font-bold uppercase tracking-widest text-primary text-glow">CALIBRATING SYSTEM</h3>
+            
+            <div className="space-y-2 mt-8 text-left max-w-xs mx-auto font-mono text-sm">
+                <p className="text-white">&gt; Analyzing biometric data...</p>
+                {processingState >= 1 && <p className="text-white animate-in fade-in">&gt; Setting caloric baseline: {selectedMode === 'cut' ? 'DEFICIT' : selectedMode === 'build' ? 'SURPLUS' : 'MAINTENANCE'}</p>}
+                {processingState >= 2 && <p className="text-white animate-in fade-in">&gt; Adjusting volume for {experience?.toUpperCase()} level...</p>}
+                {processingState >= 3 && <p className="text-primary animate-in fade-in font-bold">&gt; PROTOCOLS LOCKED.</p>}
+            </div>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div className="space-y-10 animate-in fade-in zoom-in duration-1000 text-center">
+            
+            <div className="space-y-4">
+              <h2 className="text-primary text-sm tracking-[0.3em] font-bold">CALIBRATION COMPLETE</h2>
+              <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-widest text-glow leading-tight">
+                YOU ARE IN.
+              </h1>
+            </div>
+            
+            <div className="p-6 bg-primary/5 border border-primary/20 text-left max-w-sm mx-auto space-y-4">
+              <div className="flex justify-between border-b border-white/5 pb-2">
+                <span className="text-xs text-muted-foreground uppercase tracking-widest">Directive</span>
+                <span className="text-xs text-white font-bold uppercase tracking-widest">{selectedMode}</span>
+              </div>
+              <div className="flex justify-between border-b border-white/5 pb-2">
+                <span className="text-xs text-muted-foreground uppercase tracking-widest">Starting Wt</span>
+                <span className="text-xs text-white font-bold uppercase tracking-widest">{metrics.weight} LBS</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-muted-foreground uppercase tracking-widest">Level</span>
+                <span className="text-xs text-white font-bold uppercase tracking-widest">{experience}</span>
+              </div>
+            </div>
+
+            <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto text-sm">
+              The system is built. The only variable left is your execution. No negotiation. No excuses.
+            </p>
+
+            <Button 
+              onClick={handleFinish}
+              className="w-full h-16 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.3em] text-sm border border-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)] transition-all mt-10"
+            >
+              ENTER DASHBOARD
+            </Button>
+          </div>
+        )}
         
       </div>
     </div>
   );
 }
+
