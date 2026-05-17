@@ -80,7 +80,12 @@ export default function Blueprint() {
           <div className="text-primary font-display font-medium tracking-widest text-xs mb-2">
             {isPhase2 ? "PHASE 2: HYPERTROPHY" : "PHASE 1: FOUNDATION"}
           </div>
-          <h1 className="text-4xl font-bold text-glow">COMMAND CENTER</h1>
+          <h1 className="text-4xl font-bold text-glow mb-4">COMMAND CENTER</h1>
+          <Link href="/onboarding">
+            <Button variant="outline" className="h-10 rounded-none border-primary/50 text-primary hover:text-primary-foreground hover:bg-primary uppercase tracking-widest font-bold text-xs flex items-center gap-2 shadow-[0_0_10px_hsl(var(--primary)/0.2)]">
+              <Target className="w-4 h-4" /> System Body Calibration
+            </Button>
+          </Link>
         </div>
         <div className="flex items-center gap-4 bg-secondary/50 px-4 py-2 rounded-none border border-white/5">
           <div className="flex items-center gap-2">
@@ -255,12 +260,6 @@ export default function Blueprint() {
               </div>
             </DialogContent>
           </Dialog>
-
-          <Link href="/onboarding">
-            <Button variant="outline" className="w-full mt-4 h-12 rounded-none border-white/10 text-muted-foreground hover:text-white hover:bg-white/5 uppercase tracking-widest font-bold text-xs">
-              Recalibrate System
-            </Button>
-          </Link>
 
         </div>
 

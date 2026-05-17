@@ -13,19 +13,19 @@ import { useSystem } from "@/hooks/use-system";
 const getTargets = (mode: string) => {
   switch (mode) {
     case "Operator Lean":
-      return { kcal: 2400, protein: 200, carbs: 200, fats: 80 };
+      return { kcal: 2400, protein: 200, carbs: 200, fats: 80, hydration: "1.2 Gal" };
     case "Athletic Build":
-      return { kcal: 2800, protein: 180, carbs: 320, fats: 85 };
+      return { kcal: 2800, protein: 180, carbs: 320, fats: 85, hydration: "1.3 Gal" };
     case "Elite Conditioning":
-      return { kcal: 3200, protein: 170, carbs: 450, fats: 80 };
+      return { kcal: 3200, protein: 170, carbs: 450, fats: 80, hydration: "1.5 Gal" };
     case "Lean Mass Phase":
-      return { kcal: 3100, protein: 220, carbs: 350, fats: 90 };
+      return { kcal: 3100, protein: 220, carbs: 350, fats: 90, hydration: "1.4 Gal" };
     case "Performance Build":
-      return { kcal: 3500, protein: 200, carbs: 450, fats: 100 };
+      return { kcal: 3500, protein: 200, carbs: 450, fats: 100, hydration: "1.5 Gal" };
     case "Recomp Phase":
-      return { kcal: 2650, protein: 210, carbs: 250, fats: 80 };
+      return { kcal: 2650, protein: 210, carbs: 250, fats: 80, hydration: "1.2 Gal" };
     default:
-      return { kcal: 2850, protein: 180, carbs: 300, fats: 80 };
+      return { kcal: 2850, protein: 180, carbs: 300, fats: 80, hydration: "1.0 Gal" };
   }
 };
 
@@ -354,7 +354,7 @@ export default function Nutrition() {
               HYDRATION
             </h2>
             <div className="text-center py-4">
-              <div className="text-4xl font-display font-bold text-blue-400 mb-2">1.5</div>
+              <div className="text-4xl font-display font-bold text-blue-400 mb-2">{targets.hydration?.split(' ')[0] || "1.0"}</div>
               <div className="text-sm text-muted-foreground uppercase tracking-widest mb-4">Gallons Daily Target</div>
               <Progress value={60} className="h-3 bg-secondary" style={{ '--tw-progress-fill': 'hsl(210 100% 60%)' } as any} />
               <div className="mt-2 text-xs text-muted-foreground">0.9 Gal consumed today</div>
