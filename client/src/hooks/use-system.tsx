@@ -19,6 +19,8 @@ interface SystemState {
     carbs: number;
     fats: number;
     maintenanceKcal: number;
+    recoveryPriority: string;
+    hydration: string;
   };
   profile?: {
     classification: string;

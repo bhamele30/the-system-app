@@ -141,77 +141,53 @@ export default function Blueprint() {
             </div>
           </section>
 
-          {/* Progress Overview */}
-          <section className="glass-panel p-6 rounded-none">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-display font-bold">CURRENT METRICS</h2>
-              <Dialog open={isUpdating} onOpenChange={setIsUpdating}>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-primary h-8 hover:bg-primary/20">Update</Button>
-                </DialogTrigger>
-                <DialogContent className="glass-panel border-primary/20 bg-background/95 backdrop-blur-xl sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-display font-bold text-primary mb-2">
-                      LOG METRICS
-                    </DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label className="text-xs uppercase tracking-widest text-muted-foreground">Bodyweight (lbs)</Label>
-                        <Input 
-                          type="number" 
-                          value={tempMetrics.bodyweight} 
-                          onChange={e => setTempMetrics({...tempMetrics, bodyweight: e.target.value})}
-                          className="bg-black/50 border-white/10 font-mono text-lg"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs uppercase tracking-widest text-muted-foreground">Est. Fat (%)</Label>
-                        <Input 
-                          type="number" 
-                          value={tempMetrics.fat} 
-                          onChange={e => setTempMetrics({...tempMetrics, fat: e.target.value})}
-                          className="bg-black/50 border-white/10 font-mono text-lg"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs uppercase tracking-widest text-muted-foreground">Bench PR (lbs)</Label>
-                        <Input 
-                          type="number" 
-                          value={tempMetrics.bench} 
-                          onChange={e => setTempMetrics({...tempMetrics, bench: e.target.value})}
-                          className="bg-black/50 border-white/10 font-mono text-lg"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs uppercase tracking-widest text-muted-foreground">Squat PR (lbs)</Label>
-                        <Input 
-                          type="number" 
-                          value={tempMetrics.squat} 
-                          onChange={e => setTempMetrics({...tempMetrics, squat: e.target.value})}
-                          className="bg-black/50 border-white/10 font-mono text-lg"
-                        />
-                      </div>
-                    </div>
-                    <Button 
-                      onClick={handleUpdateMetrics}
-                      className="w-full mt-4 font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90"
-                    >
-                      <Save className="w-4 h-4 mr-2" /> Save Progress
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <MetricBox label="BODYWEIGHT" value={metrics.bodyweight} unit="lbs" trend="+1.2" />
-              <MetricBox label="EST. FAT" value={metrics.fat} unit="%" trend="-0.5" positive={true} />
-              <MetricBox label="BENCH PR" value={metrics.bench} unit="lbs" trend="+5.0" positive={true} />
-              <MetricBox label="SQUAT PR" value={metrics.squat} unit="lbs" trend="+10.0" positive={true} />
-            </div>
-          </section>
+          {/* System Calibration Output */}
+          {state.targets && state.profile && (
+            <section className="glass-panel p-6 rounded-none mt-6 border border-primary/20">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-display font-bold text-glow">SYSTEM PROFILE</h2>
+                <div className="text-right">
+                  <div className="text-xs text-muted-foreground uppercase tracking-widest">Current Status</div>
+                  <div className="text-primary font-bold uppercase tracking-widest text-sm">{state.mode}</div>
+                </div>
+              </div>
+              
+              <div className="mb-6 pb-6 border-b border-white/10">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Classification</div>
+                <div className="text-xl font-bold uppercase text-white">{state.profile.classification} Operator</div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-1">Calories</div>
+                  <div className="text-2xl font-bold font-display text-white">{state.targets.kcal}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-1">Protein</div>
+                  <div className="text-2xl font-bold font-display text-white">{state.targets.protein}g</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-1">Carbs</div>
+                  <div className="text-2xl font-bold font-display text-white">{state.targets.carbs}g</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-1">Fats</div>
+                  <div className="text-2xl font-bold font-display text-white">{state.targets.fats}g</div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                <div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-1">Recovery Priority</div>
+                  <div className={`font-bold uppercase text-sm ${state.targets.recoveryPriority.includes('High') || state.targets.recoveryPriority.includes('Critical') ? 'text-primary' : 'text-white'}`}>{state.targets.recoveryPriority}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-1">Hydration Target</div>
+                  <div className="font-bold uppercase text-sm text-blue-400">{state.targets.hydration}</div>
+                </div>
+              </div>
+            </section>
+          )}
 
         </div>
 
@@ -279,6 +255,12 @@ export default function Blueprint() {
               </div>
             </DialogContent>
           </Dialog>
+
+          <Link href="/onboarding">
+            <Button variant="outline" className="w-full mt-4 h-12 rounded-none border-white/10 text-muted-foreground hover:text-white hover:bg-white/5 uppercase tracking-widest font-bold text-xs">
+              Recalibrate System
+            </Button>
+          </Link>
 
         </div>
 

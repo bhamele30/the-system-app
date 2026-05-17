@@ -11,7 +11,7 @@ export default function Onboarding() {
   const { setMode } = useSystem();
   
   const [step, setStep] = useState(0);
-  const [selectedMode, setSelectedMode] = useState<"lock-in" | "cut" | "build" | null>(null);
+  const [selectedMode, setSelectedMode] = useState<"Operator Lean" | "Athletic Build" | "Elite Conditioning" | "Lean Mass Phase" | "Performance Build" | "Recomp Phase" | null>(null);
   
   // Step 1: Body Profile
   const [profile, setProfile] = useState({
@@ -164,11 +164,13 @@ export default function Onboarding() {
         carbs: generatedTargets.carbs,
         fats: generatedTargets.fats,
         maintenanceKcal: generatedTargets.maintenanceKcal,
+        recoveryPriority: generatedTargets.recoveryPriority,
+        hydration: generatedTargets.hydration
       }, {
         classification
       });
     }
-    setLocation("/");
+    setLocation("/blueprint");
   };
 
   const formatHeight = (inches: number) => {
