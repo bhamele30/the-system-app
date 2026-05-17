@@ -12,7 +12,7 @@ interface SystemState {
   exerciseLogs: Record<string, { weight: string, date: string }[]>;
   nutritionLogs: Record<string, { id: string, food: string, calories: number, protein: number, carbs: number, fat: number }[]>;
   loggedMealIds: Record<string, string[]>;
-  mode: "cut" | "build" | "lock-in";
+  mode: "Operator Lean" | "Athletic Build" | "Elite Conditioning" | "Lean Mass Phase" | "Performance Build" | "Recomp Phase" | "lock-in" | "cut" | "build";
 }
 
 const defaultState: SystemState = {

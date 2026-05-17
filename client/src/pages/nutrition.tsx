@@ -9,15 +9,46 @@ import nutritionBg from "@/assets/nutrition-bg.png";
 
 import { useSystem } from "@/hooks/use-system";
 
-// Daily Targets
-const TARGETS = {
-  kcal: 2850,
-  protein: 180,
-  carbs: 300,
-  fats: 80
+// Dynamic Daily Targets based on selected mode
+const getTargets = (mode: string) => {
+  switch (mode) {
+    case "Operator Lean":
+      return { kcal: 2400, protein: 200, carbs: 200, fats: 80 };
+    case "Athletic Build":
+      return { kcal: 2800, protein: 180, carbs: 320, fats: 85 };
+    case "Elite Conditioning":
+      return { kcal: 3200, protein: 170, carbs: 450, fats: 80 };
+    case "Lean Mass Phase":
+      return { kcal: 3100, protein: 220, carbs: 350, fats: 90 };
+    case "Performance Build":
+      return { kcal: 3500, protein: 200, carbs: 450, fats: 100 };
+    case "Recomp Phase":
+      return { kcal: 2650, protein: 210, carbs: 250, fats: 80 };
+    default:
+      return { kcal: 2850, protein: 180, carbs: 300, fats: 80 };
+  }
 };
 
-const MEALS = [
+const getPhaseDescription = (mode: string) => {
+  switch (mode) {
+    case "Operator Lean":
+      return "Slight Deficit. Strip fat, maintain output. Keep carbs moderate around training.";
+    case "Athletic Build":
+      return "Maintenance. Fuel performance, prioritize protein synthesis.";
+    case "Elite Conditioning":
+      return "High Energy Demand. Carbs are king to fuel intense work capacity.";
+    case "Lean Mass Phase":
+      return "Slight Surplus. Gradual tissue accumulation. Do not get sloppy.";
+    case "Performance Build":
+      return "Heavy Surplus. Maximal strength and size gain. Eat to grow.";
+    case "Recomp Phase":
+      return "Strict Maintenance. Burn fat, build muscle. Protein must stay high.";
+    default:
+      return "Phase 1: Maintenance / Slight Surplus. Fuel the machine, don't feed the fat.";
+  }
+};
+
+const MEALS: { id: string, time: string, name: string, macros: { p: number, c: number, f: number, kcal: number }, desc: string, isCustom?: boolean }[] = [
   {
     id: "m1",
     time: "Meal 1: Breakfast",
@@ -153,6 +184,9 @@ export default function Nutrition() {
     setNewMeal({ name: "", p: "", c: "", f: "", kcal: "" });
   };
 
+  const targets = getTargets(state.mode);
+  const phaseDesc = getPhaseDescription(state.mode);
+
   return (
     <div className="p-6 md:p-10 max-w-6xl mx-auto animate-in fade-in duration-700 relative">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 relative z-10">
@@ -161,7 +195,8 @@ export default function Nutrition() {
             <Flame className="w-8 h-8 text-primary" />
             Fuel & Macros
           </h1>
-          <p className="text-muted-foreground mt-2">Phase 1: Maintenance / Slight Surplus. Fuel the machine, don't feed the fat.</p>
+          <p className="text-primary font-bold tracking-widest uppercase text-xs mt-4 mb-1">{state.mode}</p>
+          <p className="text-muted-foreground text-sm">{phaseDesc}</p>
         </div>
         <Dialog>
           <DialogTrigger asChild>
@@ -216,19 +251,19 @@ export default function Nutrition() {
                 <h2 className="text-xl font-display font-bold">DAILY TARGETS</h2>
                 <div className="text-right">
                   <div className="flex items-baseline justify-end gap-1">
-                    <span className={`text-3xl font-bold font-display ${currentMacros.kcal >= TARGETS.kcal ? 'text-green-500 text-glow' : 'text-primary'}`}>
+                    <span className={`text-3xl font-bold font-display ${currentMacros.kcal >= targets.kcal ? 'text-green-500 text-glow' : 'text-primary'}`}>
                       {currentMacros.kcal}
                     </span>
-                    <span className="text-xl text-muted-foreground font-display">/ {TARGETS.kcal}</span>
+                    <span className="text-xl text-muted-foreground font-display">/ {targets.kcal}</span>
                   </div>
                   <div className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Kcal Logged</div>
                 </div>
               </div>
 
               <div className="space-y-6">
-                <MacroBar icon={Beef} label="PROTEIN" current={currentMacros.p} target={TARGETS.protein} unit="g" color="bg-primary" description="Muscle building blocks. Non-negotiable." />
-                <MacroBar icon={Cookie} label="CARBS" current={currentMacros.c} target={TARGETS.carbs} unit="g" color="bg-blue-400" description="Primary energy source. Cycle around workouts." />
-                <MacroBar icon={Droplets} label="FATS" current={currentMacros.f} target={TARGETS.fats} unit="g" color="bg-cyan-600" description="Hormone regulation. Keep moderate." />
+                <MacroBar icon={Beef} label="PROTEIN" current={currentMacros.p} target={targets.protein} unit="g" color="bg-primary" description="Muscle building blocks. Non-negotiable." />
+                <MacroBar icon={Cookie} label="CARBS" current={currentMacros.c} target={targets.carbs} unit="g" color="bg-blue-400" description="Primary energy source. Cycle around workouts." />
+                <MacroBar icon={Droplets} label="FATS" current={currentMacros.f} target={targets.fats} unit="g" color="bg-cyan-600" description="Hormone regulation. Keep moderate." />
               </div>
             </div>
           </section>

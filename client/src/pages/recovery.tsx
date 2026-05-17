@@ -2,19 +2,35 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { HeartPulse, Moon, Battery, Zap, ActivitySquare, Wind } from "lucide-react";
 import recoveryBg from "@/assets/recovery-bg.png";
+import { useSystem } from "@/hooks/use-system";
 
 export default function Recovery() {
+  const { state } = useSystem();
+
+  const getRecoveryAdvice = () => {
+    switch (state.mode) {
+      case "Elite Conditioning":
+        return "Your mode requires maximal work capacity. Sleep and active recovery are critical to prevent CNS burnout.";
+      case "Performance Build":
+        return "Heavy loads require heavy rest. Prioritize sleep and tissue repair to maximize growth.";
+      case "Operator Lean":
+        return "Operating in a deficit increases injury risk. Do not skip mobility or sleep.";
+      default:
+        return "You don't grow in the gym; you grow outside of it. Master these protocols to accelerate muscle repair and central nervous system recovery.";
+    }
+  };
+
   return (
     <div className="p-6 md:p-10 max-w-6xl mx-auto animate-in fade-in duration-700">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="text-primary font-display font-medium tracking-widest text-xs mb-2 uppercase">Rest & Repair</div>
+          <div className="text-primary font-display font-medium tracking-widest text-xs mb-2 uppercase">Rest & Repair / {state.mode}</div>
           <h1 className="text-4xl font-bold text-glow uppercase flex items-center gap-3">
             <HeartPulse className="w-8 h-8 text-primary" />
             Recovery Protocol
           </h1>
           <p className="text-muted-foreground mt-2 max-w-2xl">
-            You don't grow in the gym; you grow outside of it. Master these protocols to accelerate muscle repair and central nervous system recovery.
+            {getRecoveryAdvice()}
           </p>
         </div>
       </header>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { useSystem } from "@/hooks/use-system";
-import { Crosshair, ShieldCheck, Target, Activity, ChevronRight, User } from "lucide-react";
+import { Crosshair, ShieldCheck, Target, Activity, ChevronRight, User, HeartPulse, Dumbbell } from "lucide-react";
 
 export default function Onboarding() {
   const [, setLocation] = useLocation();
@@ -368,9 +368,12 @@ export default function Onboarding() {
             
             <div className="space-y-4 mt-8">
               {[
-                { id: "lock-in", title: "LOCK IN", desc: "Maintain current mass. Recompose and harden.", icon: ShieldCheck },
-                { id: "cut", title: "CUT", desc: "Strip body fat. Preserve lean tissue. Deficit protocol.", icon: Target },
-                { id: "build", title: "BUILD", desc: "Accumulate lean mass. Surplus protocol.", icon: Activity }
+                { id: "Operator Lean", title: "Operator Lean", desc: "Strip fat. Maximize relative strength. Slight caloric deficit, moderate carbs.", icon: Target },
+                { id: "Athletic Build", title: "Athletic Build", desc: "Performance & aesthetics. Maintenance calories, high protein.", icon: Activity },
+                { id: "Elite Conditioning", title: "Elite Conditioning", desc: "Maximal work capacity. High carb, high recovery demands.", icon: HeartPulse },
+                { id: "Lean Mass Phase", title: "Lean Mass Phase", desc: "Accumulate lean tissue. Slight surplus, high volume training.", icon: ShieldCheck },
+                { id: "Performance Build", title: "Performance Build", desc: "Focus on absolute strength & mass. Heavy surplus.", icon: Dumbbell },
+                { id: "Recomp Phase", title: "Recomp Phase", desc: "Lose fat, build muscle simultaneously. Strict maintenance protocol.", icon: Crosshair }
               ].map(mode => (
                 <div 
                   key={mode.id}
@@ -438,7 +441,7 @@ export default function Onboarding() {
             <div className="space-y-2 mt-8 text-left max-w-xs mx-auto font-mono text-sm">
                 <p className="text-white">&gt; Analyzing {profile.weight}lbs @ {profile.bf}% BF...</p>
                 {processingState >= 1 && <p className="text-white animate-in fade-in">&gt; Scaling output parameters: {classification} level...</p>}
-                {processingState >= 2 && <p className="text-white animate-in fade-in">&gt; Setting caloric baseline: {selectedMode === 'cut' ? 'DEFICIT' : selectedMode === 'build' ? 'SURPLUS' : 'MAINTENANCE'}...</p>}
+                {processingState >= 2 && <p className="text-white animate-in fade-in">&gt; Locking in directive: {selectedMode}...</p>}
                 {processingState >= 3 && <p className="text-primary animate-in fade-in font-bold">&gt; PROTOCOLS LOCKED.</p>}
             </div>
           </div>
