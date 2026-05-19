@@ -205,6 +205,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-6 font-mono text-sm md:pl-20">
       
+      <div className="w-full max-w-md mb-8 flex justify-center">
+        <h2 className="font-display text-2xl font-black text-white uppercase tracking-[0.4em] drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">THE SYSTEM</h2>
+      </div>
+
       {/* Top Bar Stats */}
       <div className="w-full max-w-md flex justify-between items-end mb-12 border-b-2 border-white/10 pb-4">
         <div className="flex flex-col">
