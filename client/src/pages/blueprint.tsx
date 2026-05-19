@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ChevronRight, Flame, Target, Trophy, Clock, CheckCircle2, Circle, Quote, Save } from "lucide-react";
+import { ChevronRight, Flame, Target, Trophy, Clock, CheckCircle2, Circle, Quote, Save, ShieldAlert } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
