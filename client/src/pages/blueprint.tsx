@@ -14,23 +14,23 @@ export default function Blueprint() {
   const { state } = useSystem();
   // Calculate current week and day based on completed days
   // e.g., if completedDays is 0, week is 1 and day is 1.
-  const isPhase2 = state.completedDays >= 84;
-  const phaseDays = state.completedDays % 84;
-  const currentWeek = Math.floor(phaseDays / 7) + 1;
-  const currentDay = (phaseDays % 7) + 1;
-  const phaseCompletion = Math.min(100, Math.round((phaseDays / 84) * 100)); // 12 weeks = 84 days
+  const isPhase2 = state.completedDays >= 30;
+  const phaseDays = state.completedDays % 30;
+  const currentWeek = Math.floor(state.completedDays / 7) + 1;
+  const currentDay = (state.completedDays % 7) + 1;
+  const phaseCompletion = Math.min(100, Math.round((state.completedDays / 30) * 100)); // Phase 1 is 30 days
   
   let cycleName = "";
   let cycleDuration = "";
   let cycleType = "";
   
   if (isPhase2) {
-    const p2Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Upper Body Power", "Lower Body Power", "Active Recovery"][phaseDays % 6];
+    const p2Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Upper Body Power", "Lower Body Power", "Active Recovery"][state.completedDays % 6];
     cycleName = p2Cycle;
     cycleDuration = p2Cycle === "Active Recovery" ? "45 Min" : "65-75 Min";
     cycleType = p2Cycle === "Active Recovery" ? "Recovery" : "Hypertrophy / Power";
   } else {
-    const p1Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Strict Arms", "Active Recovery"][phaseDays % 5];
+    const p1Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Strict Arms", "Active Recovery"][state.completedDays % 5];
     cycleName = p1Cycle;
     cycleDuration = p1Cycle === "Active Recovery" || p1Cycle === "Strict Arms" ? "45 Min" : "60-75 Min";
     cycleType = p1Cycle === "Active Recovery" ? "Recovery" : "Foundation";
@@ -62,7 +62,7 @@ export default function Blueprint() {
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="text-primary font-display font-medium tracking-widest text-xs mb-2">
-            {isPhase2 ? "PHASE 2: HYPERTROPHY" : "PHASE 1: FOUNDATION"}
+            {isPhase2 ? "PHASE 2: THE DEEPER PROTOCOL" : "30 DAY LOCK IN CHALLENGE"}
           </div>
           <h1 className="text-4xl font-bold text-glow mb-4">COMMAND CENTER</h1>
           <Link href="/onboarding">
@@ -196,40 +196,79 @@ export default function Blueprint() {
             </div>
           </section>
 
-          {/* Vision/Why */}
+          {/* Protocol Rules */}
           <Dialog>
             <DialogTrigger asChild>
-              <section className="rounded-none overflow-hidden relative border border-white/10 group cursor-pointer">
-                <img 
-                  src={transformImg} 
-                  alt="Goal Physique" 
-                  className="w-full h-64 object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent transition-opacity duration-500 group-hover:opacity-80" />
-                <div className="absolute bottom-0 left-0 p-6 w-full transform transition-transform duration-500 group-hover:-translate-y-1">
-                  <div className="text-xs font-display text-primary tracking-widest mb-1 flex items-center gap-2">
-                    THE VISION
+              <section className="rounded-none overflow-hidden relative border border-white/10 group cursor-pointer bg-black/50 hover:bg-black/80 transition-colors">
+                <div className="p-6 relative z-10">
+                  <div className="text-xs font-display text-primary tracking-widest mb-2 flex items-center gap-2">
+                    <ShieldAlert className="w-4 h-4" /> THE PROTOCOL
                   </div>
-                  <h3 className="font-bold text-lg leading-tight text-glow">REMEMBER WHY YOU STARTED</h3>
+                  <h3 className="font-bold text-xl leading-tight text-glow mb-2 uppercase">30 DAY LOCK IN CHALLENGE</h3>
+                  <p className="text-sm text-muted-foreground">Review the daily non-negotiables and system parameters.</p>
+                </div>
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Flame className="w-24 h-24" />
                 </div>
               </section>
             </DialogTrigger>
-            <DialogContent className="glass-panel border-primary/20 bg-background/95 backdrop-blur-xl sm:max-w-md">
+            <DialogContent className="glass-panel border-primary/20 bg-background/95 backdrop-blur-xl sm:max-w-md max-h-[85vh] overflow-y-auto hide-scrollbar">
               <DialogHeader>
-                <DialogTitle className="text-2xl font-display font-bold text-primary flex items-center gap-2 mb-2">
-                  <Quote className="w-6 h-6" /> THE MANIFESTO
+                <DialogTitle className="text-2xl font-display font-black text-white flex flex-col gap-1 mb-4 border-b border-white/10 pb-4">
+                  <span className="text-primary text-xs tracking-[0.3em] uppercase">The System</span>
+                  30 DAY LOCK IN CHALLENGE
                 </DialogTitle>
               </DialogHeader>
-              <div className="space-y-4 text-muted-foreground mt-4">
-                <p className="italic text-lg text-foreground/90 border-l-2 border-primary pl-4">
-                  "I was tired of feeling invisible in my own body. Tired of shirts hanging loose off my shoulders. Tired of the excuses I kept telling myself."
-                </p>
-                <p>
-                  This system is built on execution, not motivation. Every rep, every meal, and every day compounds. You are calibrating an unbreakable frame and a disciplined mind. Do not deviate from the protocol.
-                </p>
-                <p className="font-bold text-primary">
-                  Stay disciplined. Do the work. Your future self is watching.
-                </p>
+              <div className="space-y-6 text-sm font-mono mt-2">
+                
+                <div className="space-y-3">
+                  <h4 className="font-bold text-primary uppercase tracking-widest text-xs border-b border-primary/20 pb-2">Objective: Rebuild</h4>
+                  <ul className="list-none space-y-1.5 text-muted-foreground uppercase tracking-widest text-[11px] font-bold">
+                    <li>• Discipline</li>
+                    <li>• Structure</li>
+                    <li>• Consistency</li>
+                    <li>• Physical Momentum</li>
+                    <li>• Mental Control</li>
+                  </ul>
+                  <div className="mt-3 p-3 bg-destructive/10 border border-destructive/30 text-destructive text-[10px] uppercase tracking-[0.2em] font-bold leading-relaxed">
+                    NOT: Extreme transformation in 30 days
+                  </div>
+                </div>
+
+                <div className="space-y-5 pt-4">
+                  <h4 className="font-bold text-white uppercase tracking-widest border-b border-white/10 pb-2 flex items-center gap-2">
+                    <Flame className="w-4 h-4 text-primary" /> DAILY NON-NEGOTIABLES
+                  </h4>
+                  
+                  <div className="space-y-1">
+                    <div className="font-bold text-white uppercase tracking-wider text-xs flex items-center gap-2"><span className="text-primary">1.</span> TRAIN</div>
+                    <div className="text-muted-foreground text-xs leading-relaxed pl-5">Minimum: 45–75 mins. No skipped sessions unless recovery day assigned.</div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="font-bold text-white uppercase tracking-wider text-xs flex items-center gap-2"><span className="text-primary">2.</span> HIT MACROS</div>
+                    <div className="text-muted-foreground text-xs leading-relaxed pl-5">Daily: Protein, Calorie, and Hydration targets. Compliance tracked in app.</div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="font-bold text-white uppercase tracking-wider text-xs flex items-center gap-2"><span className="text-primary">3.</span> SLEEP STANDARD</div>
+                    <div className="text-muted-foreground text-xs leading-relaxed pl-5">In bed before 11 PM. No chaos sleep schedule.</div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="font-bold text-white uppercase tracking-wider text-xs flex items-center gap-2"><span className="text-primary">4.</span> NO NEGOTIATION</div>
+                    <div className="text-muted-foreground text-xs italic border-l-2 border-primary/50 pl-3 ml-5 py-1 space-y-1">
+                      <div>"I'll start tomorrow"</div>
+                      <div>"I don't feel like it"</div>
+                      <div>"One day off won't matter"</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="font-bold text-white uppercase tracking-wider text-xs flex items-center gap-2"><span className="text-primary">5.</span> DAILY CHECK-IN</div>
+                    <div className="text-muted-foreground text-xs leading-relaxed pl-5">Track energy, mood, recovery, bodyweight, and execution score.</div>
+                  </div>
+                </div>
               </div>
             </DialogContent>
           </Dialog>
