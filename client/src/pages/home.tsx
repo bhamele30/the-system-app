@@ -261,12 +261,6 @@ export default function Home() {
               </span>
             )}
           </div>
-          
-          <div className="relative z-10 mt-6 inline-block bg-destructive/10 border border-destructive/30 px-3 py-1.5">
-            <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-destructive flex items-center gap-2">
-              <ShieldAlert className="w-3 h-3" /> MISS = RESET STREAK TO 0
-            </div>
-          </div>
         </div>
 
         {(isBreached || isRebuilding) && (
