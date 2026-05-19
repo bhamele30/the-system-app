@@ -210,7 +210,7 @@ export default function Home() {
       </div>
 
       {/* Top Bar Stats */}
-      <div className="w-full max-w-md flex justify-between items-end mb-12 border-b-2 border-white/10 pb-4">
+      <div className="w-full max-w-md flex justify-between items-end mb-8 border-b-2 border-white/10 pb-4">
         <div className="flex flex-col">
           <span className="text-white/40 uppercase tracking-[0.3em] text-[9px] mb-1 font-bold">
             {displayDay <= 30 ? "PHASE 1: LOCK IN" : "PHASE 2: EXECUTION"}
@@ -225,6 +225,43 @@ export default function Home() {
             {state.streak} DAYS
           </span>
           <span className="text-destructive uppercase tracking-[0.2em] text-[9px] font-bold mt-1">MISS = RESET TO 0</span>
+        </div>
+      </div>
+
+      <div className="w-full max-w-md mb-8">
+        <div className="bg-black/50 p-4 border border-white/10">
+          <div className="text-[10px] text-white/50 font-bold uppercase tracking-[0.2em] mb-3">Operating Mode</div>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            {(["cut", "build"] as const).map((modeOption) => (
+              <Button
+                key={modeOption}
+                variant="outline"
+                size="sm"
+                onClick={() => setMode(modeOption)}
+                className={`font-display uppercase tracking-widest text-[10px] h-10 rounded-none border ${
+                  state.mode === modeOption 
+                    ? "bg-white text-black hover:bg-white/90 border-white" 
+                    : "bg-black border-white/10 text-muted-foreground hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {modeOption} (GOAL)
+              </Button>
+            ))}
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => setMode("lock-in")}
+            className={`w-full font-display font-black uppercase tracking-[0.3em] text-xs h-12 rounded-none border-2 transition-all relative overflow-hidden group ${
+              state.mode === "lock-in" 
+                ? "bg-primary text-black hover:bg-primary/90 border-primary shadow-[0_0_25px_hsl(var(--primary)/0.4)]" 
+                : "bg-primary/5 border-primary/50 text-primary hover:bg-primary/20 hover:border-primary shadow-[0_0_10px_hsl(var(--primary)/0.1)]"
+            }`}
+          >
+            {state.mode === "lock-in" && <div className="absolute inset-0 bg-white/20 animate-pulse mix-blend-overlay pointer-events-none"></div>}
+            <span className="relative z-10 flex items-center justify-center gap-2 w-full">
+              <span className="text-sm">🔥</span> LOCK IN (IDENTITY)
+            </span>
+          </Button>
         </div>
       </div>
 
