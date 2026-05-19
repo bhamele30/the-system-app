@@ -224,65 +224,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Philosophy / Overview */}
-      <div className="w-full max-w-md mb-10 border-2 border-white/10 bg-black rounded-none relative">
-        <div className="absolute top-0 left-0 w-2 h-full bg-primary"></div>
-        <div className="p-6">
-          <h2 className="font-display text-xl font-bold text-white uppercase tracking-[0.2em] mb-4">THE SYSTEM</h2>
-          <div className="text-foreground/90 text-sm leading-relaxed mb-6 font-mono space-y-4">
-            <p className="uppercase tracking-widest text-xs text-primary font-bold">
-              This is not motivation.<br />This is enforcement.
-            </p>
-            <div className="text-center py-6 my-6 space-y-4 border-y border-white/5 bg-white/[0.01]">
-              <div className="text-[10px] text-white/50 font-bold uppercase tracking-[0.3em] mb-2">DECIDE.</div>
-              <div className="text-white font-black text-base uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">LEVEL UP</div>
-              <div className="text-[10px] text-primary font-bold uppercase tracking-[0.3em]">OR</div>
-              <div className="text-white font-black text-base uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">STAY THE SAME.</div>
-            </div>
-            <ul className="space-y-3 border-l border-white/20 pl-4 mt-4">
-              <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>You do not negotiate.</li>
-              <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>Feelings are irrelevant.</li>
-              <li className="uppercase tracking-[0.15em] text-[10px] text-white"><span className="text-primary mr-2">■</span>Partial compliance is failure.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="bg-white/5 p-4 border-t border-white/10">
-          <div className="text-[10px] text-white/50 font-bold uppercase tracking-[0.2em] mb-3">Operating Mode</div>
-          <div className="grid grid-cols-2 gap-2 mb-3">
-            {(["cut", "build"] as const).map((modeOption) => (
-              <Button
-                key={modeOption}
-                variant="outline"
-                size="sm"
-                onClick={() => setMode(modeOption)}
-                className={`font-display uppercase tracking-widest text-[10px] h-10 rounded-none border ${
-                  state.mode === modeOption 
-                    ? "bg-white text-black hover:bg-white/90 border-white" 
-                    : "bg-black border-white/10 text-muted-foreground hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {modeOption} (GOAL)
-              </Button>
-            ))}
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => setMode("lock-in")}
-            className={`w-full font-display font-black uppercase tracking-[0.3em] text-xs h-12 rounded-none border-2 transition-all relative overflow-hidden group ${
-              state.mode === "lock-in" 
-                ? "bg-primary text-black hover:bg-primary/90 border-primary shadow-[0_0_25px_hsl(var(--primary)/0.4)]" 
-                : "bg-primary/5 border-primary/50 text-primary hover:bg-primary/20 hover:border-primary shadow-[0_0_10px_hsl(var(--primary)/0.1)]"
-            }`}
-          >
-            {state.mode === "lock-in" && <div className="absolute inset-0 bg-white/20 animate-pulse mix-blend-overlay pointer-events-none"></div>}
-            <span className="relative z-10 flex items-center justify-center gap-2 w-full">
-              <span className="text-sm">🔥</span> LOCK IN (IDENTITY)
-            </span>
-          </Button>
-        </div>
-      </div>
-
       {/* Main Display */}
       <main className="w-full max-w-md space-y-6">
 
@@ -335,7 +276,7 @@ export default function Home() {
         )}
 
         {/* Protocol Sections */}
-        <Card className={`bg-black/50 p-5 space-y-6 rounded-none relative overflow-hidden ${
+        <Card className={`bg-black/50 p-6 space-y-8 rounded-none relative overflow-hidden ${
           isBreached
             ? "border-destructive/40 shadow-[0_0_30px_rgba(255,0,0,0.06)]"
             : isRebuilding
@@ -345,74 +286,72 @@ export default function Home() {
           
           {dayType === "REST" ? (
             <>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-                  <RefreshCw className="w-3 h-3" /> RECOVERY PROTOCOL
+              <div className="space-y-1">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+                  <span className="text-primary uppercase tracking-widest text-[10px] font-bold flex items-center gap-2">
+                    <RefreshCw className="w-3 h-3" /> DIRECTIVE 01 // RECOVERY
+                  </span>
                 </div>
-                <div className="font-bold text-lg">Active Recovery & Mobility</div>
-                <div className="text-muted-foreground text-sm">No heavy lifting. Allow the nervous system to reset.</div>
+                <div className="font-bold text-lg uppercase tracking-wider">ACTIVE RECOVERY</div>
+                <div className="text-muted-foreground text-xs uppercase tracking-widest">No heavy lifting. Nervous system reset.</div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-                  <Utensils className="w-3 h-3" /> RECOVERY NUTRITION
+              <div className="space-y-1">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+                  <span className="text-primary uppercase tracking-widest text-[10px] font-bold flex items-center gap-2">
+                    <Utensils className="w-3 h-3" /> DIRECTIVE 02 // FUEL
+                  </span>
                 </div>
-                <ul className="text-muted-foreground space-y-1">
-                  <li>- Maintain protein target (1g/lb)</li>
-                  <li>- Lower carbohydrates (no training fuel needed)</li>
-                  <li>- Hydration focus (1 gallon minimum)</li>
-                </ul>
+                <div className="font-bold text-lg uppercase tracking-wider">MAINTENANCE CALORIES</div>
+                <div className="text-muted-foreground text-xs uppercase tracking-widest">Target: 1g Protein / lb bodyweight.</div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-                  <Bed className="w-3 h-3" /> REGENERATION TASKS
+              <div className="space-y-1">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+                  <span className="text-primary uppercase tracking-widest text-[10px] font-bold flex items-center gap-2">
+                    <Bed className="w-3 h-3" /> DIRECTIVE 03 // REGENERATION
+                  </span>
                 </div>
-                <ul className="text-muted-foreground space-y-1">
-                  <li>- 45 minute light walk (Zone 1 heart rate)</li>
-                  <li>- 15-20 minutes dedicated mobility/stretching</li>
-                  <li>- Absolute minimum 8 hours of sleep</li>
-                </ul>
+                <div className="font-bold text-lg uppercase tracking-wider">8+ HOURS SLEEP</div>
+                <div className="text-muted-foreground text-xs uppercase tracking-widest">Hydration: 1 Gallon strict.</div>
               </div>
             </>
           ) : (
             <>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-                  <Dumbbell className="w-3 h-3" /> ACTION REQUIRED
+              <div className="space-y-1">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+                  <span className="text-primary uppercase tracking-widest text-[10px] font-bold flex items-center gap-2">
+                    <Dumbbell className="w-3 h-3" /> DIRECTIVE 01 // TRAINING
+                  </span>
                 </div>
-                <div className="font-bold text-lg">{getWorkout()}</div>
-                <div className="text-muted-foreground text-sm border-l-2 border-primary/50 pl-3 mt-2 py-1 bg-primary/5">
-                  <span className="font-bold text-primary text-xs uppercase tracking-widest block mb-1">MODE DIRECTIVE:</span>
-                  {modeAdvice.train}
-                </div>
+                <div className="font-bold text-lg uppercase tracking-wider">{getWorkout()}</div>
+                <div className="text-muted-foreground text-xs uppercase tracking-widest">Execute protocol. Zero deviations.</div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-                  <Utensils className="w-3 h-3" /> FOLLOW PROTOCOL
+              <div className="space-y-1">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+                  <span className="text-primary uppercase tracking-widest text-[10px] font-bold flex items-center gap-2">
+                    <Utensils className="w-3 h-3" /> DIRECTIVE 02 // FUEL
+                  </span>
                 </div>
-                <div className="text-muted-foreground text-sm border-l-2 border-primary/50 pl-3 mt-2 py-1 bg-primary/5">
-                  {modeAdvice.nutrition}
-                </div>
+                <div className="font-bold text-lg uppercase tracking-wider">MACROS LOCKED</div>
+                <div className="text-muted-foreground text-xs uppercase tracking-widest">Hit daily targets. Fuel the machine.</div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-primary uppercase tracking-widest text-[10px] border-b border-white/5 pb-2">
-                  <Bed className="w-3 h-3" /> COMPLETE REQUIREMENTS
+              <div className="space-y-1">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+                  <span className="text-primary uppercase tracking-widest text-[10px] font-bold flex items-center gap-2">
+                    <Bed className="w-3 h-3" /> DIRECTIVE 03 // REGENERATION
+                  </span>
                 </div>
-                <div className="text-muted-foreground text-sm border-l-2 border-primary/50 pl-3 mt-2 py-1 bg-primary/5">
-                  {modeAdvice.recovery}
-                </div>
+                <div className="font-bold text-lg uppercase tracking-wider">SYSTEM RECOVERY</div>
+                <div className="text-muted-foreground text-xs uppercase tracking-widest">Hydrate & Sleep. Prepare for next cycle.</div>
               </div>
             </>
           )}
 
-          <div className="bg-primary/5 border border-primary/20 p-4 text-center mt-6">
-            <div className="text-[10px] text-primary uppercase tracking-widest mb-1 flex justify-center items-center gap-1">
-              <Target className="w-3 h-3" /> NO NEGOTIATION
-            </div>
-            <div className="font-bold text-xl uppercase tracking-widest text-glow">{focusLine}</div>
+          <div className="border border-primary/20 bg-primary/5 p-3 text-center mt-8">
+            <div className="font-bold text-sm uppercase tracking-widest text-primary">{focusLine}</div>
           </div>
         </Card>
 
