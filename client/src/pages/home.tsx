@@ -16,6 +16,33 @@ export default function Home() {
   const [showPhaseCelebration, setShowPhaseCelebration] = useState(false);
   const [checks, setChecks] = useState<{train: boolean | null, nutrition: boolean | null, recovery: boolean | null}>({ train: null, nutrition: null, recovery: null });
   const [error, setError] = useState("");
+  const [timeLeft, setTimeLeft] = useState<string>("");
+
+  // Countdown timer to midnight
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      const diff = endOfDay.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        setTimeLeft("00:00:00");
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setTimeLeft(
+        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+      );
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Generate daily protocol based on system execution logic
   useEffect(() => {
@@ -279,7 +306,9 @@ export default function Home() {
           <div className="relative z-10 text-xs uppercase tracking-[0.4em] font-bold">
             <span className={`${statusColor}`}>STATUS: {statusIcon} {systemStatusLabel}</span>
             {!isTodayCompleted && !isBreached && !isRebuilding && (
-              <span className="ml-4 text-white/50 border-l border-white/20 pl-4">TIME: <span className="text-white animate-pulse">RUNNING</span></span>
+              <span className="ml-4 text-white/50 border-l border-white/20 pl-4 flex-inline items-center">
+                TIME REMAINING: <span className="text-white font-mono tracking-widest">{timeLeft}</span>
+              </span>
             )}
             {isTodayCompleted && !isRebuilding && !isBreached && (
               <span className="ml-4 text-green-500 border-l border-white/20 pl-4 drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">
