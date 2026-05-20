@@ -8,6 +8,114 @@ import { toast } from "@/hooks/use-toast";
 import { useSystem } from "@/hooks/use-system";
 import { Input } from "@/components/ui/input";
 
+const CHALLENGE_WORKOUTS = [
+  {
+    id: "challenge-day-1",
+    title: "Day 1: Upper Power",
+    description: "Heavy compound pulling and pushing for upper body density.",
+    duration: "60-75 min",
+    intensity: "High",
+    exercises: [
+      { name: "Incline Dumbbell Press", sets: "4", reps: "6-10" },
+      { name: "Weighted Pull-Ups", sets: "4", reps: "6-10" },
+      { name: "Machine Shoulder Press", sets: "4", reps: "8-12" },
+      { name: "Chest Supported Row", sets: "4", reps: "8-10" },
+      { name: "Incline Dumbbell Curl", sets: "3", reps: "10-12" },
+      { name: "Rope Pushdowns", sets: "3", reps: "12-15" },
+      { name: "Cable Lateral Raises", sets: "3", reps: "15" }
+    ]
+  },
+  {
+    id: "challenge-day-2",
+    title: "Day 2: Lower Body",
+    description: "Foundational leg strength focusing on quads, hamstrings, and calves.",
+    duration: "60-75 min",
+    intensity: "Extreme",
+    exercises: [
+      { name: "Hack Squat or Pendulum", sets: "4", reps: "8-10" },
+      { name: "Romanian Deadlift", sets: "4", reps: "8-10" },
+      { name: "Leg Press", sets: "3", reps: "12-15" },
+      { name: "Walking Lunges", sets: "3", reps: "10/leg" },
+      { name: "Leg Curl", sets: "4", reps: "12-15" },
+      { name: "Leg Extensions", sets: "3", reps: "15" },
+      { name: "Standing Calves", sets: "4", reps: "15-20" }
+    ]
+  },
+  {
+    id: "challenge-day-3",
+    title: "Day 3: Active Recovery",
+    description: "Low-intensity movement to promote blood flow, tissue repair, and core strength.",
+    duration: "45-60 min",
+    intensity: "Low",
+    exercises: [
+      { name: "Incline Walk", sets: "1", reps: "20-30 mins" },
+      { name: "Hanging Leg Raises", sets: "3", reps: "Failure" },
+      { name: "Cable Crunches", sets: "3", reps: "15-20" },
+      { name: "Planks", sets: "3", reps: "60s" },
+      { name: "Mobility/Stretching", sets: "1", reps: "10-15 mins" }
+    ]
+  },
+  {
+    id: "challenge-day-4",
+    title: "Day 4: Push",
+    description: "Volume-focused pushing movements for chest, shoulders, and triceps.",
+    duration: "60-75 min",
+    intensity: "High",
+    exercises: [
+      { name: "Flat Machine Press", sets: "4", reps: "10-12" },
+      { name: "Incline Smith Press", sets: "4", reps: "8-10" },
+      { name: "Cable Fly", sets: "3", reps: "12-15" },
+      { name: "Machine Shoulder Press", sets: "3", reps: "10-12" },
+      { name: "Cable Lateral Raises", sets: "4", reps: "15" },
+      { name: "Rope Pushdowns", sets: "4", reps: "12-15" },
+      { name: "Overhead Cable Extensions", sets: "4", reps: "10-12" }
+    ]
+  },
+  {
+    id: "challenge-day-5",
+    title: "Day 5: Pull",
+    description: "Volume-focused pulling movements for back width and biceps.",
+    duration: "60-75 min",
+    intensity: "High",
+    exercises: [
+      { name: "Pull-Ups or Lat Pulldown", sets: "4", reps: "8-12" },
+      { name: "Chest Supported Row", sets: "4", reps: "10" },
+      { name: "Seated Cable Row", sets: "3", reps: "12" },
+      { name: "Cable Lat Prayer Pulldown", sets: "3", reps: "12-15" },
+      { name: "Rear Delt Fly", sets: "4", reps: "15" },
+      { name: "EZ Bar Curl", sets: "4", reps: "8-10" },
+      { name: "Hammer Curl", sets: "3", reps: "12" }
+    ]
+  },
+  {
+    id: "challenge-day-6",
+    title: "Day 6: Legs + Conditioning",
+    description: "Hypertrophy leg focus followed by intense conditioning.",
+    duration: "60-75 min",
+    intensity: "Extreme",
+    exercises: [
+      { name: "Front Squat or Hack Squat", sets: "4", reps: "8" },
+      { name: "Romanian Deadlift", sets: "3", reps: "10" },
+      { name: "Bulgarian Split Squat", sets: "3", reps: "10/leg" },
+      { name: "Leg Curl", sets: "3", reps: "15" },
+      { name: "Calves", sets: "4", reps: "15-20" },
+      { name: "Conditioning (Incline Walk/Sled/Stairs)", sets: "1", reps: "15-20 mins" }
+    ]
+  },
+  {
+    id: "challenge-day-7",
+    title: "Day 7: System Reset",
+    description: "Total recovery. Focus on meal prep, hydration, sleep, and planning the next week.",
+    duration: "Flexible",
+    intensity: "Rest",
+    exercises: [
+      { name: "Light Walk / Stretching", sets: "1", reps: "20-30 mins" },
+      { name: "Meal Prep", sets: "1", reps: "Complete" },
+      { name: "Progress Review", sets: "1", reps: "Complete" }
+    ]
+  }
+];
+
 const WORKOUT_PLANS = [
   {
     id: "chest-triceps",
@@ -397,52 +505,125 @@ export default function Workouts() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {WORKOUT_PLANS.map((plan) => (
-          <Card key={plan.id} className="glass-panel overflow-hidden border-white/5 hover:border-primary/30 transition-all group">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-2 bg-primary/10 rounded-none text-primary">
-                  <Dumbbell className="w-6 h-6" />
-                </div>
-                <Badge variant="secondary" className="bg-secondary/50 text-[10px] font-display uppercase tracking-wider">
-                  {plan.intensity}
-                </Badge>
-              </div>
-              
-              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{plan.title}</h3>
-              <p className="text-sm text-muted-foreground mb-6 line-clamp-2">
-                {plan.description}
-              </p>
-
-              <div className="flex gap-4 mb-6 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" /> {plan.duration}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Zap className="w-3 h-3" /> {plan.exercises.length} Exercises
-                </span>
-              </div>
-
-              <div className="space-y-3 mb-6">
-                {plan.exercises.slice(0, 3).map((ex, i) => (
-                  <div key={i} className="flex justify-between text-sm py-2 border-b border-white/5 last:border-0">
-                    <span className="text-foreground/80">{ex.name}</span>
-                    <span className="font-display text-primary text-xs">{ex.sets}x{ex.reps}</span>
+      {/* 30 Day Challenge Section */}
+      <section className="mb-16">
+        <div className="mb-6 flex items-center justify-between border-b border-primary/20 pb-2">
+          <h2 className="text-2xl font-bold font-display uppercase tracking-widest text-primary flex items-center gap-2">
+            <ShieldAlert className="w-6 h-6" /> 30 Day Lock In Challenge
+          </h2>
+          <Badge variant="outline" className="border-primary/50 text-primary">5-DAY SPLIT</Badge>
+        </div>
+        <p className="text-sm text-muted-foreground mb-6">
+          The foundational 5-day training split designed for lean muscle, athletic aesthetics, and consistency. No junk volume. No ego lifting.
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {CHALLENGE_WORKOUTS.map((plan) => (
+            <Card key={plan.id} className="glass-panel overflow-hidden border-white/5 hover:border-primary/30 transition-all group bg-black/50">
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-2 bg-primary/10 rounded-none text-primary">
+                    <Dumbbell className="w-5 h-5" />
                   </div>
-                ))}
-              </div>
+                  <Badge variant="secondary" className="bg-secondary/50 text-[10px] font-display uppercase tracking-wider">
+                    {plan.intensity}
+                  </Badge>
+                </div>
+                
+                <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors uppercase tracking-wide">{plan.title}</h3>
+                <p className="text-xs text-muted-foreground mb-4 line-clamp-2 min-h-[32px]">
+                  {plan.description}
+                </p>
 
-              <Button 
-                onClick={() => setActiveWorkout(plan)}
-                className="w-full font-display uppercase tracking-widest text-xs py-6 bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground border border-primary/20 transition-all duration-300 shadow-[0_0_0px_hsl(var(--primary)/0)] hover:shadow-[0_0_15px_hsl(var(--primary)/0.3)] cursor-pointer"
-              >
-                <PlayCircle className="w-4 h-4 mr-2" /> Start Workout
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+                <div className="flex gap-4 mb-4 text-[10px] text-muted-foreground tracking-widest uppercase font-bold">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-primary" /> {plan.duration}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Zap className="w-3 h-3 text-primary" /> {plan.exercises.length} Exercises
+                  </span>
+                </div>
+
+                <div className="space-y-2 mb-6 border-t border-white/5 pt-4">
+                  {plan.exercises.slice(0, 3).map((ex, i) => (
+                    <div key={i} className="flex justify-between text-xs py-1">
+                      <span className="text-foreground/70 truncate pr-2">{ex.name}</span>
+                      <span className="font-display text-primary whitespace-nowrap">{ex.sets}x{ex.reps}</span>
+                    </div>
+                  ))}
+                  {plan.exercises.length > 3 && (
+                    <div className="text-[10px] text-muted-foreground text-center pt-2 italic">
+                      + {plan.exercises.length - 3} more exercises
+                    </div>
+                  )}
+                </div>
+
+                <Button 
+                  onClick={() => setActiveWorkout(plan as any)}
+                  className="w-full font-display uppercase tracking-widest text-xs py-5 bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground border border-primary/20 transition-all duration-300 shadow-[0_0_0px_hsl(var(--primary)/0)] hover:shadow-[0_0_15px_hsl(var(--primary)/0.3)] rounded-none"
+                >
+                  <PlayCircle className="w-4 h-4 mr-2" /> Start Session
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Standard Library Section */}
+      <section>
+        <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-2">
+          <h2 className="text-xl font-bold font-display uppercase tracking-widest flex items-center gap-2">
+            The Library
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {WORKOUT_PLANS.map((plan) => (
+            <Card key={plan.id} className="glass-panel overflow-hidden border-white/5 hover:border-white/20 transition-all group opacity-80 hover:opacity-100">
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-2 bg-secondary rounded-none">
+                    <Dumbbell className="w-5 h-5 text-muted-foreground group-hover:text-white transition-colors" />
+                  </div>
+                  <Badge variant="secondary" className="bg-secondary/50 text-[10px] font-display uppercase tracking-wider text-muted-foreground">
+                    {plan.intensity}
+                  </Badge>
+                </div>
+                
+                <h3 className="text-lg font-bold mb-2 group-hover:text-white transition-colors text-foreground/80">{plan.title}</h3>
+                <p className="text-xs text-muted-foreground mb-4 line-clamp-2">
+                  {plan.description}
+                </p>
+
+                <div className="flex gap-4 mb-4 text-[10px] text-muted-foreground tracking-widest uppercase">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" /> {plan.duration}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Zap className="w-3 h-3" /> {plan.exercises.length} Exercises
+                  </span>
+                </div>
+
+                <div className="space-y-2 mb-6 border-t border-white/5 pt-4">
+                  {plan.exercises.slice(0, 3).map((ex, i) => (
+                    <div key={i} className="flex justify-between text-xs py-1">
+                      <span className="text-muted-foreground truncate pr-2">{ex.name}</span>
+                      <span className="font-display text-muted-foreground whitespace-nowrap">{ex.sets}x{ex.reps}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <Button 
+                  onClick={() => setActiveWorkout(plan as any)}
+                  className="w-full font-display uppercase tracking-widest text-xs py-5 bg-secondary hover:bg-white hover:text-black border border-white/10 transition-all duration-300 rounded-none text-muted-foreground"
+                >
+                  <PlayCircle className="w-4 h-4 mr-2" /> Start Workout
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
