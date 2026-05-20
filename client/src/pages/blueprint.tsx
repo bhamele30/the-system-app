@@ -25,10 +25,10 @@ export default function Blueprint() {
   let cycleType = "";
   
   if (isPhase2) {
-    const p2Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Upper Body Power", "Lower Body Power", "Active Recovery"][state.completedDays % 6];
+    const p2Cycle = ["Push (Phase 2)", "Pull (Phase 2)", "Rest", "Legs (Phase 2)", "Full Body Power", "Active Recovery", "Rest"][state.completedDays % 7];
     cycleName = p2Cycle;
-    cycleDuration = p2Cycle === "Active Recovery" ? "45 Min" : "65-75 Min";
-    cycleType = p2Cycle === "Active Recovery" ? "Recovery" : "Hypertrophy / Power";
+    cycleDuration = (p2Cycle === "Active Recovery" || p2Cycle === "Rest") ? "45 Min" : "60-75 Min";
+    cycleType = (p2Cycle === "Active Recovery" || p2Cycle === "Rest") ? "Recovery" : "Hypertrophy / Power";
   } else {
     const p1Cycle = ["Push: Chest & Triceps", "Pull: Back & Biceps", "Shoulders & Legs", "Strict Arms", "Active Recovery"][state.completedDays % 5];
     cycleName = p1Cycle;

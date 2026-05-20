@@ -10,7 +10,7 @@ import { toast } from "@/hooks/use-toast";
 export default function Home() {
   const [, setLocation] = useLocation();
   const { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, setMode } = useSystem();
-  const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "UPPER" | "LOWER" | "REST" | "UPPER_POWER" | "LOWER_BODY" | "ACTIVE_RECOVERY" | "PUSH_VOLUME" | "PULL_VOLUME" | "LEGS_COND" | "SYSTEM_RESET">("UPPER_POWER");
+  const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "UPPER" | "LOWER" | "REST" | "UPPER_POWER" | "LOWER_BODY" | "ACTIVE_RECOVERY" | "PUSH_VOLUME" | "PULL_VOLUME" | "LEGS_COND" | "SYSTEM_RESET" | "PUSH_P2" | "PULL_P2" | "LEGS_P2" | "FULL_BODY_P2">("UPPER_POWER");
   const [focusLine, setFocusLine] = useState("");
   const [showCheckin, setShowCheckin] = useState(false);
   const [showPhaseCelebration, setShowPhaseCelebration] = useState(false);
@@ -59,8 +59,8 @@ export default function Home() {
     
     let cycle;
     if (isPhase2) {
-      // Phase 2: 5 workouts + 1 rest day = 6 day cycle
-      cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][phaseDays % 6] as any;
+      // Phase 2: 4 workouts + 1 active recovery + 2 rest days = 7 day cycle
+      cycle = ["PUSH_P2", "PULL_P2", "REST", "LEGS_P2", "FULL_BODY_P2", "ACTIVE_RECOVERY", "REST"][phaseDays % 7] as any;
     } else {
       // Phase 1 (30 Day Challenge): 5 workouts + 1 rest + 1 reset = 7 day cycle
       cycle = ["UPPER_POWER", "LOWER_BODY", "ACTIVE_RECOVERY", "PUSH_VOLUME", "PULL_VOLUME", "LEGS_COND", "SYSTEM_RESET"][state.completedDays % 7] as any;
@@ -90,11 +90,10 @@ export default function Home() {
     if (dayType === "SYSTEM_RESET") return "System Reset";
     
     // Phase 2 fallbacks
-    if (dayType === "PUSH") return "Chest & Triceps";
-    if (dayType === "PULL") return "Back & Biceps";
-    if (dayType === "LEGS") return "Shoulders & Legs";
-    if (dayType === "UPPER") return "Upper Body Power";
-    if (dayType === "LOWER") return "Lower Body Power";
+    if (dayType === "PUSH_P2") return "Push (Phase 2)";
+    if (dayType === "PULL_P2") return "Pull (Phase 2)";
+    if (dayType === "LEGS_P2") return "Legs (Phase 2)";
+    if (dayType === "FULL_BODY_P2") return "Full Body Power (Phase 2)";
     return "Active Recovery";
   };
 
