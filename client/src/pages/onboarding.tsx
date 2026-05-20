@@ -85,36 +85,20 @@ export default function Onboarding() {
     let fatMultiplier = 0.3;
     let recoveryPriority = "Moderate";
 
-    switch(selectedMode) {
-      case "Operator Lean":
+    switch(selectedMode as any) {
+      case "cut":
         kcal -= 500;
         proteinMultiplier = 1.1; 
         recoveryPriority = "High (Deficit Protocol)";
         break;
-      case "Athletic Build":
-        kcal += 0;
-        proteinMultiplier = 1.0;
-        recoveryPriority = "Moderate";
-        break;
-      case "Elite Conditioning":
-        kcal += 200;
-        proteinMultiplier = 0.9;
-        fatMultiplier = 0.25; 
-        recoveryPriority = "Critical (CNS Taxing)";
-        break;
-      case "Lean Mass Phase":
+      case "build":
         kcal += 300;
         proteinMultiplier = 1.0;
         recoveryPriority = "High (Growth Protocol)";
         break;
-      case "Performance Build":
-        kcal += 500;
+      case "lock-in":
+        kcal += 0;
         proteinMultiplier = 1.0;
-        recoveryPriority = "High (Heavy Load)";
-        break;
-      case "Recomp Phase":
-        kcal -= 100;
-        proteinMultiplier = 1.1; 
         recoveryPriority = "Moderate";
         break;
     }
@@ -452,12 +436,9 @@ export default function Onboarding() {
             
             <div className="space-y-4 mt-8">
               {[
-                { id: "Operator Lean", title: "Operator Lean", desc: "Strip fat. Maximize relative strength. Slight caloric deficit, moderate carbs.", icon: Target },
-                { id: "Athletic Build", title: "Athletic Build", desc: "Performance & aesthetics. Maintenance calories, high protein.", icon: Activity },
-                { id: "Elite Conditioning", title: "Elite Conditioning", desc: "Maximal work capacity. High carb, high recovery demands.", icon: HeartPulse },
-                { id: "Lean Mass Phase", title: "Lean Mass Phase", desc: "Accumulate lean tissue. Slight surplus, high volume training.", icon: ShieldCheck },
-                { id: "Performance Build", title: "Performance Build", desc: "Focus on absolute strength & mass. Heavy surplus.", icon: Dumbbell },
-                { id: "Recomp Phase", title: "Recomp Phase", desc: "Lose fat, build muscle simultaneously. Strict maintenance protocol.", icon: Crosshair }
+                { id: "cut", title: "Operator Lean (Cut)", desc: "Strip fat. Maximize relative strength. Slight caloric deficit, moderate carbs.", icon: Target },
+                { id: "build", title: "Athletic Build (Build)", desc: "Performance & aesthetics. Maintenance calories, high protein.", icon: Activity },
+                { id: "lock-in", title: "Lock-In Phase", desc: "Maximal work capacity. High carb, high recovery demands.", icon: HeartPulse }
               ].map(mode => (
                 <div 
                   key={mode.id}
