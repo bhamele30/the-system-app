@@ -10,7 +10,7 @@ import { toast } from "@/hooks/use-toast";
 export default function Home() {
   const [, setLocation] = useLocation();
   const { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, setMode } = useSystem();
-  const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "UPPER" | "LOWER" | "REST">("PUSH");
+  const [dayType, setDayType] = useState<"PUSH" | "PULL" | "LEGS" | "ARMS" | "UPPER" | "LOWER" | "REST" | "UPPER_POWER" | "LOWER_BODY" | "ACTIVE_RECOVERY" | "PUSH_VOLUME" | "PULL_VOLUME" | "LEGS_COND" | "SYSTEM_RESET">("UPPER_POWER");
   const [focusLine, setFocusLine] = useState("");
   const [showCheckin, setShowCheckin] = useState(false);
   const [showPhaseCelebration, setShowPhaseCelebration] = useState(false);
@@ -49,9 +49,9 @@ export default function Home() {
     // Determine the current cycle step based on the number of completed days.
     // This means the user stays on their current workout until they log a successful execution.
     
-    // Check if in phase 1 (first 84 days) or phase 2 (after 84 days)
-    const isPhase2 = state.completedDays >= 84;
-    const phaseDays = state.completedDays % 84;
+    // Check if in phase 1 (first 30 days) or phase 2 (after 30 days)
+    const isPhase2 = state.completedDays >= 30;
+    const phaseDays = state.completedDays % 30;
     
     if (isPhase2 && !state.hasSeenPhase2Celebration) {
       setShowPhaseCelebration(true);
@@ -62,8 +62,8 @@ export default function Home() {
       // Phase 2: 5 workouts + 1 rest day = 6 day cycle
       cycle = ["PUSH", "PULL", "LEGS", "UPPER", "LOWER", "REST"][phaseDays % 6] as any;
     } else {
-      // Phase 1: 4 workouts + 1 rest day = 5 day cycle
-      cycle = ["PUSH", "PULL", "LEGS", "ARMS", "REST"][phaseDays % 5] as any;
+      // Phase 1 (30 Day Challenge): 5 workouts + 1 rest + 1 reset = 7 day cycle
+      cycle = ["UPPER_POWER", "LOWER_BODY", "ACTIVE_RECOVERY", "PUSH_VOLUME", "PULL_VOLUME", "LEGS_COND", "SYSTEM_RESET"][state.completedDays % 7] as any;
     }
     
     setDayType(cycle);
@@ -81,10 +81,18 @@ export default function Home() {
   }, [state.completedDays, state.hasSeenPhase2Celebration]);
 
   const getWorkout = () => {
+    if (dayType === "UPPER_POWER") return "Upper Power";
+    if (dayType === "LOWER_BODY") return "Lower Body";
+    if (dayType === "ACTIVE_RECOVERY") return "Active Recovery";
+    if (dayType === "PUSH_VOLUME") return "Push";
+    if (dayType === "PULL_VOLUME") return "Pull";
+    if (dayType === "LEGS_COND") return "Legs + Conditioning";
+    if (dayType === "SYSTEM_RESET") return "System Reset";
+    
+    // Phase 2 fallbacks
     if (dayType === "PUSH") return "Chest & Triceps";
     if (dayType === "PULL") return "Back & Biceps";
     if (dayType === "LEGS") return "Shoulders & Legs";
-    if (dayType === "ARMS") return "Strict Arms";
     if (dayType === "UPPER") return "Upper Body Power";
     if (dayType === "LOWER") return "Lower Body Power";
     return "Active Recovery";
@@ -319,7 +327,7 @@ export default function Home() {
               : "border-white/10"
         }`}>
           
-          {dayType === "REST" ? (
+          {["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? (
             <>
               <div className="space-y-1">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
@@ -327,7 +335,7 @@ export default function Home() {
                     <RefreshCw className="w-3 h-3" /> DIRECTIVE 01 // RECOVERY
                   </span>
                 </div>
-                <div className="font-bold text-lg uppercase tracking-wider">ACTIVE RECOVERY</div>
+                <div className="font-bold text-lg uppercase tracking-wider">{getWorkout()}</div>
                 <div className="text-muted-foreground text-xs uppercase tracking-widest">No heavy lifting. Nervous system reset.</div>
               </div>
 
@@ -448,11 +456,11 @@ export default function Home() {
               Recovery condition: train, nutrition, and recovery must all be marked YES on the next log. One weak link keeps the system damaged.
             </div>
             <Button 
-              onClick={() => dayType === "REST" ? setShowCheckin(true) : setLocation('/workouts')}
+              onClick={() => {["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? setShowCheckin(true) : setLocation('/workouts')}}
               data-testid="button-open-rebuild-log"
               className="w-full rounded-none bg-yellow-400 text-black hover:bg-yellow-300 font-bold uppercase tracking-widest h-12 shadow-[0_0_20px_rgba(250,204,21,0.18)]"
             >
-              {dayType === "REST" ? "OPEN REBUILD LOG" : "BEGIN REPAIR PROTOCOL (WORKOUTS)"}
+              {["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? "OPEN REBUILD LOG" : "BEGIN REPAIR PROTOCOL (WORKOUTS)"}
             </Button>
           </Card>
         )}
@@ -480,7 +488,7 @@ export default function Home() {
               <span>{isRebuilding ? "RESTORATION REQUIRED" : isBreached ? "REBUILD REQUIRED" : "EXECUTION REQUIRED"}</span>
             </div>
             <Button 
-              onClick={() => dayType === "REST" ? setShowCheckin(true) : setLocation('/workouts')}
+              onClick={() => {["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? setShowCheckin(true) : setLocation('/workouts')}}
               data-testid="button-execute-day"
               className={`w-full h-16 rounded-none font-black uppercase tracking-[0.2em] text-base border-2 ${
                 isRebuilding
@@ -490,7 +498,7 @@ export default function Home() {
                     : "bg-primary text-black hover:bg-primary/90 border-primary shadow-[0_0_30px_hsl(var(--primary)/0.2)]"
               }`}
             >
-              {isBreached ? "INITIATE REPAIR SEQUENCE" : (dayType === "REST" ? "LOG RECOVERY COMPLIANCE" : "ENTER TRAINING PROTOCOL")}
+              {isBreached ? "INITIATE REPAIR SEQUENCE" : (["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? "LOG RECOVERY COMPLIANCE" : "ENTER TRAINING PROTOCOL")}
             </Button>
           </div>
         )}
