@@ -40,7 +40,11 @@ export default function Home() {
     };
 
     updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
+    // We check the countdown every second, but now we also check for a missed day
+    // every time the countdown hits exactly 00:00:00. The check in use-system will handle it.
+    const interval = setInterval(() => {
+      updateCountdown();
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 

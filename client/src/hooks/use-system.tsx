@@ -86,6 +86,64 @@ export function useSystem() {
   initGlobalState();
   const [state, setState] = useState<SystemState>(globalState);
 
+  // Check for missed days based on the 24-hour clock
+  useEffect(() => {
+    const checkMissedDays = () => {
+      // We only check if the system has been started (totalDays > 0)
+      if (globalState.totalDays === 0) return;
+
+      const today = new Date().toISOString().split('T')[0];
+      
+      // If we've completed today, or we're already breached, nothing to do
+      if (globalState.lastCompletedDate === today || globalState.recoveryState === "breached") {
+        return;
+      }
+
+      // Check if it's past midnight of a day we haven't completed
+      const now = new Date();
+      // If they started the system today, give them until midnight.
+      // If it's a new calendar day and they haven't submitted yesterday's log,
+      // they have breached the system.
+      if (globalState.lastCompletedDate) {
+        const lastDate = new Date(globalState.lastCompletedDate);
+        const currentDate = new Date(today);
+        const diffTime = Math.abs(currentDate.getTime() - lastDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        
+        // If more than 1 day has passed since the last completion (i.e. it is tomorrow, and they didn't complete today), they missed a day
+        if (diffDays > 1 && globalState.recoveryState === "idle") {
+          setGlobalState(prev => ({
+            ...prev,
+            streak: 0,
+            recoveryState: "breached",
+            lastOutcome: "broken"
+          }));
+        }
+      } else if (globalState.totalDays > 0) {
+          // Edge case: They started the system, but never logged Day 1, and now it's Day 2
+          // We can't rely on lastCompletedDate, but we know totalDays > 0
+          // If we had a strict "startDate" we could compare against it, but without one, 
+          // we can check if they have any logs from before today.
+          // For now, the safest way is ensuring the streak breaks if the 24 hr clock ticks over and nothing is logged.
+          const hasLoggedAnything = Object.keys(globalState.exerciseLogs || {}).length > 0 || Object.keys(globalState.nutritionLogs || {}).length > 0;
+          if (hasLoggedAnything) {
+             setGlobalState(prev => ({
+              ...prev,
+              streak: 0,
+              recoveryState: "breached",
+              lastOutcome: "broken"
+            }));
+          }
+      }
+    };
+
+    checkMissedDays();
+    
+    // Set up an interval to check periodically (e.g., every minute) in case they leave the app open overnight
+    const interval = setInterval(checkMissedDays, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     listeners.add(setState);
     return () => {
