@@ -233,7 +233,11 @@ export default function Home() {
         <div className="flex flex-col text-right">
           <span className="text-white/40 uppercase tracking-[0.3em] text-[9px] mb-1 font-bold">Unbroken Chain</span>
           <span className="text-2xl font-black text-primary flex items-center justify-end tracking-tighter">
-            {state.streak > 0 && <span className="mr-2 text-xl">🔥</span>}
+            {state.streak > 0 ? (
+              <span className="mr-2 text-xl">🔥</span>
+            ) : (
+              <span className="mr-2 text-xl">🚨</span>
+            )}
             {state.streak} DAYS
           </span>
           <span className="text-destructive uppercase tracking-[0.2em] text-[9px] font-bold mt-1">MISS = RESET TO 0</span>
