@@ -436,7 +436,7 @@ export default function Onboarding() {
             
             <div className="space-y-4 mt-8">
               {[
-                { id: "cut", title: "Operator Lean (Cut)", desc: "Strip fat. Maximize relative strength. Slight caloric deficit, moderate carbs.", icon: Target },
+                { id: "cut", title: "Cut", desc: "Strip fat. Maximize relative strength. Slight caloric deficit, moderate carbs.", icon: Target },
                 { id: "build", title: "Athletic Build (Build)", desc: "Performance & aesthetics. Maintenance calories, high protein.", icon: Activity },
                 { id: "lock-in", title: "Lock-In Phase", desc: "Maximal work capacity. High carb, high recovery demands.", icon: HeartPulse }
               ].map(mode => (
@@ -526,7 +526,7 @@ export default function Onboarding() {
               <div className="space-y-2 pb-4 border-b border-white/5">
                 <div className="text-[10px] text-muted-foreground tracking-widest uppercase">System Profile</div>
                 <div className="flex justify-between items-end">
-                  <div className="font-bold text-lg text-white uppercase">{classification} Operator</div>
+                  <div className="font-bold text-lg text-white uppercase">{classification}</div>
                   <div className="text-right">
                     <div className="text-[10px] text-muted-foreground tracking-widest uppercase">Current Status</div>
                     <div className="text-primary font-bold uppercase text-sm tracking-widest">{selectedMode}</div>

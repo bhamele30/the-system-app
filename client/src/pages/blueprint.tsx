@@ -132,7 +132,7 @@ export default function Blueprint() {
               
               <div className="mb-6 pb-6 border-b border-white/10">
                 <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Classification</div>
-                <div className="text-xl font-bold uppercase text-white">{state.profile.classification} Operator</div>
+                <div className="text-xl font-bold uppercase text-white">{state.profile.classification}</div>
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
