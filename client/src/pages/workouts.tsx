@@ -449,6 +449,35 @@ export default function Workouts() {
                     </label>
                   </div>
                 </div>
+
+                <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
+                  <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">LOG PROOF</h4>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                      <span className="text-xl mb-2">📸</span>
+                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground">GYM PIC</span>
+                    </div>
+                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                      <span className="text-xl mb-2">⚖️</span>
+                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground">WEIGHT LOG</span>
+                    </div>
+                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                      <span className="text-xl mb-2">🥩</span>
+                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground">MEAL PIC</span>
+                    </div>
+                  </div>
+                  
+                  {/* Mockup visual for proof state */}
+                  {checks.train && checks.nutrition && checks.recovery ? (
+                     <div className="w-full text-center py-2 text-green-500 font-bold uppercase tracking-widest text-xs border border-green-500/20 bg-green-500/10">
+                       👉 Proof Verified
+                     </div>
+                  ) : (
+                    <div className="w-full text-center py-2 text-muted-foreground font-bold uppercase tracking-widest text-xs border border-white/10 bg-white/5">
+                       👉 No proof submitted
+                     </div>
+                  )}
+                </div>
               </div>
             </div>
 

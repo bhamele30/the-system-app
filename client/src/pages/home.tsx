@@ -470,7 +470,7 @@ export default function Home() {
               <span>{isRebuilding ? "RESTORATION REQUIRED" : isBreached ? "REBUILD REQUIRED" : "EXECUTION REQUIRED"}</span>
             </div>
             <Button 
-              onClick={() => {["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? setShowCheckin(true) : setLocation('/workouts')}}
+              onClick={() => setShowCheckin(true)}
               data-testid="button-execute-day"
               className={`w-full h-16 rounded-none font-black uppercase tracking-[0.2em] text-base border-2 ${
                 isRebuilding
@@ -480,8 +480,18 @@ export default function Home() {
                     : "bg-primary text-black hover:bg-primary/90 border-primary shadow-[0_0_30px_hsl(var(--primary)/0.2)]"
               }`}
             >
-              {isBreached ? "INITIATE REPAIR SEQUENCE" : (["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? "LOG RECOVERY COMPLIANCE" : "ENTER TRAINING PROTOCOL")}
+              {isBreached ? "INITIATE REPAIR SEQUENCE" : "LOG EXECUTION"}
             </Button>
+            
+            {!["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) && (
+              <Button 
+                variant="outline"
+                onClick={() => setLocation('/workouts')}
+                className="w-full h-12 rounded-none font-bold uppercase tracking-widest text-xs border-white/20 hover:bg-white/5 mt-2 text-white"
+              >
+                VIEW TRAINING PROTOCOL
+              </Button>
+            )}
           </div>
         )}
 
