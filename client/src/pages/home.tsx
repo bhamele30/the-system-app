@@ -14,6 +14,7 @@ export default function Home() {
   const [focusLine, setFocusLine] = useState("");
   const [showCheckin, setShowCheckin] = useState(false);
   const [showPhaseCelebration, setShowPhaseCelebration] = useState(false);
+  const [showWeeklyReview, setShowWeeklyReview] = useState(false);
   const [checks, setChecks] = useState<{train: boolean | null, nutrition: boolean | null, recovery: boolean | null}>({ train: null, nutrition: null, recovery: null });
   const [error, setError] = useState("");
   const [timeLeft, setTimeLeft] = useState<string>("");
@@ -367,6 +368,16 @@ export default function Home() {
           <div className="border border-primary/20 bg-primary/5 p-3 text-center mt-8">
             <div className="font-bold text-sm uppercase tracking-widest text-primary">{focusLine}</div>
           </div>
+
+          <div className="w-full mt-4">
+             <Button 
+              variant="outline"
+              onClick={() => setShowWeeklyReview(true)}
+              className="w-full text-[10px] uppercase tracking-widest rounded-none border-white/10 hover:bg-white/5"
+             >
+               View Weekly Review (Demo)
+             </Button>
+          </div>
         </Card>
 
         {isBreached && (
@@ -475,6 +486,58 @@ export default function Home() {
         )}
 
       </main>
+
+      {/* Weekly Review Modal */}
+      <Dialog open={showWeeklyReview} onOpenChange={setShowWeeklyReview}>
+        <DialogContent className="bg-black border-primary/50 shadow-[0_0_50px_hsl(var(--primary)/0.2)] rounded-none sm:max-w-md overflow-hidden hide-close">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+          
+          <div className="flex flex-col items-center justify-center text-center space-y-6 py-8 px-2">
+            <h2 className="font-display text-primary text-xl uppercase tracking-[0.4em] font-black border-b border-primary/20 pb-4 w-full">SYSTEM REVIEW</h2>
+            
+            <div className="w-full space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-left">
+                <div className="bg-white/5 border border-white/10 p-4">
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Adherence</div>
+                  <div className="text-3xl font-black text-white">100%</div>
+                </div>
+                <div className="bg-white/5 border border-white/10 p-4">
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Missed Tasks</div>
+                  <div className="text-3xl font-black text-white">0</div>
+                </div>
+              </div>
+              
+              <div className="bg-white/5 border border-white/10 p-4 text-left">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">Performance</div>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs uppercase font-bold text-white">Training</span>
+                  <span className="text-primary text-xs">A+</span>
+                </div>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs uppercase font-bold text-white">Nutrition</span>
+                  <span className="text-primary text-xs">A</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs uppercase font-bold text-white">Recovery</span>
+                  <span className="text-primary text-xs">A+</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full pt-4 mt-2 border-t border-white/10 flex flex-col items-center gap-2">
+               <span className="text-xs uppercase tracking-widest text-muted-foreground">👉 Verdict:</span>
+               <span className="text-4xl font-black uppercase text-glow tracking-tighter">ELITE</span>
+            </div>
+
+            <Button 
+              onClick={() => setShowWeeklyReview(false)}
+              className="w-full mt-6 h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-display font-bold uppercase tracking-widest text-sm shadow-[0_0_30px_hsl(var(--primary)/0.3)] transition-all"
+            >
+              ACKNOWLEDGE
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Check-in Modal */}
       <Dialog open={showCheckin} onOpenChange={setShowCheckin}>
@@ -587,6 +650,35 @@ export default function Home() {
                     /> NO
                   </label>
                 </div>
+              </div>
+
+              <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
+                <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">LOG PROOF</h4>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                    <span className="text-xl mb-2">📸</span>
+                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">GYM PIC</span>
+                  </div>
+                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                    <span className="text-xl mb-2">⚖️</span>
+                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">WEIGHT LOG</span>
+                  </div>
+                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                    <span className="text-xl mb-2">🥩</span>
+                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">MEAL PIC</span>
+                  </div>
+                </div>
+                
+                {/* Mockup visual for proof state */}
+                {checks.train && checks.nutrition && checks.recovery ? (
+                   <div className="w-full text-center py-2 text-green-500 font-bold uppercase tracking-widest text-xs border border-green-500/20 bg-green-500/10">
+                     👉 Proof Verified
+                   </div>
+                ) : (
+                  <div className="w-full text-center py-2 text-muted-foreground font-bold uppercase tracking-widest text-xs border border-white/10 bg-white/5">
+                     👉 No proof submitted
+                   </div>
+                )}
               </div>
             </div>
           </div>
