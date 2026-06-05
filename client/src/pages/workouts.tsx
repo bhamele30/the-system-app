@@ -453,17 +453,17 @@ export default function Workouts() {
                 <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
                   <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">LOG PROOF</h4>
                   <div className="grid grid-cols-3 gap-2">
-                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
                       <span className="text-xl mb-2">📸</span>
-                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground">GYM PIC</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">GYM PIC</span>
                     </div>
-                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
                       <span className="text-xl mb-2">⚖️</span>
-                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground">WEIGHT LOG</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">WEIGHT LOG</span>
                     </div>
-                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
                       <span className="text-xl mb-2">🥩</span>
-                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground">MEAL PIC</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">MEAL PIC</span>
                     </div>
                   </div>
                   

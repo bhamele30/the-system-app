@@ -398,7 +398,7 @@ export default function Home() {
               <div className="border border-white/10 px-2 py-3 text-foreground/60">Rebuild Mode</div>
               <div className="border border-white/10 px-2 py-3 text-foreground/60">Integrity Restored</div>
             </div>
-            <div className="grid gap-2 text-[11px] uppercase tracking-widest text-foreground/80">
+            <div className="grid gap-2 text-[10px] md:text-[11px] uppercase tracking-widest text-foreground/80">
               <div className="border border-white/10 px-3 py-2">1. Acknowledge the breach</div>
               <div className="border border-white/10 px-3 py-2">2. Enter rebuild mode</div>
               <div className="border border-white/10 px-3 py-2">3. Win the next full day without compromise</div>
@@ -440,9 +440,9 @@ export default function Home() {
             <Button 
               onClick={() => {["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? setShowCheckin(true) : setLocation('/workouts')}}
               data-testid="button-open-rebuild-log"
-              className="w-full rounded-none bg-yellow-400 text-black hover:bg-yellow-300 font-bold uppercase tracking-widest h-12 shadow-[0_0_20px_rgba(250,204,21,0.18)]"
+              className="w-full rounded-none bg-yellow-400 text-black hover:bg-yellow-300 font-bold uppercase tracking-wider text-xs h-12 shadow-[0_0_20px_rgba(250,204,21,0.18)]"
             >
-              {["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? "OPEN REBUILD LOG" : "BEGIN REPAIR PROTOCOL (WORKOUTS)"}
+              {["REST", "ACTIVE_RECOVERY", "SYSTEM_RESET"].includes(dayType) ? "OPEN REBUILD LOG" : "BEGIN REPAIR PROTOCOL"}
             </Button>
           </Card>
         )}
@@ -665,17 +665,17 @@ export default function Home() {
               <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
                 <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">LOG PROOF</h4>
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
                     <span className="text-xl mb-2">📸</span>
-                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">GYM PIC</span>
+                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">GYM PIC</span>
                   </div>
-                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
                     <span className="text-xl mb-2">⚖️</span>
-                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">WEIGHT LOG</span>
+                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">WEIGHT LOG</span>
                   </div>
-                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-white/10 transition-colors">
+                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
                     <span className="text-xl mb-2">🥩</span>
-                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">MEAL PIC</span>
+                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">MEAL PIC</span>
                   </div>
                 </div>
                 
