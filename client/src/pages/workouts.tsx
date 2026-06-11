@@ -200,42 +200,6 @@ export default function Workouts() {
   const isRebuilding = state.recoveryState === "rebuilding";
   const modalTitle = isRebuilding ? "LOG REBUILD EXECUTION" : "DID YOU EXECUTE";
 
-  const handleCheckinSubmit = () => {
-    if (checks.train === null || checks.nutrition === null || checks.recovery === null) {
-      setError("YOU MUST REPORT ALL METRICS TO LOG EXECUTION.");
-      return;
-    }
-    
-    setError("");
-    const result = submitDay(checks.train, checks.nutrition, checks.recovery);
-    setShowCheckin(false);
-    
-    setChecks({ train: null, nutrition: null, recovery: null });
-    setActiveWorkout(null);
-    setCompletedSets({});
-    setActiveWeights({});
-    
-    if (result.restored) {
-      toast({
-        title: "SYSTEM RESTORED",
-        description: "REBUILD COMPLETE. RETURN TO STANDARD EXECUTION.",
-        variant: "default",
-      });
-    } else if (result.success) {
-      toast({
-        title: "SYSTEM MAINTAINED",
-        description: "STAY IN THE SYSTEM.",
-        variant: "default",
-      });
-    } else {
-      toast({
-        title: "SYSTEM BROKEN",
-        description: "YOU BROKE THE SYSTEM. ZERO TOLERANCE.",
-        variant: "destructive",
-      });
-    }
-  };
-
   const toggleSet = (exerciseName: string, setIndex: number) => {
     const key = `${exerciseName}-${setIndex}`;
     setCompletedSets(prev => ({ ...prev, [key]: !prev[key] }));
