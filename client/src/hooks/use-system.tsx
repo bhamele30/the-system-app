@@ -26,6 +26,7 @@ interface SystemState {
     classification: string;
   };
   customMealsLibrary: { id: string, food: string, calories: number, protein: number, carbs: number, fat: number }[];
+  proofs: Record<string, { gymPic?: string, weightLog?: string, mealPic?: string }>;
 }
 
 const defaultState: SystemState = {
@@ -42,6 +43,7 @@ const defaultState: SystemState = {
   loggedMealIds: {},
   mode: "lock-in",
   customMealsLibrary: [],
+  proofs: {},
 };
 
 const normalizeState = (savedState: Partial<SystemState>): SystemState => {
@@ -151,7 +153,7 @@ export function useSystem() {
     };
   }, []);
 
-  const submitDay = (train: boolean, nutrition: boolean, recovery: boolean) => {
+  const submitDay = (train: boolean, nutrition: boolean, recovery: boolean, proof?: { gymPic?: string, weightLog?: string, mealPic?: string }) => {
     const today = new Date().toISOString().split('T')[0];
     const success = train && nutrition && recovery;
     const wasRecovering = state.recoveryState === "breached" || state.recoveryState === "rebuilding";
@@ -174,6 +176,11 @@ export function useSystem() {
       lastOutcome = "broken";
     }
 
+    const newProofs = { ...state.proofs };
+    if (proof) {
+      newProofs[today] = proof;
+    }
+
     setGlobalState(prev => ({
       ...prev,
       streak: newStreak,
@@ -182,7 +189,8 @@ export function useSystem() {
       completedDays: newCompleted,
       lastCompletedDate: today,
       recoveryState,
-      lastOutcome
+      lastOutcome,
+      proofs: newProofs
     }));
     
     return { success, restored: success && wasRecovering };

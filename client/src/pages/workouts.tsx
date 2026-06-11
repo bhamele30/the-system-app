@@ -257,6 +257,50 @@ export default function Workouts() {
     setShowCheckin(true);
   };
 
+  const handleCheckinSubmit = () => {
+    if (checks.train === null || checks.nutrition === null || checks.recovery === null) {
+      setError("YOU MUST REPORT ALL METRICS TO LOG EXECUTION.");
+      return;
+    }
+    
+    setError("");
+
+    const weightAmount = Math.floor(Math.random() * (205 - 190 + 1) + 190);
+    const mockProof = {
+      gymPic: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop",
+      weightLog: weightAmount.toString(),
+      mealPic: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1480&auto=format&fit=crop"
+    };
+
+    const result = submitDay(checks.train, checks.nutrition, checks.recovery, mockProof);
+    setShowCheckin(false);
+    
+    setChecks({ train: null, nutrition: null, recovery: null });
+    setActiveWorkout(null);
+    setCompletedSets({});
+    setActiveWeights({});
+    
+    if (result.restored) {
+      toast({
+        title: "SYSTEM RESTORED",
+        description: "REBUILD COMPLETE. RETURN TO STANDARD EXECUTION.",
+        variant: "default",
+      });
+    } else if (result.success) {
+      toast({
+        title: "SYSTEM LOCKED IN",
+        description: "STAY IN THE SYSTEM.",
+        variant: "default",
+      });
+    } else {
+      toast({
+        title: "SYSTEM BROKEN",
+        description: "YOU BROKE THE SYSTEM. ZERO TOLERANCE.",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (activeWorkout) {
     return (
       <div className="p-6 md:p-10 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">

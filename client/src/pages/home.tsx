@@ -140,7 +140,15 @@ export default function Home() {
     }
     
     setError("");
-    const result = submitDay(checks.train, checks.nutrition, checks.recovery);
+
+    const weightAmount = Math.floor(Math.random() * (205 - 190 + 1) + 190);
+    const mockProof = {
+      gymPic: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop",
+      weightLog: weightAmount.toString(),
+      mealPic: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1480&auto=format&fit=crop"
+    };
+
+    const result = submitDay(checks.train, checks.nutrition, checks.recovery, mockProof);
     setShowCheckin(false);
     
     setChecks({ train: null, nutrition: null, recovery: null });
