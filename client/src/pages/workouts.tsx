@@ -187,6 +187,8 @@ const WORKOUT_PLANS = [
   }
 ];
 
+import { compressImage } from "@/lib/image-utils";
+
 export default function Workouts() {
   const { state, logExerciseWeight, submitDay } = useSystem();
   const [activeWorkout, setActiveWorkout] = useState<typeof WORKOUT_PLANS[0] | null>(null);
@@ -472,12 +474,12 @@ export default function Workouts() {
                       <input 
                         type="file" 
                         accept="image/*" 
-                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" 
+                        className="hidden" 
                         onChange={(e) => {
                           if (e.target.files && e.target.files.length > 0) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => setGymPic(e.target?.result as string);
-                            reader.readAsDataURL(e.target.files[0]);
+                            compressImage(e.target.files[0], (compressedData) => {
+                              setGymPic(compressedData);
+                            });
                           }
                         }}
                       />
@@ -485,26 +487,27 @@ export default function Workouts() {
                       <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{gymPic ? "PIC SET" : "GYM PIC"}</span>
                     </label>
                     
-                    <div className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group`} onClick={() => {
-                      const weight = prompt("Enter today's weight (lbs):");
-                      if (weight) {
-                        setWeightLog(weight);
-                      }
-                    }}>
-                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform">⚖️</span>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{weightLog ? `${weightLog} LBS` : "WEIGHT LOG"}</span>
+                    <div className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-2 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                      <span className="text-xl mb-1 group-hover:scale-110 transition-transform">⚖️</span>
+                      <input
+                        type="number"
+                        placeholder="WEIGHT LBS"
+                        className={`w-full bg-transparent text-center text-[9px] uppercase tracking-wider outline-none font-bold ${weightLog ? "text-primary" : "text-muted-foreground"}`}
+                        value={weightLog || ""}
+                        onChange={(e) => setWeightLog(e.target.value)}
+                      />
                     </div>
 
                     <label className={`border ${mealPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
                       <input 
                         type="file" 
                         accept="image/*" 
-                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" 
+                        className="hidden" 
                         onChange={(e) => {
                           if (e.target.files && e.target.files.length > 0) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => setMealPic(e.target?.result as string);
-                            reader.readAsDataURL(e.target.files[0]);
+                            compressImage(e.target.files[0], (compressedData) => {
+                              setMealPic(compressedData);
+                            });
                           }
                         }}
                       />
