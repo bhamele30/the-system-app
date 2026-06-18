@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -201,6 +201,10 @@ export default function Workouts() {
   const [gymPic, setGymPic] = useState<string | null>(null);
   const [mealPic, setMealPic] = useState<string | null>(null);
   const [weightLog, setWeightLog] = useState<string | null>(null);
+
+  const gymPicRef = useRef<HTMLInputElement>(null);
+  const mealPicRef = useRef<HTMLInputElement>(null);
+  const weightRef = useRef<HTMLInputElement>(null);
 
   const isRebuilding = state.recoveryState === "rebuilding";
   const modalTitle = isRebuilding ? "LOG REBUILD EXECUTION" : "DID YOU EXECUTE";
@@ -470,11 +474,15 @@ export default function Workouts() {
                 <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
                   <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">LOG PROOF</h4>
                   <div className="grid grid-cols-3 gap-2">
-                    <div className={`border ${gymPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                    <div 
+                      className={`border ${gymPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group cursor-pointer`}
+                      onClick={() => gymPicRef.current?.click()}
+                    >
                       <input 
+                        ref={gymPicRef}
                         type="file" 
                         accept="image/*" 
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                        className="hidden" 
                         onChange={(e) => {
                           if (e.target.files && e.target.files.length > 0) {
                             compressImage(e.target.files[0], (compressedData) => {
@@ -483,26 +491,34 @@ export default function Workouts() {
                           }
                         }}
                       />
-                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform pointer-events-none relative z-0">📸</span>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight pointer-events-none relative z-0">{gymPic ? "PIC SET" : "GYM PIC"}</span>
+                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform pointer-events-none">📸</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight pointer-events-none">{gymPic ? "PIC SET" : "GYM PIC"}</span>
                     </div>
                     
-                    <label className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-2 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group cursor-text`}>
-                      <span className="text-xl mb-1 group-hover:scale-110 transition-transform">⚖️</span>
+                    <div 
+                      className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-2 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group cursor-text`}
+                      onClick={() => weightRef.current?.focus()}
+                    >
+                      <span className="text-xl mb-1 group-hover:scale-110 transition-transform pointer-events-none">⚖️</span>
                       <input
+                        ref={weightRef}
                         type="number"
                         placeholder="WEIGHT LBS"
                         className={`w-full bg-transparent text-center text-[9px] uppercase tracking-wider outline-none font-bold ${weightLog ? "text-primary" : "text-muted-foreground"}`}
                         value={weightLog || ""}
                         onChange={(e) => setWeightLog(e.target.value)}
                       />
-                    </label>
+                    </div>
 
-                    <div className={`border ${mealPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                    <div 
+                      className={`border ${mealPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group cursor-pointer`}
+                      onClick={() => mealPicRef.current?.click()}
+                    >
                       <input 
+                        ref={mealPicRef}
                         type="file" 
                         accept="image/*" 
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                        className="hidden" 
                         onChange={(e) => {
                           if (e.target.files && e.target.files.length > 0) {
                             compressImage(e.target.files[0], (compressedData) => {
@@ -511,8 +527,8 @@ export default function Workouts() {
                           }
                         }}
                       />
-                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform pointer-events-none relative z-0">🥩</span>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight pointer-events-none relative z-0">{mealPic ? "PIC SET" : "MEAL PIC"}</span>
+                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform pointer-events-none">🥩</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight pointer-events-none">{mealPic ? "PIC SET" : "MEAL PIC"}</span>
                     </div>
                   </div>
                   
