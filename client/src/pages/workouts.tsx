@@ -466,6 +466,11 @@ export default function Workouts() {
                         type="file" 
                         accept="image/*" 
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            alert("Gym Pic Selected: " + e.target.files[0].name);
+                          }
+                        }}
                       />
                       <span className="text-xl mb-2 group-hover:scale-110 transition-transform">📸</span>
                       <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">GYM PIC</span>
@@ -474,7 +479,6 @@ export default function Workouts() {
                     <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group" onClick={() => {
                       const weight = prompt("Enter today's weight (lbs):");
                       if (weight) {
-                        // Note: In a real app we'd save this to state before submitting
                         alert(`Weight recorded: ${weight} lbs`);
                       }
                     }}>
@@ -487,6 +491,11 @@ export default function Workouts() {
                         type="file" 
                         accept="image/*" 
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            alert("Meal Pic Selected: " + e.target.files[0].name);
+                          }
+                        }}
                       />
                       <span className="text-xl mb-2 group-hover:scale-110 transition-transform">🥩</span>
                       <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">MEAL PIC</span>
