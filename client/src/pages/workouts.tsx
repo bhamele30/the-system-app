@@ -483,8 +483,8 @@ export default function Workouts() {
                           }
                         }}
                       />
-                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform">📸</span>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{gymPic ? "PIC SET" : "GYM PIC"}</span>
+                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform pointer-events-none relative z-0">📸</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight pointer-events-none relative z-0">{gymPic ? "PIC SET" : "GYM PIC"}</span>
                     </div>
                     
                     <label className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-2 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group cursor-text`}>
@@ -511,8 +511,8 @@ export default function Workouts() {
                           }
                         }}
                       />
-                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform">🥩</span>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{mealPic ? "PIC SET" : "MEAL PIC"}</span>
+                      <span className="text-xl mb-2 group-hover:scale-110 transition-transform pointer-events-none relative z-0">🥩</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight pointer-events-none relative z-0">{mealPic ? "PIC SET" : "MEAL PIC"}</span>
                     </div>
                   </div>
                   
