@@ -673,28 +673,46 @@ export default function Home() {
               <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
                 <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">LOG PROOF</h4>
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
-                    <span className="text-xl mb-2">📸</span>
+                  <label className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" 
+                    />
+                    <span className="text-xl mb-2 group-hover:scale-110 transition-transform">📸</span>
                     <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">GYM PIC</span>
-                  </div>
-                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
-                    <span className="text-xl mb-2">⚖️</span>
+                  </label>
+                  
+                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group" onClick={() => {
+                    const weight = prompt("Enter today's weight (lbs):");
+                    if (weight) {
+                      // Note: In a real app we'd save this to state before submitting
+                      alert(`Weight recorded: ${weight} lbs`);
+                    }
+                  }}>
+                    <span className="text-xl mb-2 group-hover:scale-110 transition-transform">⚖️</span>
                     <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">WEIGHT LOG</span>
                   </div>
-                  <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center">
-                    <span className="text-xl mb-2">🥩</span>
+
+                  <label className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" 
+                    />
+                    <span className="text-xl mb-2 group-hover:scale-110 transition-transform">🥩</span>
                     <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">MEAL PIC</span>
-                  </div>
+                  </label>
                 </div>
                 
                 {/* Mockup visual for proof state */}
                 {checks.train && checks.nutrition && checks.recovery ? (
                    <div className="w-full text-center py-2 text-green-500 font-bold uppercase tracking-widest text-xs border border-green-500/20 bg-green-500/10">
-                     👉 Proof Verified
+                     👉 Proof Ready to Submit
                    </div>
                 ) : (
                   <div className="w-full text-center py-2 text-muted-foreground font-bold uppercase tracking-widest text-xs border border-white/10 bg-white/5">
-                     👉 No proof submitted
+                     👉 Complete checks to submit
                    </div>
                 )}
               </div>
