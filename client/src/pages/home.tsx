@@ -683,11 +683,11 @@ export default function Home() {
               <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
                 <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">LOG PROOF</h4>
                 <div className="grid grid-cols-3 gap-2">
-                  <label className={`border ${gymPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                  <div className={`border ${gymPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
                     <input 
                       type="file" 
                       accept="image/*" 
-                      className="hidden" 
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
                       onChange={(e) => {
                         if (e.target.files && e.target.files.length > 0) {
                           compressImage(e.target.files[0], (compressedData) => {
@@ -698,9 +698,9 @@ export default function Home() {
                     />
                     <span className="text-xl mb-2 group-hover:scale-110 transition-transform">📸</span>
                     <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{gymPic ? "PIC SET" : "GYM PIC"}</span>
-                  </label>
+                  </div>
                   
-                  <div className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-2 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                  <label className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-2 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group cursor-text`}>
                     <span className="text-xl mb-1 group-hover:scale-110 transition-transform">⚖️</span>
                     <input
                       type="number"
@@ -709,13 +709,13 @@ export default function Home() {
                       value={weightLog || ""}
                       onChange={(e) => setWeightLog(e.target.value)}
                     />
-                  </div>
+                  </label>
 
-                  <label className={`border ${mealPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                  <div className={`border ${mealPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
                     <input 
                       type="file" 
                       accept="image/*" 
-                      className="hidden" 
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
                       onChange={(e) => {
                         if (e.target.files && e.target.files.length > 0) {
                           compressImage(e.target.files[0], (compressedData) => {
@@ -726,7 +726,7 @@ export default function Home() {
                     />
                     <span className="text-xl mb-2 group-hover:scale-110 transition-transform">🥩</span>
                     <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{mealPic ? "PIC SET" : "MEAL PIC"}</span>
-                  </label>
+                  </div>
                 </div>
                 
                 {/* Mockup visual for proof state */}
