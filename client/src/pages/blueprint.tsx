@@ -11,7 +11,7 @@ import transformImg from "@/assets/transformation-placeholder.png";
 import { useSystem } from "@/hooks/use-system";
 
 export default function Blueprint() {
-  const { state } = useSystem();
+  const { state, resetSystem } = useSystem();
   // Calculate current week and day based on completed days
   // e.g., if completedDays is 0, week is 1 and day is 1.
   const isPhase2 = state.completedDays >= 30;
