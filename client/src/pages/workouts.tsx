@@ -198,6 +198,8 @@ export default function Workouts() {
   const [showCheckin, setShowCheckin] = useState(false);
   const [checks, setChecks] = useState<{train: boolean | null, nutrition: boolean | null, recovery: boolean | null}>({ train: null, nutrition: null, recovery: null });
   const [error, setError] = useState("");
+  const [gymPic, setGymPic] = useState<string | null>(null);
+  const [mealPic, setMealPic] = useState<string | null>(null);
   const [weightLog, setWeightLog] = useState<string | null>(null);
 
   const isRebuilding = state.recoveryState === "rebuilding";
@@ -235,9 +237,9 @@ export default function Workouts() {
     // Use entered weight
     const weightAmount = weightLog || Math.floor(Math.random() * (205 - 190 + 1) + 190).toString();
     const mockProof = {
-      gymPic: "",
+      gymPic: gymPic || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop",
       weightLog: weightAmount.toString(),
-      mealPic: ""
+      mealPic: mealPic || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1480&auto=format&fit=crop"
     };
 
     const result = submitDay(checks.train, checks.nutrition, checks.recovery, mockProof);
@@ -247,6 +249,8 @@ export default function Workouts() {
     setActiveWorkout(null);
     setCompletedSets({});
     setActiveWeights({});
+    setGymPic(null);
+    setMealPic(null);
     setWeightLog(null);
     
     if (result.restored) {
@@ -465,18 +469,56 @@ export default function Workouts() {
 
                 <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
                   <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">DAILY METRICS</h4>
-                  <div className="grid grid-cols-1 gap-2">
-                    <div className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-4 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className={`border ${gymPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50" 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            compressImage(e.target.files[0], (compressedData) => {
+                              setGymPic(compressedData);
+                            });
+                          }
+                        }}
+                      />
+                      <div className="pointer-events-none flex flex-col items-center">
+                        <span className="text-xl mb-2 group-hover:scale-110 transition-transform">📸</span>
+                        <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{gymPic ? "PIC SET" : "GYM PIC"}</span>
+                      </div>
+                    </div>
+                    
+                    <div className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-2 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
                       <div className="pointer-events-none flex flex-col items-center w-full">
-                        <span className="text-2xl mb-2 group-hover:scale-110 transition-transform">⚖️</span>
+                        <span className="text-xl mb-1 group-hover:scale-110 transition-transform">⚖️</span>
                       </div>
                       <input
                         type="number"
-                        placeholder="ENTER WEIGHT LBS"
-                        className={`w-full bg-transparent text-center text-xs uppercase tracking-wider outline-none font-bold relative z-50 ${weightLog ? "text-primary" : "text-muted-foreground"}`}
+                        placeholder="WEIGHT LBS"
+                        className={`w-full bg-transparent text-center text-[9px] uppercase tracking-wider outline-none font-bold relative z-50 ${weightLog ? "text-primary" : "text-muted-foreground"}`}
                         value={weightLog || ""}
                         onChange={(e) => setWeightLog(e.target.value)}
                       />
+                    </div>
+
+                    <div className={`border ${mealPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50" 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            compressImage(e.target.files[0], (compressedData) => {
+                              setMealPic(compressedData);
+                            });
+                          }
+                        }}
+                      />
+                      <div className="pointer-events-none flex flex-col items-center">
+                        <span className="text-xl mb-2 group-hover:scale-110 transition-transform">🥩</span>
+                        <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{mealPic ? "PIC SET" : "MEAL PIC"}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
