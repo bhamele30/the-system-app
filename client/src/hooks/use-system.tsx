@@ -317,5 +317,9 @@ export function useSystem() {
     setGlobalState(prev => ({ ...prev, mode, targets: targets || prev.targets, profile: profile || prev.profile }));
   };
 
-  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode };
+  const resetSystem = () => {
+    setGlobalState(() => defaultState);
+  };
+
+  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode, resetSystem };
 }

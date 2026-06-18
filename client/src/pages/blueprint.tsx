@@ -273,6 +273,22 @@ export default function Blueprint() {
             </DialogContent>
           </Dialog>
 
+          <div className="pt-4 border-t border-white/5 space-y-4">
+            <h3 className="text-lg font-bold">SYSTEM CONTROLS</h3>
+            <Button 
+              variant="destructive" 
+              className="w-full h-12 rounded-none font-bold uppercase tracking-widest text-xs border border-red-500/20 hover:border-red-500/50 bg-red-950/20"
+              onClick={() => {
+                if (window.confirm("ARE YOU SURE YOU WANT TO RESET THE SYSTEM TO DAY 1? THIS CANNOT BE UNDONE.")) {
+                  resetSystem();
+                  window.location.href = '/';
+                }
+              }}
+            >
+              <ShieldAlert className="w-4 h-4 mr-2 text-red-500" /> RESET SYSTEM TO DAY 1
+            </Button>
+          </div>
+
         </div>
 
       </div>
