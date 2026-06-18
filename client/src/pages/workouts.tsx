@@ -196,6 +196,9 @@ export default function Workouts() {
   const [showCheckin, setShowCheckin] = useState(false);
   const [checks, setChecks] = useState<{train: boolean | null, nutrition: boolean | null, recovery: boolean | null}>({ train: null, nutrition: null, recovery: null });
   const [error, setError] = useState("");
+  const [gymPic, setGymPic] = useState<string | null>(null);
+  const [mealPic, setMealPic] = useState<string | null>(null);
+  const [weightLog, setWeightLog] = useState<string | null>(null);
 
   const isRebuilding = state.recoveryState === "rebuilding";
   const modalTitle = isRebuilding ? "LOG REBUILD EXECUTION" : "DID YOU EXECUTE";
@@ -229,11 +232,12 @@ export default function Workouts() {
     
     setError("");
 
-    const weightAmount = Math.floor(Math.random() * (205 - 190 + 1) + 190);
+    // Use selected files or fallback to randomized mock proof if none selected
+    const weightAmount = weightLog || Math.floor(Math.random() * (205 - 190 + 1) + 190).toString();
     const mockProof = {
-      gymPic: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop",
+      gymPic: gymPic || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop",
       weightLog: weightAmount.toString(),
-      mealPic: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1480&auto=format&fit=crop"
+      mealPic: mealPic || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1480&auto=format&fit=crop"
     };
 
     const result = submitDay(checks.train, checks.nutrition, checks.recovery, mockProof);
@@ -243,6 +247,9 @@ export default function Workouts() {
     setActiveWorkout(null);
     setCompletedSets({});
     setActiveWeights({});
+    setGymPic(null);
+    setMealPic(null);
+    setWeightLog(null);
     
     if (result.restored) {
       toast({
@@ -461,44 +468,48 @@ export default function Workouts() {
                 <div className="mt-4 p-4 border border-white/10 bg-black/40 space-y-4">
                   <h4 className="text-primary text-xs uppercase tracking-[0.2em] font-bold">LOG PROOF</h4>
                   <div className="grid grid-cols-3 gap-2">
-                    <label className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group">
+                    <label className={`border ${gymPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
                       <input 
                         type="file" 
                         accept="image/*" 
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" 
                         onChange={(e) => {
                           if (e.target.files && e.target.files.length > 0) {
-                            alert("Gym Pic Selected: " + e.target.files[0].name);
+                            const reader = new FileReader();
+                            reader.onload = (e) => setGymPic(e.target?.result as string);
+                            reader.readAsDataURL(e.target.files[0]);
                           }
                         }}
                       />
                       <span className="text-xl mb-2 group-hover:scale-110 transition-transform">📸</span>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">GYM PIC</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{gymPic ? "PIC SET" : "GYM PIC"}</span>
                     </label>
                     
-                    <div className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group" onClick={() => {
+                    <div className={`border ${weightLog ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group`} onClick={() => {
                       const weight = prompt("Enter today's weight (lbs):");
                       if (weight) {
-                        alert(`Weight recorded: ${weight} lbs`);
+                        setWeightLog(weight);
                       }
                     }}>
                       <span className="text-xl mb-2 group-hover:scale-110 transition-transform">⚖️</span>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">WEIGHT LOG</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{weightLog ? `${weightLog} LBS` : "WEIGHT LOG"}</span>
                     </div>
 
-                    <label className="border border-white/10 bg-white/5 flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group">
+                    <label className={`border ${mealPic ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"} flex flex-col items-center justify-center py-3 px-1 cursor-pointer hover:bg-white/10 transition-colors text-center relative overflow-hidden group`}>
                       <input 
                         type="file" 
                         accept="image/*" 
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" 
                         onChange={(e) => {
                           if (e.target.files && e.target.files.length > 0) {
-                            alert("Meal Pic Selected: " + e.target.files[0].name);
+                            const reader = new FileReader();
+                            reader.onload = (e) => setMealPic(e.target?.result as string);
+                            reader.readAsDataURL(e.target.files[0]);
                           }
                         }}
                       />
                       <span className="text-xl mb-2 group-hover:scale-110 transition-transform">🥩</span>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">MEAL PIC</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground leading-tight">{mealPic ? "PIC SET" : "MEAL PIC"}</span>
                     </label>
                   </div>
                   
