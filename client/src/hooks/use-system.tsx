@@ -27,6 +27,7 @@ interface SystemState {
   };
   customMealsLibrary: { id: string, food: string, calories: number, protein: number, carbs: number, fat: number }[];
   proofs: Record<string, { gymPic?: string, weightLog?: string, mealPic?: string }>;
+  hasPaid: boolean;
 }
 
 const defaultState: SystemState = {
@@ -44,6 +45,7 @@ const defaultState: SystemState = {
   mode: "lock-in",
   customMealsLibrary: [],
   proofs: {},
+  hasPaid: false,
 };
 
 const normalizeState = (savedState: Partial<SystemState>): SystemState => {
@@ -317,9 +319,13 @@ export function useSystem() {
     setGlobalState(prev => ({ ...prev, mode, targets: targets || prev.targets, profile: profile || prev.profile }));
   };
 
+  const authorizePayment = () => {
+    setGlobalState(prev => ({ ...prev, hasPaid: true }));
+  };
+
   const resetSystem = () => {
     setGlobalState(() => defaultState);
   };
 
-  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode, resetSystem };
+  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode, authorizePayment, resetSystem };
 }

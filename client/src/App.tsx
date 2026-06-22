@@ -12,6 +12,7 @@ import Onboarding from "@/pages/onboarding";
 import Nutrition from "@/pages/nutrition";
 import Workouts from "@/pages/workouts";
 import Recovery from "@/pages/recovery";
+import Paywall from "@/pages/paywall";
 import { useSystem } from "@/hooks/use-system";
 
 function Navigation() {
@@ -74,6 +75,22 @@ function App() {
   const { state } = useSystem();
   const isFailing = state.recoveryState === "breached";
   const isRebuilding = state.recoveryState === "rebuilding";
+
+  // Check if trial is over (3 days completed) and user hasn't paid
+  const isTrialExpired = state.totalDays >= 3 && !state.hasPaid;
+
+  if (isTrialExpired) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <div className="min-h-screen w-full">
+            <Paywall />
+            <Toaster />
+          </div>
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
