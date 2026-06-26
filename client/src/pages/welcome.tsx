@@ -20,7 +20,7 @@ export default function Welcome() {
           
           <div className="space-y-4">
             <div className="text-primary font-display font-bold tracking-[0.4em] text-[10px] uppercase">
-              Phase 1 Protocol
+              30 Day Lock In
             </div>
             <h1 className="text-5xl md:text-7xl font-black text-glow uppercase tracking-tighter leading-[0.85]">
               THE SYSTEM
