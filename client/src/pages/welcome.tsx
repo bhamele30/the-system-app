@@ -15,7 +15,7 @@ export default function Welcome() {
         <div className="flex flex-col items-center text-center mb-16 space-y-6">
           <div className="w-16 h-16 bg-primary/10 border border-primary/30 flex items-center justify-center mb-4 relative group">
             <div className="absolute inset-0 bg-primary/20 blur-md group-hover:blur-xl transition-all duration-500"></div>
-            <span className="text-3xl font-display font-bold text-primary relative z-10">B</span>
+            <span className="text-3xl font-display font-bold text-primary relative z-10">S</span>
           </div>
           
           <div className="space-y-4">

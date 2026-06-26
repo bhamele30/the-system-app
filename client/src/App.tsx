@@ -35,7 +35,7 @@ function Navigation() {
       <div className="flex md:flex-col items-center justify-around md:justify-start md:gap-8 h-16 md:h-full w-full">
         <div className="hidden md:flex flex-col items-center gap-1 mb-8">
           <div className="w-10 h-10 bg-primary/20 rounded-none flex items-center justify-center border border-primary/50 text-primary font-display font-bold">
-            B
+            S
           </div>
         </div>
         {navItems.map((item) => (
