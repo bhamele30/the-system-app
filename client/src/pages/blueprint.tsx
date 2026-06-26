@@ -281,7 +281,7 @@ export default function Blueprint() {
               onClick={() => {
                 if (window.confirm("ARE YOU SURE YOU WANT TO RESET THE SYSTEM TO DAY 1? THIS CANNOT BE UNDONE.")) {
                   resetSystem();
-                  window.location.href = '/';
+                  window.location.href = '/welcome';
                 }
               }}
             >

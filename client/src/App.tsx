@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Dumbbell, LayoutDashboard, Target, Apple, HeartPulse, ShieldCheck, ImageIcon } from "lucide-react";
 import NotFound from "@/pages/not-found";
+import { useEffect } from "react";
 
 import Home from "@/pages/home";
 import Blueprint from "@/pages/blueprint";
@@ -13,12 +14,13 @@ import Nutrition from "@/pages/nutrition";
 import Workouts from "@/pages/workouts";
 import Recovery from "@/pages/recovery";
 import Paywall from "@/pages/paywall";
+import Welcome from "@/pages/welcome";
 import { useSystem } from "@/hooks/use-system";
 
 function Navigation() {
   const [location] = useLocation();
 
-  if (location === "/onboarding") return null;
+  if (location === "/onboarding" || location === "/welcome") return null;
 
   const navItems = [
     { href: "/", icon: ShieldCheck, label: "System" },
@@ -58,6 +60,7 @@ function Router() {
     <div className="min-h-screen md:pl-20 pb-16 md:pb-0 blueprint-grid">
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/welcome" component={Welcome} />
         <Route path="/onboarding" component={Onboarding} />
         <Route path="/blueprint" component={Blueprint} />
         <Route path="/nutrition" component={Nutrition} />
@@ -73,11 +76,19 @@ function Router() {
 
 function App() {
   const { state } = useSystem();
+  const [location, setLocation] = useLocation();
   const isFailing = state.recoveryState === "breached";
   const isRebuilding = state.recoveryState === "rebuilding";
 
   // Check if trial is over (3 days completed) and user hasn't paid
   const isTrialExpired = state.totalDays >= 3 && !state.hasPaid;
+  
+  // Direct new users to the welcome page
+  useEffect(() => {
+    if (state.totalDays === 0 && location !== "/welcome" && location !== "/onboarding") {
+      setLocation("/welcome");
+    }
+  }, [state.totalDays, location, setLocation]);
 
   if (isTrialExpired) {
     return (
