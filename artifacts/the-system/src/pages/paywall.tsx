@@ -1,18 +1,51 @@
 import { Button } from "@/components/ui/button";
 import { useSystem } from "@/hooks/use-system";
 import { ShieldAlert, Lock, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 
 export default function Paywall() {
   const { authorizePayment } = useSystem();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [, setLocation] = useLocation();
 
-  const handlePayment = () => {
-    setIsProcessing(true);
-    // Simulate payment processing delay
-    setTimeout(() => {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payment = params.get('payment');
+
+    if (payment === 'success') {
       authorizePayment();
-    }, 1500);
+      setLocation('/');
+    }
+  }, []);
+
+  const handlePayment = async () => {
+    setIsProcessing(true);
+    setError(null);
+
+    try {
+      const resp = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+
+      if (!resp.ok) {
+        const data = await resp.json();
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      const { url } = await resp.json();
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Payment initialization failed');
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -65,6 +98,12 @@ export default function Paywall() {
             ))}
           </div>
 
+          {error && (
+            <div className="mb-4 p-3 border border-red-500/30 bg-red-500/10 text-red-400 text-xs uppercase tracking-wide">
+              {error}
+            </div>
+          )}
+
           <Button 
             onClick={handlePayment}
             disabled={isProcessing}
@@ -73,7 +112,7 @@ export default function Paywall() {
             {isProcessing ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
-                AUTHORIZING...
+                REDIRECTING TO CHECKOUT...
               </span>
             ) : (
               <span className="flex items-center gap-2 relative z-10">
@@ -84,7 +123,7 @@ export default function Paywall() {
           </Button>
           
           <div className="mt-4 flex items-center justify-center gap-2 text-[9px] text-muted-foreground uppercase tracking-widest">
-            <ShieldAlert className="w-3 h-3" /> Secure Mock Payment
+            <ShieldAlert className="w-3 h-3" /> Secured by Stripe
           </div>
         </div>
       </div>
