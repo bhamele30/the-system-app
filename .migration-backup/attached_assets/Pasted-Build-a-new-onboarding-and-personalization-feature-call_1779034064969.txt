@@ -1,0 +1,216 @@
+Build a new onboarding and personalization feature called:
+
+“SYSTEM CALIBRATION”
+
+The purpose of this feature is to make the app feel fully personalized to the user’s body, performance level, recovery, and physique goals.
+
+The design should match the app’s existing aesthetic:
+
+* dark
+* premium
+* tactical
+* masculine
+* clean minimal UI
+* no clutter
+
+The onboarding flow should feel like:
+“building a personal performance system.”
+
+---
+
+STEP 1 — BODY PROFILE
+
+Collect:
+
+* age
+* sex
+* height
+* weight
+* estimated body fat %
+* waist measurement
+* activity level
+* training days per week
+
+Use sliders/dropdowns where possible for smooth UX.
+
+---
+
+STEP 2 — PERFORMANCE PROFILE
+
+Collect:
+
+* bench press PR
+* squat PR
+* deadlift PR (optional)
+* current cardio level
+* experience level
+
+Then classify user into:
+
+* Beginner
+* Intermediate
+* Advanced
+* Elite
+
+Based on relative strength/bodyweight.
+
+---
+
+STEP 3 — GOAL TYPE
+
+Allow users to select identity-based goals instead of generic “bulk/cut.”
+
+Goal options:
+
+* Operator Lean
+* Athletic Build
+* Elite Conditioning
+* Lean Mass Phase
+* Performance Build
+* Recomp Phase
+
+Each goal should slightly alter:
+
+* calories
+* carb targets
+* training recovery recommendations
+
+---
+
+STEP 4 — SYSTEM GENERATION
+
+After setup, generate:
+
+* maintenance calories
+* target calories
+* protein target
+* carb target
+* fat target
+* hydration recommendation
+* recovery priority
+
+Display results in a clean tactical dashboard.
+
+Example:
+
+SYSTEM PROFILE:
+Intermediate Operator
+
+CURRENT STATUS:
+Lean Build Phase
+
+DAILY TARGETS:
+Calories: 2850
+Protein: 190g
+Carbs: 285g
+Fats: 75g
+
+RECOVERY PRIORITY:
+Moderate
+
+---
+
+IMPORTANT:
+Macros should NOT be generic.
+
+Use:
+
+* bodyweight
+* body fat %
+* activity level
+* training frequency
+* goal type
+
+to personalize recommendations.
+
+---
+
+MACRO LOGIC
+
+Protein:
+0.8–1.1g per lb bodyweight
+Higher during cuts/recomp.
+
+Fats:
+0.25–0.35g per lb bodyweight
+
+Carbs:
+Remaining calories after protein/fat allocation.
+
+Higher carbs for:
+
+* lean users
+* high activity
+* performance goals
+
+---
+
+ADD SYSTEM STATUS ENGINE
+
+Create dynamic tactical feedback messages based on user data.
+
+Examples:
+
+SYSTEM STATUS:
+Recovery compromised.
+Increase carbohydrate intake post workout.
+
+SYSTEM STATUS:
+Protein target secured.
+Recovery supported.
+
+SYSTEM STATUS:
+Fat intake exceeded target.
+Prioritize lean protein remainder of day.
+
+This should update dynamically daily.
+
+---
+
+ADD LOCK IN STREAK
+
+Track:
+
+* workouts completed
+* macro compliance
+* check-ins
+* hydration
+
+Display:
+🔥 LOCK IN STREAK: X DAYS
+
+Reset streak if user misses compliance thresholds.
+
+---
+
+ADD EXECUTION SCORE
+
+Generate a score from:
+
+* nutrition compliance
+* training consistency
+* sleep
+* hydration
+* recovery
+
+Display:
+SYSTEM SCORE: 84
+
+Keep visually clean and minimal.
+
+---
+
+VERY IMPORTANT:
+Do NOT clutter the UI.
+
+Prioritize:
+
+* premium design
+* smooth UX
+* tactical language
+* psychological engagement
+* clean layout
+* mobile-first design
+
+The app should feel like:
+“A performance operating system for rebuilding the body and mind.”

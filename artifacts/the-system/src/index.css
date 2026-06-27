@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'JetBrains Mono', monospace;
+  --font-display: 'Orbitron', sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+}
+
+:root, .dark {
+  --background: hsl(222 47% 4%);
+  --foreground: hsl(210 40% 98%);
+
+  --card: hsl(222 47% 6%);
+  --card-foreground: hsl(210 40% 98%);
+
+  --popover: hsl(222 47% 6%);
+  --popover-foreground: hsl(210 40% 98%);
+
+  --primary: hsl(210 100% 50%);
+  --primary-foreground: hsl(210 40% 98%);
+
+  --secondary: hsl(217 32% 17%);
+  --secondary-foreground: hsl(210 40% 98%);
+
+  --muted: hsl(217 32% 17%);
+  --muted-foreground: hsl(215 20.2% 65.1%);
+
+  --accent: hsl(210 100% 50% / 0.15);
+  --accent-foreground: hsl(210 100% 65%);
+
+  --destructive: hsl(0 62.8% 30.6%);
+  --destructive-foreground: hsl(210 40% 98%);
+
+  --border: hsl(217 32% 17%);
+  --input: hsl(217 32% 17%);
+  --ring: hsl(210 100% 50%);
+
+  --radius: 0rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    background-image:
+      radial-gradient(circle at 50% 0%, hsl(210 100% 50% / 0.05) 0%, transparent 50%),
+      linear-gradient(to bottom, hsl(222 47% 4%), hsl(222 47% 2%));
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display tracking-tight uppercase;
+  }
+}
+
+.blueprint-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, hsl(210 100% 50% / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(210 100% 50% / 0.05) 1px, transparent 1px);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px hsl(210 100% 50% / 0.5);
+}
+
+.glass-panel {
+  background: hsl(222 47% 4% / 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid hsl(217 32% 17% / 0.8);
+  border-top: 1px solid hsl(210 100% 50% / 0.4);
+}
+
+.hide-close > button {
+  display: none !important;
+}
+
+.system-failing {
+  filter: grayscale(0.8) contrast(1.5) sepia(1) hue-rotate(-50deg) saturate(2);
+  animation: main-glitch 4s infinite;
+}
+
+.system-failing::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px);
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanlines 10s linear infinite;
+}
+
+.system-rebuilding::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background:
+    linear-gradient(to bottom, hsl(48 96% 53% / 0.04), transparent 30%),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, hsl(48 96% 53% / 0.08) 3px, hsl(48 96% 53% / 0.08) 4px);
+}
+
+.system-rebuilding .glass-panel {
+  border-color: hsl(48 96% 53% / 0.35) !important;
+  border-top-color: hsl(48 96% 53% / 0.6) !important;
+  box-shadow: 0 0 20px hsl(48 96% 53% / 0.08);
+}
+
+.system-rebuilding .text-glow {
+  text-shadow: 0 0 15px hsl(48 96% 53% / 0.45) !important;
+}
+
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; }
+}
+
+@keyframes main-glitch {
+  0%, 96%, 98%, 100% {
+    transform: none;
+    filter: grayscale(0.8) contrast(1.5) sepia(1) hue-rotate(-50deg) saturate(2);
+  }
+  97% {
+    transform: translate(-5px, 5px);
+    filter: grayscale(0) contrast(2) hue-rotate(90deg) invert(1);
+  }
+  99% {
+    transform: translate(5px, -5px);
+    filter: grayscale(1) contrast(3) invert(1);
+  }
+}
+
+.system-failing .glass-panel {
+  border-color: rgba(255, 0, 0, 0.5) !important;
+  background: rgba(20, 0, 0, 0.8) !important;
+}
+
+.system-failing .text-glow {
+  text-shadow: 0 0 15px rgba(255, 0, 0, 0.8) !important;
+}
+
+.system-failing .bg-primary {
+  background-color: #ff3333 !important;
+  color: black !important;
+}
+
+.system-failing .text-primary {
+  color: #ff3333 !important;
+}
+
+.system-failing .border-primary {
+  border-color: #ff3333 !important;
+}
