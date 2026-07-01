@@ -86,7 +86,10 @@ function App() {
         <TooltipProvider>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
             <div className="min-h-screen w-full">
-              <Welcome />
+              <Switch>
+                <Route path="/onboarding" component={Onboarding} />
+                <Route component={Welcome} />
+              </Switch>
               <Toaster />
             </div>
           </WouterRouter>
