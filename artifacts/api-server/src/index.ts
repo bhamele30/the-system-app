@@ -18,7 +18,8 @@ if (Number.isNaN(port) || port <= 0) {
 async function initStripe() {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
-    throw new Error('DATABASE_URL environment variable is required for Stripe integration.');
+    logger.warn('DATABASE_URL not set — skipping Stripe init');
+    return;
   }
 
   try {
@@ -37,12 +38,9 @@ async function initStripe() {
       .then(() => logger.info('Stripe data synced'))
       .catch((err) => logger.error({ err }, 'Error syncing Stripe data'));
   } catch (error) {
-    logger.error({ err: error }, 'Failed to initialize Stripe');
-    throw error;
+    logger.error({ err: error }, 'Stripe init failed — server will still start; payments require Stripe connection');
   }
 }
-
-await initStripe();
 
 app.listen(port, (err) => {
   if (err) {
@@ -52,3 +50,6 @@ app.listen(port, (err) => {
 
   logger.info({ port }, "Server listening");
 });
+
+// Init Stripe in background — non-fatal
+initStripe();

@@ -1,0 +1,45 @@
+import { useLocation } from "wouter";
+
+export default function Welcome() {
+  const [, setLocation] = useLocation();
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <div className="absolute inset-0 blueprint-grid opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background pointer-events-none" />
+
+      <div className="relative z-10 w-full max-w-sm text-center space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+
+        <div className="space-y-3">
+          <div className="text-primary font-display font-medium tracking-[0.4em] text-xs uppercase mb-4">
+            30 Day Lock In
+          </div>
+
+          <h1 className="text-6xl font-black font-display tracking-tighter text-white text-glow leading-none">
+            THE<br />SYSTEM
+          </h1>
+
+          <div className="w-16 h-px bg-primary/50 mx-auto mt-6" />
+        </div>
+
+        <p className="text-muted-foreground text-sm tracking-wide leading-relaxed max-w-xs mx-auto font-mono">
+          No shortcuts. No excuses. A 30-day protocol engineered for adults who are done making deals with themselves.
+        </p>
+
+        <div className="space-y-3 pt-2">
+          <button
+            onClick={() => setLocation("/onboarding")}
+            className="w-full h-14 bg-primary text-black font-bold font-display uppercase tracking-widest text-sm hover:bg-primary/90 transition-all relative overflow-hidden group border-none outline-none"
+          >
+            <span className="relative z-10">INITIALIZE CALIBRATION</span>
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+          </button>
+
+          <div className="text-[10px] text-muted-foreground/50 uppercase tracking-widest font-mono">
+            Commitment required
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

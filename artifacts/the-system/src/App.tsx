@@ -13,6 +13,7 @@ import Nutrition from "@/pages/nutrition";
 import Workouts from "@/pages/workouts";
 import Recovery from "@/pages/recovery";
 import Paywall from "@/pages/paywall";
+import Welcome from "@/pages/welcome";
 import { useSystem } from "@/hooks/use-system";
 
 function Navigation() {
@@ -76,8 +77,23 @@ function App() {
   const isFailing = state.recoveryState === "breached";
   const isRebuilding = state.recoveryState === "rebuilding";
 
-  // Check if trial is over (3 days completed) and user hasn't paid
+  const isNewUser = state.totalDays === 0;
   const isTrialExpired = state.totalDays >= 3 && !state.hasPaid;
+
+  if (isNewUser) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <div className="min-h-screen w-full">
+              <Welcome />
+              <Toaster />
+            </div>
+          </WouterRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
+  }
 
   if (isTrialExpired) {
     return (
