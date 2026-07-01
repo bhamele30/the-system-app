@@ -181,21 +181,21 @@ export default function Onboarding() {
             </div>
             
             <div className="space-y-4">
-              <h2 className="text-primary text-sm tracking-[0.3em] font-bold">SYSTEM INITIATION</h2>
+              <h2 className="text-primary text-sm tracking-[0.3em] font-bold">PRE-MISSION BRIEF</h2>
               <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-widest text-glow leading-tight">
                 SYSTEM<br/>CALIBRATION
               </h1>
             </div>
             
             <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto text-sm">
-              You are not here for motivation. You are here to build a personalized performance system. Data input is required to calibrate your protocols.
+              This is not a fitness app. It's a 30-day operating protocol built around your body, your output, and your objective. Give The System accurate data. It will give you a protocol worth executing.
             </p>
 
             <Button 
               onClick={() => setStep(1)}
               className="w-full h-16 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.3em] text-sm border border-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)] transition-all mt-10"
             >
-              COMMENCE CALIBRATION
+              BEGIN CALIBRATION
             </Button>
           </div>
         )}
@@ -341,8 +341,8 @@ export default function Onboarding() {
                 <span className="text-xs text-muted-foreground tracking-widest uppercase">Performance Profile</span>
             </div>
 
-            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Baseline Output</h3>
-            <p className="text-sm text-muted-foreground">Input your current bests. The system classifies your level based on relative strength metrics.</p>
+            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Strength Baseline</h3>
+            <p className="text-sm text-muted-foreground">No ego. No estimates. What are you actually moving right now? The System calibrates to your real output — not who you used to be.</p>
             
             <div className="space-y-6 mt-8">
               <div className="grid grid-cols-3 gap-4">
@@ -431,14 +431,14 @@ export default function Onboarding() {
                 <span className="text-xs text-muted-foreground tracking-widest uppercase">Directives</span>
             </div>
 
-            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Identify Primary Directive</h3>
-            <p className="text-sm text-muted-foreground">Select your operational objective. This dictates your caloric intake and training parameters.</p>
+            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Set Your Directive</h3>
+            <p className="text-sm text-muted-foreground">Pick one. There is no hybrid. Commitment to a single objective is what separates results from noise.</p>
             
             <div className="space-y-4 mt-8">
               {[
-                { id: "cut", title: "Cut", desc: "Strip fat. Maximize relative strength. Slight caloric deficit, moderate carbs.", icon: Target },
-                { id: "build", title: "Athletic Build (Build)", desc: "Performance & aesthetics. Maintenance calories, high protein.", icon: Activity },
-                { id: "lock-in", title: "Lock-In Phase", desc: "Maximal work capacity. High carb, high recovery demands.", icon: HeartPulse }
+                { id: "cut", title: "Cut", desc: "Shed the excess. Hold every pound of muscle you've built. Deficit-based protocol, high protein, no shortcuts.", icon: Target },
+                { id: "build", title: "Build", desc: "Mass on top of performance. Slight surplus, dense training blocks, maximum protein utilization.", icon: Activity },
+                { id: "lock-in", title: "Lock In", desc: "Where you are is solid. Now make it permanent. Maintenance calories, maximum consistency, no regression.", icon: HeartPulse }
               ].map(mode => (
                 <div 
                   key={mode.id}
@@ -471,8 +471,8 @@ export default function Onboarding() {
                 <span className="text-xs text-muted-foreground tracking-widest uppercase">System Check</span>
             </div>
 
-            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Acknowledge Terms</h3>
-            <p className="text-sm text-muted-foreground">This system requires absolute compliance. Verify your data.</p>
+            <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Verify Your Data</h3>
+            <p className="text-sm text-muted-foreground">These parameters govern your next 30 days. Review before you commit. You will not be asked again.</p>
             
             <div className="space-y-4 mt-8 bg-white/5 border border-white/10 p-6">
                <div className="flex justify-between border-b border-white/5 pb-2">
@@ -493,7 +493,7 @@ export default function Onboarding() {
               onClick={handleNext}
               className="w-full h-14 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.2em] text-sm mt-8"
             >
-              INITIALIZE CALIBRATION <ChevronRight className="w-4 h-4 ml-2" />
+              LOCK IN PARAMETERS <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         )}
@@ -501,13 +501,13 @@ export default function Onboarding() {
         {step === 5 && (
           <div className="space-y-6 text-center animate-in fade-in duration-500 py-10">
             <Crosshair className="w-16 h-16 mx-auto text-primary animate-spin" style={{ animationDuration: '3s' }} />
-            <h3 className="text-2xl font-bold uppercase tracking-widest text-primary text-glow">CALIBRATING SYSTEM</h3>
+            <h3 className="text-2xl font-bold uppercase tracking-widest text-primary text-glow">BUILDING YOUR PROTOCOL</h3>
             
             <div className="space-y-2 mt-8 text-left max-w-xs mx-auto font-mono text-sm">
-                <p className="text-white">&gt; Analyzing {profile.weight}lbs @ {profile.bf}% BF...</p>
-                {processingState >= 1 && <p className="text-white animate-in fade-in">&gt; Scaling output parameters: {classification} level...</p>}
-                {processingState >= 2 && <p className="text-white animate-in fade-in">&gt; Locking in directive: {selectedMode}...</p>}
-                {processingState >= 3 && <p className="text-primary animate-in fade-in font-bold">&gt; PROTOCOLS LOCKED.</p>}
+                <p className="text-white">&gt; Logging body data: {profile.weight}lbs @ {profile.bf}% BF...</p>
+                {processingState >= 1 && <p className="text-white animate-in fade-in">&gt; Operator grade confirmed: {classification}...</p>}
+                {processingState >= 2 && <p className="text-white animate-in fade-in">&gt; Directive assigned: {selectedMode}...</p>}
+                {processingState >= 3 && <p className="text-primary animate-in fade-in font-bold">&gt; PROTOCOL ENGAGED.</p>}
             </div>
           </div>
         )}
@@ -518,17 +518,17 @@ export default function Onboarding() {
             <div className="text-center space-y-4">
               <h2 className="text-primary text-sm tracking-[0.3em] font-bold">CALIBRATION COMPLETE</h2>
               <h1 className="text-3xl font-bold uppercase tracking-widest text-glow leading-tight">
-                SYSTEM GENERATED
+                YOUR PROTOCOL
               </h1>
             </div>
             
             <div className="bg-white/5 border border-white/10 p-6 space-y-6 text-left">
               <div className="space-y-2 pb-4 border-b border-white/5">
-                <div className="text-[10px] text-muted-foreground tracking-widest uppercase">System Profile</div>
+                <div className="text-[10px] text-muted-foreground tracking-widest uppercase">Operator Profile</div>
                 <div className="flex justify-between items-end">
                   <div className="font-bold text-lg text-white uppercase">{classification}</div>
                   <div className="text-right">
-                    <div className="text-[10px] text-muted-foreground tracking-widest uppercase">Current Status</div>
+                    <div className="text-[10px] text-muted-foreground tracking-widest uppercase">Directive</div>
                     <div className="text-primary font-bold uppercase text-sm tracking-widest">{selectedMode}</div>
                   </div>
                 </div>
@@ -578,7 +578,7 @@ export default function Onboarding() {
               onClick={handleFinish}
               className="w-full h-16 rounded-none bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.3em] text-sm border border-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)] transition-all mt-10"
             >
-              ENTER DASHBOARD
+              ENTER THE SYSTEM
             </Button>
           </div>
         )}
