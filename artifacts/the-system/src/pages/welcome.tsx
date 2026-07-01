@@ -23,7 +23,7 @@ export default function Welcome() {
         </div>
 
         <p className="text-muted-foreground text-sm tracking-wide leading-relaxed max-w-xs mx-auto font-mono">
-          No shortcuts. No excuses. A 30-day protocol engineered for adults who are done making deals with themselves.
+          You've tried the apps. You've done the challenges. None of it stuck because none of it was built around you. This is different. 30 days. Your numbers. Your protocol. No way out.
         </p>
 
         <div className="space-y-3 pt-2">
@@ -31,12 +31,12 @@ export default function Welcome() {
             onClick={() => setLocation("/onboarding")}
             className="w-full h-14 bg-primary text-black font-bold font-display uppercase tracking-widest text-sm hover:bg-primary/90 transition-all relative overflow-hidden group border-none outline-none"
           >
-            <span className="relative z-10">INITIALIZE CALIBRATION</span>
+            <span className="relative z-10">BEGIN CALIBRATION</span>
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           </button>
 
           <div className="text-[10px] text-muted-foreground/50 uppercase tracking-widest font-mono">
-            Commitment required
+            3-day free trial — then $14/mo
           </div>
         </div>
       </div>
