@@ -3,6 +3,7 @@ import { useSystem } from "@/hooks/use-system";
 import { ShieldAlert, Lock, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { apiUrl } from "@/lib/api";
 
 export default function Paywall() {
   const { authorizePayment } = useSystem();
@@ -25,7 +26,7 @@ export default function Paywall() {
     setError(null);
 
     try {
-      const resp = await fetch('/api/stripe/checkout', {
+      const resp = await fetch(apiUrl('/api/stripe/checkout'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
