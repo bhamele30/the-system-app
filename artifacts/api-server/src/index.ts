@@ -34,7 +34,7 @@ async function initStripe() {
     await stripeSync.findOrCreateManagedWebhook(`${webhookBaseUrl}/api/stripe/webhook`);
     logger.info('Webhook configured');
 
-    stripeSync.syncBackfill()
+    stripeSync.syncBackfill({ object: 'all' })
       .then(() => logger.info('Stripe data synced'))
       .catch((err) => logger.error({ err }, 'Error syncing Stripe data'));
   } catch (error) {
