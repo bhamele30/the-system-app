@@ -14,10 +14,27 @@ export default function Paywall() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const payment = params.get('payment');
+    const sessionId = params.get('session_id');
 
-    if (payment === 'success') {
-      authorizePayment();
-      setLocation('/');
+    if (payment === 'success' && sessionId) {
+      setIsProcessing(true);
+      fetch(apiUrl(`/api/stripe/subscription-status?sessionId=${encodeURIComponent(sessionId)}`))
+        .then(r => r.json())
+        .then(data => {
+          if (data.active) {
+            authorizePayment();
+            setLocation('/');
+          } else {
+            setError('Payment could not be verified. Contact support if you were charged.');
+            setIsProcessing(false);
+          }
+        })
+        .catch(() => {
+          setError('Could not verify payment status. Please refresh or contact support.');
+          setIsProcessing(false);
+        });
+    } else if (payment === 'success' && !sessionId) {
+      setError('Missing session token. Cannot verify payment.');
     }
   }, []);
 

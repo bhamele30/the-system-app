@@ -119,17 +119,14 @@ export default function Onboarding() {
   };
 
   useEffect(() => {
-    if (step === 5) {
-      const targets = calculateTargets();
-      setGeneratedTargets(targets);
-      
-      // Fake processing animation
-      const timer1 = setTimeout(() => setProcessingState(1), 800);
-      const timer2 = setTimeout(() => setProcessingState(2), 1800);
-      const timer3 = setTimeout(() => setProcessingState(3), 2800);
-      const timer4 = setTimeout(() => setStep(6), 4000);
-      return () => { clearTimeout(timer1); clearTimeout(timer2); clearTimeout(timer3); clearTimeout(timer4); }
-    }
+    if (step !== 5) return;
+    const targets = calculateTargets();
+    setGeneratedTargets(targets);
+    const timer1 = setTimeout(() => setProcessingState(1), 800);
+    const timer2 = setTimeout(() => setProcessingState(2), 1800);
+    const timer3 = setTimeout(() => setProcessingState(3), 2800);
+    const timer4 = setTimeout(() => setStep(6), 4000);
+    return () => { clearTimeout(timer1); clearTimeout(timer2); clearTimeout(timer3); clearTimeout(timer4); };
   }, [step]);
 
   const handleNext = () => {

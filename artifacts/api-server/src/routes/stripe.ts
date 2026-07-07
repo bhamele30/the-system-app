@@ -21,7 +21,7 @@ stripeRouter.post('/stripe/checkout', async (req, res) => {
       payment_method_types: ['card'],
       line_items: [{ price: pricesResult.id, quantity: 1 }],
       mode: 'subscription',
-      success_url: `${baseUrl}/?payment=success`,
+      success_url: `${baseUrl}/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/?payment=cancelled`,
     };
 
