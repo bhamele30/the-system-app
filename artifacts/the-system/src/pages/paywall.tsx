@@ -3,7 +3,7 @@ import { useSystem } from "@/hooks/use-system";
 import { ShieldAlert, Lock, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { apiUrl } from "@/lib/api";
+import { apiUrl, getUserId } from "@/lib/api";
 
 export default function Paywall() {
   const { authorizePayment } = useSystem();
@@ -18,7 +18,13 @@ export default function Paywall() {
 
     if (payment === 'success' && sessionId) {
       setIsProcessing(true);
-      fetch(apiUrl(`/api/stripe/subscription-status?sessionId=${encodeURIComponent(sessionId)}`))
+      const userId = getUserId();
+
+      fetch(apiUrl('/api/stripe/link-payment'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, userId }),
+      })
         .then(r => r.json())
         .then(data => {
           if (data.active) {
@@ -30,7 +36,7 @@ export default function Paywall() {
           }
         })
         .catch(() => {
-          setError('Could not verify payment status. Please refresh or contact support.');
+          setError('Could not verify payment. Please refresh or contact support.');
           setIsProcessing(false);
         });
     } else if (payment === 'success' && !sessionId) {
@@ -43,10 +49,11 @@ export default function Paywall() {
     setError(null);
 
     try {
+      const userId = getUserId();
       const resp = await fetch(apiUrl('/api/stripe/checkout'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ userId }),
       });
 
       if (!resp.ok) {

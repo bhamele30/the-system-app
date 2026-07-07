@@ -1,5 +1,6 @@
 import { runMigrations } from 'stripe-replit-sync';
 import { getStripeSync } from "./stripeClient";
+import { runAppMigrations } from "./db/migrations";
 import app from "./app";
 import { logger } from "./lib/logger";
 
@@ -25,6 +26,7 @@ async function initStripe() {
   try {
     logger.info('Initializing Stripe schema...');
     await runMigrations({ databaseUrl });
+    await runAppMigrations();
     logger.info('Stripe schema ready');
 
     const stripeSync = await getStripeSync();

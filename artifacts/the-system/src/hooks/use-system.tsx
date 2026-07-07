@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { apiUrl, getUserId } from '@/lib/api';
 
 interface SystemState {
   streak: number;
@@ -86,9 +87,24 @@ const setGlobalState = (updater: (prev: SystemState) => SystemState) => {
   listeners.forEach(listener => listener(globalState));
 };
 
+const verifyAccess = async () => {
+  const userId = getUserId();
+  try {
+    const resp = await fetch(apiUrl(`/api/stripe/access-status?userId=${encodeURIComponent(userId)}`));
+    if (!resp.ok) return;
+    const data = await resp.json() as { active: boolean };
+    if (data.active !== globalState.hasPaid) {
+      setGlobalState(prev => ({ ...prev, hasPaid: data.active }));
+    }
+  } catch {
+    // Network error — trust cached state for now
+  }
+};
+
 export function useSystem() {
   initGlobalState();
   const [state, setState] = useState<SystemState>(globalState);
+  const verifiedRef = useRef(false);
 
   // Check for missed days based on the 24-hour clock
   useEffect(() => {
@@ -153,6 +169,12 @@ export function useSystem() {
     return () => {
       listeners.delete(setState);
     };
+  }, []);
+
+  useEffect(() => {
+    if (verifiedRef.current) return;
+    verifiedRef.current = true;
+    verifyAccess();
   }, []);
 
   const submitDay = (train: boolean, nutrition: boolean, recovery: boolean, proof?: { gymPic?: string, weightLog?: string, mealPic?: string }) => {
