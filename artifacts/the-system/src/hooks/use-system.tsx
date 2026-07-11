@@ -7,6 +7,7 @@ interface SystemState {
   totalDays: number;
   completedDays: number;
   lastCompletedDate: string | null;
+  hasCompletedOnboarding: boolean;
   hasSeenPhase2Celebration: boolean;
   recoveryState: "idle" | "breached" | "rebuilding";
   lastOutcome: "maintained" | "broken" | "restored" | null;
@@ -37,6 +38,7 @@ const defaultState: SystemState = {
   totalDays: 0,
   completedDays: 0,
   lastCompletedDate: null,
+  hasCompletedOnboarding: false,
   hasSeenPhase2Celebration: false,
   recoveryState: "idle",
   lastOutcome: null,
@@ -341,6 +343,10 @@ export function useSystem() {
     setGlobalState(prev => ({ ...prev, mode, targets: targets || prev.targets, profile: profile || prev.profile }));
   };
 
+  const completeOnboarding = () => {
+    setGlobalState(prev => ({ ...prev, hasCompletedOnboarding: true }));
+  };
+
   const authorizePayment = () => {
     setGlobalState(prev => ({ ...prev, hasPaid: true }));
   };
@@ -349,5 +355,5 @@ export function useSystem() {
     setGlobalState(() => defaultState);
   };
 
-  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode, authorizePayment, resetSystem };
+  return { state, submitDay, setHasSeenPhase2Celebration, startRecoveryProtocol, logExerciseWeight, logNutrition, removeNutritionLog, toggleMealId, setMode, completeOnboarding, authorizePayment, resetSystem };
 }

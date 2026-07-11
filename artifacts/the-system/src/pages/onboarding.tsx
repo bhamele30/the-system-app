@@ -8,7 +8,7 @@ import { Crosshair, ShieldCheck, Target, Activity, ChevronRight, User, HeartPuls
 
 export default function Onboarding() {
   const [, setLocation] = useLocation();
-  const { setMode } = useSystem();
+  const { setMode, completeOnboarding } = useSystem();
   
   const [step, setStep] = useState(0);
   const [selectedMode, setSelectedMode] = useState<"Operator Lean" | "Athletic Build" | "Elite Conditioning" | "Lean Mass Phase" | "Performance Build" | "Recomp Phase" | null>(null);
@@ -151,6 +151,7 @@ export default function Onboarding() {
         classification
       });
     }
+    completeOnboarding();
     setLocation("/blueprint");
   };
 

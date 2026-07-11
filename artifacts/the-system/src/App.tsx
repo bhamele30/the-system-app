@@ -80,7 +80,7 @@ function App() {
   const isFailing = state.recoveryState === "breached";
   const isRebuilding = state.recoveryState === "rebuilding";
 
-  const isNewUser = state.totalDays === 0;
+  const isNewUser = !state.hasCompletedOnboarding;
   const isTrialExpired = state.totalDays >= 3 && !state.hasPaid;
 
   if (isNewUser) {

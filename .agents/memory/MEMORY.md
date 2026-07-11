@@ -1,2 +1,3 @@
 - [stripe-replit-sync esbuild](stripe-replit-sync-esbuild.md) — must be externalized in build.mjs or SQL migration files become unreachable at runtime
 - [Stripe Replit connector credentials](stripe-credentials.md) — field is `settings.secret`, header must be `"X-Replit-Token"` (exact string, not env var name)
+- [Onboarding completion gate](onboarding-gate.md) — use hasCompletedOnboarding flag, not totalDays===0, to guard the new-user flow
