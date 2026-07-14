@@ -99,7 +99,7 @@ export default function Paywall() {
           
           <div className="text-center mb-6">
             <div className="text-5xl font-black font-display tracking-tighter mb-2 text-white">
-              $14<span className="text-xl text-muted-foreground">/mo</span>
+              $19<span className="text-xl text-muted-foreground">/mo</span>
             </div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
               Cancel anytime. No excuses.
@@ -141,7 +141,7 @@ export default function Paywall() {
               </span>
             ) : (
               <span className="flex items-center gap-2 relative z-10">
-                AUTHORIZE PAYMENT <span className="opacity-70">($14/mo)</span>
+                AUTHORIZE PAYMENT <span className="opacity-70">($19/mo)</span>
               </span>
             )}
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>

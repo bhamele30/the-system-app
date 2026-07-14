@@ -36,7 +36,7 @@ export default function Welcome() {
           </button>
 
           <div className="text-[10px] text-muted-foreground/50 uppercase tracking-widest font-mono">
-            3-day free trial — then $14/mo
+            3-day free trial — then $19/mo
           </div>
         </div>
       </div>
