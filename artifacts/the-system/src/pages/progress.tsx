@@ -23,7 +23,7 @@ const MILESTONES: Record<number, { label: string; icon: string; description: str
   30: {
     label: "PHASE 1 COMPLETE",
     icon: "💎",
-    description: "30 days executed. Protocol complete. Phase 2 unlocked.",
+    description: "Phase 1 complete. Foundation built. Phase 2 begins now.",
   },
 };
 
@@ -66,7 +66,7 @@ export default function Progress() {
       {/* Header */}
       <header className="mb-10">
         <div className="text-primary font-display font-medium tracking-widest text-xs mb-2 uppercase">
-          30 Day Lock In Challenge
+          Phase 1: Lock In
         </div>
         <h1 className="text-4xl font-bold text-glow mb-2">PROGRESS REPORT</h1>
         <p className="text-muted-foreground text-sm">

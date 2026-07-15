@@ -186,7 +186,7 @@ export default function Onboarding() {
             </div>
             
             <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto text-sm">
-              This is not a fitness app. It's a 30-day operating protocol built around your body, your output, and your objective. Give The System accurate data. It will give you a protocol worth executing.
+              This is not a fitness app. It's a multi-phase operating protocol built around your body, your output, and your objective. Phase 1 locks you in. Phase 2 builds you up. Give The System accurate data. It will give you a protocol worth executing.
             </p>
 
             <Button 
@@ -470,7 +470,7 @@ export default function Onboarding() {
             </div>
 
             <h3 className="text-2xl font-bold uppercase tracking-widest text-white">Verify Your Data</h3>
-            <p className="text-sm text-muted-foreground">These parameters govern your next 30 days. Review before you commit. You will not be asked again.</p>
+            <p className="text-sm text-muted-foreground">These parameters govern your protocol. Review before you commit. You will not be asked again.</p>
             
             <div className="space-y-4 mt-8 bg-white/5 border border-white/10 p-6">
                <div className="flex justify-between border-b border-white/5 pb-2">

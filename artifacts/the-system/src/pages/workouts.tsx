@@ -511,11 +511,11 @@ export default function Workouts() {
         </p>
       </header>
 
-      {/* 30 Day Challenge Section */}
+      {/* Phase 1 Section */}
       <section className="mb-16">
         <div className="mb-6 flex items-center justify-between border-b border-primary/20 pb-2">
           <h2 className="text-2xl font-bold font-display uppercase tracking-widest text-primary flex items-center gap-2">
-            <ShieldAlert className="w-6 h-6" /> 30 Day Lock In Challenge
+            <ShieldAlert className="w-6 h-6" /> Phase 1: Lock In
           </h2>
           <Badge variant="outline" className="border-primary/50 text-primary">5-DAY SPLIT</Badge>
         </div>

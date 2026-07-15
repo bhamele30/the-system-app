@@ -12,7 +12,7 @@ export default function Welcome() {
 
         <div className="space-y-3">
           <div className="text-primary font-display font-medium tracking-[0.4em] text-xs uppercase mb-4">
-            30 Day Lock In
+            Operator Protocol
           </div>
 
           <h1 className="text-6xl font-black font-display tracking-tighter text-white text-glow leading-none">
@@ -23,7 +23,7 @@ export default function Welcome() {
         </div>
 
         <p className="text-muted-foreground text-sm tracking-wide leading-relaxed max-w-xs mx-auto font-mono">
-          You've tried the apps. You've done the challenges. None of it stuck because none of it was built around you. This is different. 30 days. Your numbers. Your protocol. No way out.
+          You've tried the apps. You've done the challenges. None of it stuck because none of it was built around you. This is different. Your numbers. Your protocol. Phase 1 locks you in. Phase 2 builds you up. The system doesn't end — it evolves.
         </p>
 
         <div className="space-y-3 pt-2">
